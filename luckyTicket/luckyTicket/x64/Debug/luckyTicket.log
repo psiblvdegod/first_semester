@@ -1,0 +1,3 @@
+﻿  luckyTicketCode.c
+C:\Users\user\Desktop\git_repository\luckyTicket\luckyTicketCode.c(18,27): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+  luckyTicket.vcxproj -> C:\Users\user\Desktop\git_repository\luckyTicket\x64\Debug\luckyTicket.exe

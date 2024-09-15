@@ -1,0 +1,4 @@
+﻿  swap.c
+C:\Users\user\Desktop\git_repository\swapTestFolder\swap.c(11,5): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\user\Desktop\git_repository\swapTestFolder\swap.c(6,1): warning C4716: swap: должна возвращать значение
+  swap.vcxproj -> C:\Users\user\Desktop\git_repository\swapTestFolder\x64\Debug\swap.exe
