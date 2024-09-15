@@ -1,7 +1,0 @@
-﻿  primeNumbersCode.c
-C:\Users\user\Desktop\git_repository\primeNumbers\primeNumbersCode.c(5,23): warning C4047: <=: "int" отличается по уровням косвенного обращения от "int *"
-C:\Users\user\Desktop\git_repository\primeNumbers\primeNumbersCode.c(23,18): warning C4047: функция: "int *" отличается по уровням косвенного обращения от "int"
-C:\Users\user\Desktop\git_repository\primeNumbers\primeNumbersCode.c(23,18): warning C4024: primeNumbers: различные типы для формального и фактического параметров 1
-C:\Users\user\Desktop\git_repository\primeNumbers\primeNumbersCode.c(22,5): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\user\Desktop\git_repository\primeNumbers\primeNumbersCode.c(17,1): warning C4716: primeNumbers: должна возвращать значение
-  primeNumbers.vcxproj -> C:\Users\user\Desktop\git_repository\primeNumbers\x64\Debug\primeNumbers.exe
