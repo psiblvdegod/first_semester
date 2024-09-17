@@ -1,0 +1,4 @@
+﻿  incompleteQuotientCode.c
+C:\Users\user\Desktop\git_repository\incompleteQuotient\incompleteQuotientCode.c(21,5): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\user\Desktop\git_repository\incompleteQuotient\incompleteQuotientCode.c(16,1): warning C4715: incompleteQuotient: значение возвращается не при всех путях выполнения
+  incompleteQuotient.vcxproj -> C:\Users\user\Desktop\git_repository\incompleteQuotient\x64\Debug\incompleteQuotient.exe
