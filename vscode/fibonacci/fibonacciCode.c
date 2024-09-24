@@ -41,7 +41,7 @@ int *fibonacciIterative(int sequenceLength) {
                                                                                                             for (int i = 0; i < input; ++i) {
                                                                                                                         printf("%d\n", *(result + i));
                                                                                                                                 }
-                                                                                                                                        printf("\n\nFibonacci Recursive Method\n");
+                                                                                                                                     printf("\n\nFibonacci Recursive Method\n");
                                                                                                                                                 int product;
                                                                                                                                                         for (int i = 0; i < input; ++i) {
                                                                                                                                                                     product = fibonacciRecursive(i);
