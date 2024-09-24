@@ -7,7 +7,7 @@ void swap(int* left, int* right) {
     *left = *left + *right;
     *right = *left - *right;
     *left = *left - *right;
-    }
+}
 
 bool swapTest() {
     int left = 100, right = -1000;
@@ -22,7 +22,6 @@ int* semiQsort(int array[], int arrayLength) {
         while (array[left] < fulcrum) {
             left += 1;
         }
-                                                                
         while (array[right] >= fulcrum) {
             right -= 1;
         }
@@ -34,7 +33,7 @@ int* semiQsort(int array[], int arrayLength) {
     }
     return array;
 }
-                                                                                                                                                        
+
 bool semiQsortTest() {
     int array1[] = {1, 0, 0, 1};
     int array2[] = {1, 0, 0, 0, 1};
@@ -43,22 +42,23 @@ bool semiQsortTest() {
     int sortedArray1[] = {0, 0, 1, 1};
     int sortedArray2[] = {0, 0, 0, 1, 1};
     for (int i = 0; i < 4; ++i) {
-        if (array1[i] != sortedArray1[i] || array2[i] != sortedArray2[i]) {
-            return 0;
-        }                                                                                                                                                                                          
-    }                                                                                                                                                                                  
+      if (array1[i] != sortedArray1[i] || array2[i] != sortedArray2[i]) {
+        return 0;
+      }
+    }
     return 1;
-}                                                                                                                                                                                                  
-int main(void){
+}
+
+int main(void) {
     bool test = semiQsortTest() & swapTest();
     if (!test) {
-        printf("Error. Tests failed.\n");
-    }                                                                                                                                                                                                                         
+      printf("Error. Tests failed.\n");
+    }
     else{
         int randomArray[ARRAY_SIZE];
         for (int i = 0; i < ARRAY_SIZE; ++i) {
             randomArray[i] = rand() % 101;
-        }                                                                                                                                                                                                                                                                 
+        }
         printf("First element: %d\nArray: ", randomArray[0]);
         int* result = semiQsort(randomArray, ARRAY_SIZE);
         for (int i = 0; i < ARRAY_SIZE; ++i) {
@@ -66,7 +66,3 @@ int main(void){
         }
     }
 }
-
-                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                          
