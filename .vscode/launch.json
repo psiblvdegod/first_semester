@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/workspaces/homework/vscode/fibonacci",
-      "program": "/workspaces/homework/vscode/fibonacci/build/Debug/outDebug",
+      "cwd": "/workspaces/homework/vscode/exponentiation",
+      "program": "/workspaces/homework/vscode/exponentiation/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
