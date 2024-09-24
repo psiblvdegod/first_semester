@@ -3,34 +3,34 @@
 #include <stdbool.h>
 
 int *fibonacciIterative(int sequenceLength) {
-  int *sequence = malloc(sequenceLength);
-  sequence[0] = 0;
-  sequence[1] = 1;
-  for (int i = 2; i < sequenceLength; ++i) {
-    sequence[i] = sequence[i - 1] + sequence[i - 2];
-  }
-  free(sequence);
-  return sequence;
+    int *sequence = malloc(sequenceLength);
+    sequence[0] = 0;
+    sequence[1] = 1;
+    for (int i = 2; i < sequenceLength; ++i) {
+        sequence[i] = sequence[i - 1] + sequence[i - 2];
+    }
+    free(sequence);
+    return sequence;
 }
 
 int fibonacciRecursive(int currentNumber) {
-  if (currentNumber == 0) {
-    return 0;
-  }
-  if (currentNumber == 1) {
-    return 1;
-  }
-  return fibonacciRecursive(currentNumber - 2) + fibonacciRecursive(currentNumber - 1);
+    if (currentNumber == 0) {
+        return 0;
+    }
+    if (currentNumber == 1) {
+        return 1;
+    }
+    return fibonacciRecursive(currentNumber - 2) + fibonacciRecursive(currentNumber - 1);
 }
 
 bool test(){
-  return fibonacciIterative(5)[4] == 3 && fibonacciRecursive(4) == 3;
+    return fibonacciIterative(5)[4] == 3 && fibonacciRecursive(4) == 3;
 }
 
 int main(void) {
     bool testStatus = test();
     if (!testStatus) {
-      printf("Error. Tests failed.\n");
+        printf("Error. Tests failed.\n");
     }
     else {
         printf("Enter sequence length:\n");
