@@ -42,9 +42,9 @@ bool semiQsortTest() {
     int sortedArray1[] = {0, 0, 1, 1};
     int sortedArray2[] = {0, 0, 0, 1, 1};
     for (int i = 0; i < 4; ++i) {
-      if (array1[i] != sortedArray1[i] || array2[i] != sortedArray2[i]) {
-        return 0;
-      }
+        if (array1[i] != sortedArray1[i] || array2[i] != sortedArray2[i]) {
+            return 0;
+        }
     }
     return 1;
 }
@@ -52,9 +52,9 @@ bool semiQsortTest() {
 int main(void) {
     bool test = semiQsortTest() & swapTest();
     if (!test) {
-      printf("Error. Tests failed.\n");
+        printf("Error. Tests failed.\n");
     }
-    else{
+    else {
         int randomArray[ARRAY_SIZE];
         for (int i = 0; i < ARRAY_SIZE; ++i) {
             randomArray[i] = rand() % 101;
