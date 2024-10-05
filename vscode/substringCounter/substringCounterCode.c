@@ -2,53 +2,43 @@
 #include <stdbool.h>
 #define STRING_MAX_LENGTH 1000
 
-int substringCounter(char string[], char substring[])
-{
+int substringCounter(char string[], char substring[]) {
     int result = 0;
     int stringIndex = 0, substringIndex = 0;
     int substringLength = 0, i = 0;
-    while (substring[i] != '\0')
-    {
+    while (substring[i] != '\0') {
         ++substringLength;
         ++i;
     }
-    while (string[stringIndex] != '\0')
-    {
+    while (string[stringIndex] != '\0') {
         bool flag = true;
-        while (substring[substringIndex] != '\0')
-        {
-            if (string[stringIndex + substringIndex] != substring[substringIndex])
-            {
+        while (substring[substringIndex] != '\0') {
+            if (string[stringIndex + substringIndex] != substring[substringIndex]) {
                 flag = false;
             }
             ++substringIndex;
         }
         substringIndex = 0;
-        if (flag)
-        {
+        if (flag) {
             ++result;
             stringIndex += substringLength;
         }
-        else
-        {
+        else {
             ++stringIndex;
         }
     }
     return result;
 }
 
-bool test()
-{
+bool test() {
     char string[] = "4s44s444s4444";
     char substring[] = "44";
     bool result = substringCounter(string, substring) == 4 ? true : false;
     return result;
 }
 
-int main(void)
-{
-    if (!test())
-    {
+int main(void) {
+    if (!test()) {
         printf("Error. Test failed.\n");
         return 0;
     }
