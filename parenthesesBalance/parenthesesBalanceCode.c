@@ -1,41 +1,43 @@
-#include <stdio.h> 
-#include <stdbool.h> 
-#define STRING_MAX_SIZE 100 
+#include <stdio.h>
+#include <stdbool.h>
 
-bool parenthesesBalanceCheck(char *string) {
-    int leftParenthesisCounter = 0, rightParenthesisCounter = 0;
-    char lastParenthesis = '0';
-    bool parenthesesBalance = true;
-    for (int i = 0; i < STRING_MAX_SIZE; ++i) {
+bool parenthesesBalance(char string[]) {
+    int i = 0;
+    int balanceStatus = 0;
+    while (string[i] != '\0') {
         if (string[i] == '(') {
-            leftParenthesisCounter += 1;
-            lastParenthesis = 'l';
+            ++balanceStatus;
         }
         if (string[i] == ')') {
-            rightParenthesisCounter += 1;
-            lastParenthesis = 'r';
-            if (rightParenthesisCounter > leftParenthesisCounter) {
-                parenthesesBalance = false;
-                break;
-            }
+            --balanceStatus;
         }
+        if (balanceStatus < 0) {
+            return false;
+        }
+        ++i;
+    }
+    if (balanceStatus != 0) {
+        return false;
+    }
+    return true;
+}
 
-    }
-    if (lastParenthesis == 'l' || leftParenthesisCounter != rightParenthesisCounter) {
-        parenthesesBalance = false;
-    }
-    return parenthesesBalance;
+bool test() {
+    bool test1 = parenthesesBalance("()()()");
+    bool test2 = parenthesesBalance("())(()");
+    bool test3 = parenthesesBalance("(((((");
+    bool test4 = parenthesesBalance("((())");
+    return test1 && !test2 && !test3 && !test4;
 }
 
 int main(void) {
-    char inputString[STRING_MAX_SIZE] = "0";
-    printf("Enter string. No more %d symbols.\n", STRING_MAX_SIZE);
-    scanf("%s", &inputString);
-    int result = parenthesesBalanceCheck(inputString);
-    if (result == 1) {
-        printf("result: true\n");
+    if (!test()) {
+        printf("Test failed.\n");
+        return 0;
     }
-    else {
-        printf("result: false\n");
-    }
-}   
+    char string[1000];
+    printf("Enter string. No more 1000 symbols.\n");
+    scanf("%s", &string);
+    bool result = parenthesesBalance(string);
+    printf("result: %s", result ? "true\n" : "false\n");
+}
