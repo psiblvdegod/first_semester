@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\Desktop\\git_repository\\substringCounter\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DDF8811F-4203-486E-B9E4-E4098A422710}|substringCounter.vcxproj|C:\\Users\\user\\Desktop\\git_repository\\substringCounter\\substringCounterCode.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DDF8811F-4203-486E-B9E4-E4098A422710}|substringCounter.vcxproj|solutionrelative:substringCounterCode.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "substringCounterCode.c",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\git_repository\\substringCounter\\substringCounterCode.c",
+              "RelativeDocumentMoniker": "substringCounterCode.c",
+              "ToolTip": "C:\\Users\\user\\Desktop\\git_repository\\substringCounter\\substringCounterCode.c",
+              "RelativeToolTip": "substringCounterCode.c",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAzwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-07T18:04:16.807Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
