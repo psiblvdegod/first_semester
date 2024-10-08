@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#define ARRAY_SIZE 1000000 //also defines range of elements
 
-int commonestElement(int array[], int arraySize) {
+int commonestElement(int array[], int arraySize, int *errorCode) {
+    if (arraySize < 0) {
+        *errorCode = 1;
+        return 0;
+    }
     int minElement = 100000, maxElement = -100000;
     for (int i = 0; i < arraySize; ++i) {
         minElement = array[i] < minElement ? array[i] : minElement;
@@ -25,24 +28,31 @@ int commonestElement(int array[], int arraySize) {
             maxAmount = elementCounter[h];
         }
     }
+    free(elementCounter);
     return result;
 }
 
 bool test() {
     int testArray[] = { -5, -5, 10, 10, 10, 10, 10, 10, -10, 5, 5, 5, 10, 10 };
     const int testArraySize = sizeof(testArray) / sizeof(int);
-    return commonestElement(testArray, testArraySize) == 10;
+    int errorCode = 0;
+    return commonestElement(testArray, testArraySize, &errorCode) == 10 && !errorCode;
 }
 
 int main(void) {
-    int array[ARRAY_SIZE];
-    for (int i = 0; i < ARRAY_SIZE; ++i) {
-        array[i] = rand() % ARRAY_SIZE - (ARRAY_SIZE / 2);
-        //printf("%d\n", array[i]);
+    printf("Enter array size\n");
+    int arraySize = 0;
+    scanf("%d", &arraySize);
+    int *array = malloc(sizeof(int) * arraySize);
+    for (int i = 0; i < arraySize; ++i) {
+        array[i] = rand() % 20000 - 10000;
+        //printf("%d\t", array[i]);
     }
     const clock_t startTime = clock();
-    int result = commonestElement(array, ARRAY_SIZE);
+    int errorCode = 0;
+    int result = commonestElement(array, arraySize, &errorCode);
     const double duration = (double)(clock() - startTime) / CLOCKS_PER_SEC;
-    printf("Commonest element = %d\n", result);
-    printf("Elements range = (%d : %d)\nArray size = %d\nDuration = %lf\n", -ARRAY_SIZE / 2, ARRAY_SIZE / 2, ARRAY_SIZE, duration);
+    printf("\nCommonest element = %d\n", result);
+    printf("Duration: %lf", duration);
+    free(array);
 }
