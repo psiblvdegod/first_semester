@@ -1,0 +1,10 @@
+﻿  searchCode.c
+C:\Users\user\Desktop\git_repository\search\searchCode.c(71,12): warning C4477: "printf": в строке форматирования "%d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "unsigned __int64"
+      C:\Users\user\Desktop\git_repository\search\searchCode.c(71,12):
+      рекомендуется использовать "%lld" в строке форматирования
+      C:\Users\user\Desktop\git_repository\search\searchCode.c(71,12):
+      рекомендуется использовать "%Id" в строке форматирования
+      C:\Users\user\Desktop\git_repository\search\searchCode.c(71,12):
+      рекомендуется использовать "%I64d" в строке форматирования
+  
+  search.vcxproj -> C:\Users\user\Desktop\git_repository\search\x64\Debug\search.exe
