@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\user\\Desktop\\git_repository\\array\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{70FE41BD-3516-4A4A-84C3-336D1D89AAF4}|array.vcxproj|C:\\Users\\user\\Desktop\\git_repository\\array\\Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{70FE41BD-3516-4A4A-84C3-336D1D89AAF4}|array.vcxproj|solutionrelative:Source.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{70FE41BD-3516-4A4A-84C3-336D1D89AAF4}|array.vcxproj|C:\\Users\\user\\Desktop\\git_repository\\array\\arrayCode.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{70FE41BD-3516-4A4A-84C3-336D1D89AAF4}|array.vcxproj|solutionrelative:arrayCode.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Source.cpp",
-              "DocumentMoniker": "C:\\Users\\user\\Desktop\\git_repository\\array\\Source.cpp",
-              "RelativeDocumentMoniker": "Source.cpp",
-              "ToolTip": "C:\\Users\\user\\Desktop\\git_repository\\array\\Source.cpp",
-              "RelativeToolTip": "Source.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-08T10:44:52.834Z",
+              "Title": "arrayCode.c",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\git_repository\\array\\arrayCode.c",
+              "RelativeDocumentMoniker": "arrayCode.c",
+              "ToolTip": "C:\\Users\\user\\Desktop\\git_repository\\array\\arrayCode.c",
+              "RelativeToolTip": "arrayCode.c",
+              "ViewState": "AgIAABIAAAAAAAAAAAAzwCQAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-08T11:44:19.643Z",
               "EditorCaption": ""
             }
           ]
