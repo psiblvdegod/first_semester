@@ -1,0 +1,3 @@
+﻿  task1Code.c
+C:\Users\user\Desktop\git_repository\09_10_task1\task1Code.c(47,30): warning C4090: "функция": разные квалификаторы "const"
+  09_10_task1.vcxproj -> C:\Users\user\Desktop\git_repository\09_10_task1\x64\Debug\09_10_task1.exe

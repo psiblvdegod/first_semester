@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\Desktop\\git_repository\\09_10_task1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{902CAF2B-9F74-4627-B044-969419F24162}|09_10_task1.vcxproj|C:\\Users\\user\\Desktop\\git_repository\\09_10_task1\\task1Code.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{902CAF2B-9F74-4627-B044-969419F24162}|09_10_task1.vcxproj|solutionrelative:task1Code.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "task1Code.c",
+              "DocumentMoniker": "C:\\Users\\user\\Desktop\\git_repository\\09_10_task1\\task1Code.c",
+              "RelativeDocumentMoniker": "task1Code.c",
+              "ToolTip": "C:\\Users\\user\\Desktop\\git_repository\\09_10_task1\\task1Code.c",
+              "RelativeToolTip": "task1Code.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-09T10:44:01.83Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
