@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-void insertionSort(int* array, int left, int right, int *errorCode) {
+void insertionSort(int* array, int left, int right, bool *errorCode) {
     if (left < 0 || right < -1 || right - left < -1) {
-        *errorCode = 1;
-        return 0;
+        *errorCode = true;
+        return;
     }
     for (int i = left + 1; i < right; ++i) {
         for (int j = i; j > left; --j) {
@@ -21,10 +21,10 @@ void insertionSort(int* array, int left, int right, int *errorCode) {
     }
 }
 
-void smartQsort(int* array, int leftEdge, int rightEdge, int *errorCode) {
+void smartQsort(int* array, int leftEdge, int rightEdge, bool *errorCode) {
     if (leftEdge < 0 || rightEdge < -1 || rightEdge - leftEdge < -1) {
-        *errorCode = 1;
-        return 0;
+        *errorCode = true;
+        return;
     }
     if (rightEdge - leftEdge <= 10) {
         insertionSort(array, leftEdge, rightEdge, errorCode);
@@ -54,7 +54,7 @@ void smartQsort(int* array, int leftEdge, int rightEdge, int *errorCode) {
 
 bool insertionSortTest() {
     int array[] = { 5, 3, 4, 1, 6, 8, 7, 9, 0, 2 };
-    int errorCode = 0;
+    bool errorCode = false;
     insertionSort(array, 0, 10, &errorCode);
     for (int k = 1; k < 10; ++k) {
         if (array[k] < array[k - 1]) {
@@ -66,7 +66,7 @@ bool insertionSortTest() {
 
 bool smartQsortTest() {
     int array[] = { -10, 20, 50, -60, -40, 30, 40, -30, 60, -20, -50, 10 };
-    int errorCode = 0;
+    bool errorCode = false;
     smartQsort(array, 0, 11, &errorCode);
     for (int i = 1; i < 12; ++i) {
         if (array[i] < array[i - 1]) {
@@ -85,7 +85,7 @@ int main(void) {
     for (int i = 0; i < 1000; ++i) {
         array[i] = rand() % 2000 - 1000;
     }
-    int errorCode = 0 ;
+    bool errorCode = false;
     smartQsort(array, 0, 1000, &errorCode);
     if (errorCode) {
         printf("Error. Invalid value.\n");
