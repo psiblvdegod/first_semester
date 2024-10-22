@@ -68,7 +68,7 @@ bool smartQsortTest() {
     int array[] = { -10, 20, 50, -60, -40, 30, 40, -30, 60, -20, -50, 10 };
     int errorCode = 0;
     smartQsort(array, 0, 11, &errorCode);
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 1; i < 12; ++i) {
         if (array[i] < array[i - 1]) {
             return false;
         }
@@ -77,7 +77,7 @@ bool smartQsortTest() {
 }
 
 int main(void) {
-    if (!smartQsortTest() || !insertionSortTest) {
+    if (!smartQsortTest() || !insertionSortTest()) {
         printf("Error. Test failed.\n");
         return 0;
     }
