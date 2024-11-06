@@ -19,7 +19,7 @@ bool queryProcessing(int userQuery, List ** list, bool * errorCode) {
             addElement(*list, newPosition, newValue, &errorCode);
             break;
             
-        case 2: //СКОРЕЕ ВСЕГО НИХУЯ НЕ РАБОТАЕТ
+        case 2:
             if (isEmpty(list)) {
                 printf("List is empty. Nothing to delete\n");
             }
