@@ -18,7 +18,7 @@ bool queryProcessing(int userQuery, List ** list, bool * errorCode) {
             }
             addElement(*list, newPosition, newValue, &errorCode);
             break;
-            
+
         case 2:
             if (isEmpty(list)) {
                 printf("List is empty. Nothing to delete\n");
@@ -50,7 +50,7 @@ bool queryProcessing(int userQuery, List ** list, bool * errorCode) {
                 break;
             }
         default:
-           printf("Invalid value.\n");
-          break;  
+            printf("Invalid value.\n");
+            break;
     }
 }

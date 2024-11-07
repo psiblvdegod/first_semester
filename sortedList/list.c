@@ -88,6 +88,10 @@ Value getValue(Position position, bool * errorCode) {
     return ((ListElement *)position)->value;
 }
 
+//Position getFirst(List * list, bool * errorCode) {
+//    return (Position) (list->head->next);
+//}
+
 Position getFirst(List * list, bool * errorCode) {
     return (Position) (list->head->next);
 }
