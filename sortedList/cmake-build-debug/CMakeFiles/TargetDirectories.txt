@@ -1,3 +1,0 @@
-/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles/sortedList.dir
-/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles/rebuild_cache.dir
