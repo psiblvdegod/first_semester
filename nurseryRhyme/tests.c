@@ -25,5 +25,5 @@ bool theRevenantTest() {
     int test1 = getPositionOfTheRevenant(2, 10, &errorCode);
     int test2 = getPositionOfTheRevenant(7, 7, &errorCode);
     int test3 = getPositionOfTheRevenant(7, 11, &errorCode);
-    return test1 == test2 && test2 == test3 && test3 == 5;
+    return test1 == test2 && test2 == test3 && test3 == 5 && !errorCode;
 }
