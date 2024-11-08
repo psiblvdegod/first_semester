@@ -10,4 +10,6 @@ add_executable(nurseryRhyme
         list.h
         main.c
         tests.c
-        tests.h)
+        tests.h
+        theRevenant.c
+        theRevenant.h)

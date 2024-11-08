@@ -84,6 +84,9 @@ void deleteElement(List * list, Position * mainPosition, bool * errorCode) {
    // if (position->next != NULL) {
     position->next->previous = position->previous;
    // }
+   if (position == getFirst(list, errorCode)) {
+       list->head = position->next;
+   }
     free(position);
     --list->listSize;
 }
