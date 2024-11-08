@@ -17,5 +17,9 @@ int main(void) {
         return -1;
     }
     int result = getPositionOfTheRevenant(m, n, &errorCode);
+    if (errorCode) {
+        printf("Error.\n");
+        return -1;
+    }
     printf("You will survive if pick %d number.\n", result);
 }
