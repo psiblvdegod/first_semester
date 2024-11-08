@@ -163,7 +163,6 @@ CMakeFiles/sortedList.dir/main.c.o: /Users/psiblvdegod/Desktop/123/homework/sort
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdint.h \
   /Users/psiblvdegod/Desktop/123/homework/sortedList/list.h \
-  /Users/psiblvdegod/Desktop/123/homework/sortedList/queryProcessing.h \
   /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.h
 
 CMakeFiles/sortedList.dir/tests.c.o: /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c \
@@ -243,8 +242,6 @@ CMakeFiles/sortedList.dir/tests.c.o: /Users/psiblvdegod/Desktop/123/homework/sor
   /Users/psiblvdegod/Desktop/123/homework/sortedList/list.h \
   /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.h
 
-
-/Users/psiblvdegod/Desktop/123/homework/sortedList/queryProcessing.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/sys/_types/_va_list.h:
 

@@ -8,6 +8,7 @@ typedef struct ListElement {
 
 struct List {
     ListElement * head;
+    int listSize;
 };
 
 List * createList(bool * errorCode) {
@@ -18,8 +19,8 @@ List * createList(bool * errorCode) {
         return NULL;
     }
     guardian->next = NULL;
-    guardian->previous == NULL; //мейби не нужно
     list->head = guardian;
+    list->listSize = 0;
     return list;
 }
 
@@ -33,21 +34,23 @@ void addElement(List * list, Position * mainPosition, Value value, bool * errorC
     newElement->value = value;
     if (position != NULL) {
         if (position->next != NULL) {
-            position->next->previous = newElement;
+            (*mainPosition)->next->previous = newElement;
         }
         newElement->previous = position;
         newElement->next = position->next;
-        position->next = newElement;
+        (*mainPosition)->next = newElement;
     }
     else {
         newElement->previous = list->head;
         newElement->previous->next = newElement;
         newElement->next = NULL; //СКОРЕЕ ВСЕГО НЕ НУЖНО
+        *mainPosition = newElement;
     }
-    *mainPosition = newElement;
+    ++list->listSize;
+    //*mainPosition = newElement;
 }
 
-void deleteElement(Position * mainPosition, bool * errorCode) {
+void deleteElement(List * list, Position * mainPosition, bool * errorCode) {
     ListElement * position = *mainPosition;
     if (position == NULL) {
         *errorCode = true;
@@ -64,10 +67,11 @@ void deleteElement(Position * mainPosition, bool * errorCode) {
         *mainPosition = NULL;
     }
     free(position);
+    --list->listSize;
 }
 
-bool isEmpty(List * list) {
-    return list->head->next == NULL;
+int listSize(List * list) {
+    return list->listSize;
 }
 
 void deleteList(List ** list) {
@@ -123,18 +127,3 @@ Position getPrevious(List * list, Position position, bool * errorCode) {
     }
     return (Position) ((ListElement *) position)->previous;
 }
-/*Value getValue(List * list, Position * mainPosition, bool * errorCode) {
-    ListElement * position = *mainPosition;
-    if (position == NULL) { //помещает на стражнтка если temp только создан
-        position = list->head;
-        *mainPosition = position; //мейби не нужно
-    }
-    if (position->next != NULL) {
-        Value value = position->next->value;
-        *mainPosition = position->next;
-    }
-    else {
-        *errorCode = true;
-        return 0;
-    }
-}*/

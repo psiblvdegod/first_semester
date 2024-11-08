@@ -13,7 +13,7 @@ bool listTests() {
     Value testGetNext = getValue(getNext(testGetFirst, &errorCode), &errorCode);
     Value testGetPrevious = getValue(getPrevious(testList, testGetLast, &errorCode), &errorCode);
     Position first = getFirst(testList, &errorCode);
-    deleteElement(&first, &errorCode);
+    deleteElement(testList, &first, &errorCode);
     deleteList(&testList);
     return !errorCode && testGetNext == 2 && testGetPrevious == 1;
 }

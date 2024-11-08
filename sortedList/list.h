@@ -15,10 +15,10 @@ void addElement(List * list, Position * position, Value value, bool * errorCode)
 //after adding moves position on new element
 
 
-void deleteElement(Position * position, bool * errorCode);
+void deleteElement(List * list, Position * position, bool * errorCode);
 //after deletion moves position on previous element
 
-bool isEmpty(List * list);
+int listSize(List * list);
 
 void deleteList(List ** list);
 

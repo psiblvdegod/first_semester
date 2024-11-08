@@ -14,27 +14,27 @@ int main(void) {
     Position mainPosition = NULL;
     while (userQuery) {
         printf("0 - quit // 1 - add // 2 - delete // 3 - print all\n");
-        inputValidation = scanf("%d", &userQuery);
+        scanf("%d", &userQuery);
         while (getchar() != '\n');
         if (!userQuery) break;
         if (userQuery == 1) {
             Value value = 0;
             printf("Enter value you want to add.\n");
-            inputValidation = scanf("%d", &value);
+            scanf("%d", &value);
             while (getchar() != '\n');
-            if (isEmpty(list)){
+            if (listSize(list) == 0){
                 addElement(list, &mainPosition, value, &errorCode);
             }
             else {
                 Position currentPosition = getFirst(list, &errorCode);
-                while (value < getValue(currentPosition, &errorCode)) {
+                for (int i = 0; i < listSize(list) && value < getValue(currentPosition, &errorCode); ++i) {
                     currentPosition = getNext(currentPosition, &errorCode);
                 }
                 addElement(list, &currentPosition, value, &errorCode);
             }
         }
         if (userQuery == 2) {
-            if (isEmpty(list)) {
+            if (!listSize(list)) {
                 printf("List is empty.\n");
                 continue;
             }
@@ -46,7 +46,7 @@ int main(void) {
             Position lastPosition = getLast(list, &errorCode);
             while (true) {
                 if (value == getValue(currentPosition, &errorCode)) {
-                    deleteElement(&currentPosition, &errorCode);
+                    deleteElement(list, &currentPosition, &errorCode);
                     printf("Element deleted.\n");
                     break;
                 }
@@ -58,17 +58,16 @@ int main(void) {
             }
         }
         if (userQuery == 3) {
-            if (isEmpty(list)) {
+            if (!listSize(list)) {
                 printf("List is empty.\n");
                 continue;
             }
             printf("Your list:\n");
             Position currentPosition = getFirst(list, &errorCode);
-            Position lastPosition = getLast(list, &errorCode);
-            do {
+            for (int i = 0; i < listSize(list); ++i) {
                 printf("%d ", getValue(currentPosition, &errorCode));
                 currentPosition = getNext(currentPosition, &errorCode);
-            } while(currentPosition != lastPosition);
+            }
             printf("\n");
         }
     }
