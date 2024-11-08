@@ -54,10 +54,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/sortedList
+CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/sortedList.dir/clean
 CMakeFiles/sortedList.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target sortedList"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4 "Built target sortedList"
 .PHONY : CMakeFiles/sortedList.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/sortedList.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sortedList.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/sortedList.dir/rule
 
 # Convenience name for target.

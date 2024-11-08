@@ -1,6 +1,5 @@
 #include "list.h"
 #include "tests.h"
-#include "queryProcessing.h"
 #include <stdio.h>
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -13,7 +12,6 @@ int main(void) {
     int userQuery = 1;
     int inputValidation = 1;
     Position mainPosition = NULL;
-    //printf("%d ", isEmpty(list));
     while (userQuery) {
         printf("0 - quit // 1 - add // 2 - delete // 3 - print all\n");
         inputValidation = scanf("%d", &userQuery);

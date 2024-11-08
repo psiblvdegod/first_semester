@@ -1,6 +1,6 @@
 CMakeFiles/sortedList.dir/queryProcessing.c.o: \
-  /Users/psiblvdegod/Desktop/sortedList/queryProcessing.c \
-  /Users/psiblvdegod/Desktop/sortedList/list.h \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/queryProcessing.c \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/list.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/_stdlib.h \
@@ -74,7 +74,7 @@ CMakeFiles/sortedList.dir/queryProcessing.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/_abort.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/sys/_types/_dev_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/sys/_types/_mode_t.h \
-  /Users/psiblvdegod/Desktop/sortedList/queryProcessing.h \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/queryProcessing.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/sys/_types/_va_list.h \

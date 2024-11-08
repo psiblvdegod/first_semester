@@ -1,7 +1,7 @@
 CMakeFiles/sortedList.dir/tests.c.o: \
-  /Users/psiblvdegod/Desktop/sortedList/tests.c \
-  /Users/psiblvdegod/Desktop/sortedList/tests.h \
-  /Users/psiblvdegod/Desktop/sortedList/list.h \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.h \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/list.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/_stdlib.h \

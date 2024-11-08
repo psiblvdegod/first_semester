@@ -3,8 +3,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/sortedList.dir/list.c.o.d"
   "CMakeFiles/sortedList.dir/main.c.o"
   "CMakeFiles/sortedList.dir/main.c.o.d"
-  "CMakeFiles/sortedList.dir/queryProcessing.c.o"
-  "CMakeFiles/sortedList.dir/queryProcessing.c.o.d"
   "CMakeFiles/sortedList.dir/tests.c.o"
   "CMakeFiles/sortedList.dir/tests.c.o.d"
   "sortedList"

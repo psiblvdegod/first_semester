@@ -8,10 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/psiblvdegod/Desktop/sortedList/list.c" "CMakeFiles/sortedList.dir/list.c.o" "gcc" "CMakeFiles/sortedList.dir/list.c.o.d"
-  "/Users/psiblvdegod/Desktop/sortedList/main.c" "CMakeFiles/sortedList.dir/main.c.o" "gcc" "CMakeFiles/sortedList.dir/main.c.o.d"
-  "/Users/psiblvdegod/Desktop/sortedList/queryProcessing.c" "CMakeFiles/sortedList.dir/queryProcessing.c.o" "gcc" "CMakeFiles/sortedList.dir/queryProcessing.c.o.d"
-  "/Users/psiblvdegod/Desktop/sortedList/tests.c" "CMakeFiles/sortedList.dir/tests.c.o" "gcc" "CMakeFiles/sortedList.dir/tests.c.o.d"
+  "/Users/psiblvdegod/Desktop/123/homework/sortedList/list.c" "CMakeFiles/sortedList.dir/list.c.o" "gcc" "CMakeFiles/sortedList.dir/list.c.o.d"
+  "/Users/psiblvdegod/Desktop/123/homework/sortedList/main.c" "CMakeFiles/sortedList.dir/main.c.o" "gcc" "CMakeFiles/sortedList.dir/main.c.o.d"
+  "/Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c" "CMakeFiles/sortedList.dir/tests.c.o" "gcc" "CMakeFiles/sortedList.dir/tests.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

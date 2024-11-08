@@ -1,6 +1,6 @@
 CMakeFiles/sortedList.dir/list.c.o: \
-  /Users/psiblvdegod/Desktop/sortedList/list.c \
-  /Users/psiblvdegod/Desktop/sortedList/list.h \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/list.c \
+  /Users/psiblvdegod/Desktop/123/homework/sortedList/list.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/16/include/stdbool.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk/usr/include/_stdlib.h \

@@ -53,10 +53,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/sortedList
+CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/sortedList.dir/depend.make
@@ -70,66 +70,51 @@ include CMakeFiles/sortedList.dir/progress.make
 include CMakeFiles/sortedList.dir/flags.make
 
 CMakeFiles/sortedList.dir/main.c.o: CMakeFiles/sortedList.dir/flags.make
-CMakeFiles/sortedList.dir/main.c.o: /Users/psiblvdegod/Desktop/sortedList/main.c
+CMakeFiles/sortedList.dir/main.c.o: /Users/psiblvdegod/Desktop/123/homework/sortedList/main.c
 CMakeFiles/sortedList.dir/main.c.o: CMakeFiles/sortedList.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/sortedList.dir/main.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/main.c.o -MF CMakeFiles/sortedList.dir/main.c.o.d -o CMakeFiles/sortedList.dir/main.c.o -c /Users/psiblvdegod/Desktop/sortedList/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/sortedList.dir/main.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/main.c.o -MF CMakeFiles/sortedList.dir/main.c.o.d -o CMakeFiles/sortedList.dir/main.c.o -c /Users/psiblvdegod/Desktop/123/homework/sortedList/main.c
 
 CMakeFiles/sortedList.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/sortedList.dir/main.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/sortedList/main.c > CMakeFiles/sortedList.dir/main.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/123/homework/sortedList/main.c > CMakeFiles/sortedList.dir/main.c.i
 
 CMakeFiles/sortedList.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/sortedList.dir/main.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/sortedList/main.c -o CMakeFiles/sortedList.dir/main.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/123/homework/sortedList/main.c -o CMakeFiles/sortedList.dir/main.c.s
 
 CMakeFiles/sortedList.dir/list.c.o: CMakeFiles/sortedList.dir/flags.make
-CMakeFiles/sortedList.dir/list.c.o: /Users/psiblvdegod/Desktop/sortedList/list.c
+CMakeFiles/sortedList.dir/list.c.o: /Users/psiblvdegod/Desktop/123/homework/sortedList/list.c
 CMakeFiles/sortedList.dir/list.c.o: CMakeFiles/sortedList.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/sortedList.dir/list.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/list.c.o -MF CMakeFiles/sortedList.dir/list.c.o.d -o CMakeFiles/sortedList.dir/list.c.o -c /Users/psiblvdegod/Desktop/sortedList/list.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/sortedList.dir/list.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/list.c.o -MF CMakeFiles/sortedList.dir/list.c.o.d -o CMakeFiles/sortedList.dir/list.c.o -c /Users/psiblvdegod/Desktop/123/homework/sortedList/list.c
 
 CMakeFiles/sortedList.dir/list.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/sortedList.dir/list.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/sortedList/list.c > CMakeFiles/sortedList.dir/list.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/123/homework/sortedList/list.c > CMakeFiles/sortedList.dir/list.c.i
 
 CMakeFiles/sortedList.dir/list.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/sortedList.dir/list.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/sortedList/list.c -o CMakeFiles/sortedList.dir/list.c.s
-
-CMakeFiles/sortedList.dir/queryProcessing.c.o: CMakeFiles/sortedList.dir/flags.make
-CMakeFiles/sortedList.dir/queryProcessing.c.o: /Users/psiblvdegod/Desktop/sortedList/queryProcessing.c
-CMakeFiles/sortedList.dir/queryProcessing.c.o: CMakeFiles/sortedList.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/sortedList.dir/queryProcessing.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/queryProcessing.c.o -MF CMakeFiles/sortedList.dir/queryProcessing.c.o.d -o CMakeFiles/sortedList.dir/queryProcessing.c.o -c /Users/psiblvdegod/Desktop/sortedList/queryProcessing.c
-
-CMakeFiles/sortedList.dir/queryProcessing.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/sortedList.dir/queryProcessing.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/sortedList/queryProcessing.c > CMakeFiles/sortedList.dir/queryProcessing.c.i
-
-CMakeFiles/sortedList.dir/queryProcessing.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/sortedList.dir/queryProcessing.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/sortedList/queryProcessing.c -o CMakeFiles/sortedList.dir/queryProcessing.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/123/homework/sortedList/list.c -o CMakeFiles/sortedList.dir/list.c.s
 
 CMakeFiles/sortedList.dir/tests.c.o: CMakeFiles/sortedList.dir/flags.make
-CMakeFiles/sortedList.dir/tests.c.o: /Users/psiblvdegod/Desktop/sortedList/tests.c
+CMakeFiles/sortedList.dir/tests.c.o: /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c
 CMakeFiles/sortedList.dir/tests.c.o: CMakeFiles/sortedList.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/sortedList.dir/tests.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/tests.c.o -MF CMakeFiles/sortedList.dir/tests.c.o.d -o CMakeFiles/sortedList.dir/tests.c.o -c /Users/psiblvdegod/Desktop/sortedList/tests.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/sortedList.dir/tests.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/sortedList.dir/tests.c.o -MF CMakeFiles/sortedList.dir/tests.c.o.d -o CMakeFiles/sortedList.dir/tests.c.o -c /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c
 
 CMakeFiles/sortedList.dir/tests.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/sortedList.dir/tests.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/sortedList/tests.c > CMakeFiles/sortedList.dir/tests.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c > CMakeFiles/sortedList.dir/tests.c.i
 
 CMakeFiles/sortedList.dir/tests.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/sortedList.dir/tests.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/sortedList/tests.c -o CMakeFiles/sortedList.dir/tests.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/psiblvdegod/Desktop/123/homework/sortedList/tests.c -o CMakeFiles/sortedList.dir/tests.c.s
 
 # Object files for target sortedList
 sortedList_OBJECTS = \
 "CMakeFiles/sortedList.dir/main.c.o" \
 "CMakeFiles/sortedList.dir/list.c.o" \
-"CMakeFiles/sortedList.dir/queryProcessing.c.o" \
 "CMakeFiles/sortedList.dir/tests.c.o"
 
 # External object files for target sortedList
@@ -137,11 +122,10 @@ sortedList_EXTERNAL_OBJECTS =
 
 sortedList: CMakeFiles/sortedList.dir/main.c.o
 sortedList: CMakeFiles/sortedList.dir/list.c.o
-sortedList: CMakeFiles/sortedList.dir/queryProcessing.c.o
 sortedList: CMakeFiles/sortedList.dir/tests.c.o
 sortedList: CMakeFiles/sortedList.dir/build.make
 sortedList: CMakeFiles/sortedList.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable sortedList"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable sortedList"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sortedList.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,6 +137,6 @@ CMakeFiles/sortedList.dir/clean:
 .PHONY : CMakeFiles/sortedList.dir/clean
 
 CMakeFiles/sortedList.dir/depend:
-	cd /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/psiblvdegod/Desktop/sortedList /Users/psiblvdegod/Desktop/sortedList /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles/sortedList.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/psiblvdegod/Desktop/123/homework/sortedList /Users/psiblvdegod/Desktop/123/homework/sortedList /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles/sortedList.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/sortedList.dir/depend
 

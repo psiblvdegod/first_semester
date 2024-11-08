@@ -57,10 +57,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/sortedList
+CMAKE_SOURCE_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/sortedList/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/psiblvdegod/Desktop/123/homework/sortedList/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -177,30 +177,6 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/main.c.s
 .PHONY : main.c.s
 
-queryProcessing.o: queryProcessing.c.o
-.PHONY : queryProcessing.o
-
-# target to build an object file
-queryProcessing.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/queryProcessing.c.o
-.PHONY : queryProcessing.c.o
-
-queryProcessing.i: queryProcessing.c.i
-.PHONY : queryProcessing.i
-
-# target to preprocess a source file
-queryProcessing.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/queryProcessing.c.i
-.PHONY : queryProcessing.c.i
-
-queryProcessing.s: queryProcessing.c.s
-.PHONY : queryProcessing.s
-
-# target to generate assembly for a file
-queryProcessing.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sortedList.dir/build.make CMakeFiles/sortedList.dir/queryProcessing.c.s
-.PHONY : queryProcessing.c.s
-
 tests.o: tests.c.o
 .PHONY : tests.o
 
@@ -240,9 +216,6 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... queryProcessing.o"
-	@echo "... queryProcessing.i"
-	@echo "... queryProcessing.s"
 	@echo "... tests.o"
 	@echo "... tests.i"
 	@echo "... tests.s"
