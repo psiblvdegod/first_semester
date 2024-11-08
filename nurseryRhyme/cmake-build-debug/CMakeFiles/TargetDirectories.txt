@@ -1,0 +1,3 @@
+/Users/psiblvdegod/Desktop/123/homework/nurseryRhyme/cmake-build-debug/CMakeFiles/nurseryRhyme.dir
+/Users/psiblvdegod/Desktop/123/homework/nurseryRhyme/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/psiblvdegod/Desktop/123/homework/nurseryRhyme/cmake-build-debug/CMakeFiles/rebuild_cache.dir
