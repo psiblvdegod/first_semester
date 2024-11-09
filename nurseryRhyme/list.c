@@ -94,9 +94,9 @@ void deleteElement(List * list, Position * mainPosition, bool * errorCode) {
 void deleteList(List ** list, bool * errorCode) {
     ListElement * cleaner = getFirst(*list, errorCode);
     while (listSize(*list)) {
-        ListElement * temp = cleaner;
+        Position temp = cleaner;
         cleaner = cleaner->next;
-        free(temp);
+        deleteElement(*list, &temp, errorCode);
     }
     *list == NULL;
 }

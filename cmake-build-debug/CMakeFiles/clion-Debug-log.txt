@@ -1,1 +1,0 @@
-CMakeLists.txt not found in /Users/psiblvdegod/Desktop/123/homework Select CMakeLists.txt

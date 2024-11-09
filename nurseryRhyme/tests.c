@@ -11,7 +11,6 @@ bool listTests() {
     }
     addElement(list, &mainPointer, 10, &errorCode);
     addElement(list, &mainPointer, 20, &errorCode);
-    addElement(list, &mainPointer, 30, &errorCode);
     Value test1 = getValue(getNext(getLast(list, &errorCode), &errorCode), &errorCode);
     Value test2 = getValue(getPrevious(list, getFirst(list, &errorCode), &errorCode), &errorCode);
     bool test3 = listSize(list) == 2;
@@ -19,6 +18,6 @@ bool listTests() {
     Position pos2 = getLast(list, &errorCode);
     deleteElement(list, &pos2, &errorCode);
     deleteElement(list, &pos1, &errorCode);
-    //deleteList(&list, &errorCode);
+    deleteList(&list, &errorCode);
     return test1 == 10 && test2 == 20 && test3 && !errorCode;
 }
