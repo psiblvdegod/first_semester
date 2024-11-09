@@ -12,76 +12,18 @@ struct List {
 };
 
 List * createList(bool * errorCode) {
-    ListElement * guardian = calloc(1, sizeof(ListElement));
     List * list = calloc(1, sizeof(List));
-    if (guardian == NULL || list == NULL) {
+    if (list == NULL) {
         *errorCode = true;
         return NULL;
     }
-    guardian->next = NULL;
-    list->head = guardian;
+    list->head = NULL;
     list->listSize = 0;
     return list;
 }
 
-void addElement(List * list, Position * mainPosition, Value value, bool * errorCode) {
-    ListElement * position = *mainPosition;
-    ListElement * newElement = calloc(1, sizeof(ListElement));
-    if (newElement == NULL) {
-        *errorCode = true;
-        return;
-    }
-    newElement->value = value;
-    if (position != NULL) {
-        if (position->next != NULL) {
-            (*mainPosition)->next->previous = newElement;
-        }
-        newElement->previous = position;
-        newElement->next = position->next;
-        (*mainPosition)->next = newElement;
-    }
-    else {
-        newElement->previous = list->head;
-        newElement->previous->next = newElement;
-        newElement->next = NULL; //СКОРЕЕ ВСЕГО НЕ НУЖНО
-        *mainPosition = newElement;
-    }
-    ++list->listSize;
-    //*mainPosition = newElement;
-}
-
-void deleteElement(List * list, Position * mainPosition, bool * errorCode) {
-    ListElement * position = *mainPosition;
-    if (position == NULL) {
-        *errorCode = true;
-        return;
-    }
-    position->previous->next = position->next;
-    if (position->next != NULL) {
-        position->next->previous = position->previous;
-    }
-    if (position->previous->previous != NULL) {
-        *mainPosition = position->previous;
-    }
-    else {
-        *mainPosition = NULL;
-    }
-    free(position);
-    --list->listSize;
-}
-
 int listSize(List * list) {
     return list->listSize;
-}
-
-void deleteList(List ** list) {
-    ListElement * cleaner = (*list)->head;
-    while (cleaner->next != NULL) {
-        ListElement * temp = cleaner;
-        cleaner = cleaner->next;
-        free(temp);
-    }
-    *list == NULL;
 }
 
 Value getValue(Position position, bool * errorCode) {
@@ -92,28 +34,9 @@ Value getValue(Position position, bool * errorCode) {
     return ((ListElement *)position)->value;
 }
 
-//Position getFirst(List * list, bool * errorCode) {
-//    return (Position) (list->head->next);
-//}
-
-Position getFirst(List * list, bool * errorCode) {
-    return (Position) (list->head->next);
-}
-
-Position getLast(List * list, bool * errorCode) {
-    if (list->head->next == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    ListElement * lastElement = list->head->next;
-    while (lastElement->next != NULL) {
-        lastElement = lastElement->next;
-    }
-    return (Position) lastElement;
-}
 
 Position getNext(Position position, bool * errorCode) {
-    if (((ListElement *) position)->next == NULL) {
+    if (position == NULL) {
         *errorCode = true;
         return NULL;
     }
@@ -121,9 +44,76 @@ Position getNext(Position position, bool * errorCode) {
 }
 
 Position getPrevious(List * list, Position position, bool * errorCode) {
-    if (((ListElement *) position)->previous == list->head) {
+    if (position == NULL) {
         *errorCode = true;
         return NULL;
     }
     return (Position) ((ListElement *) position)->previous;
 }
+
+Position getFirst(List * list, bool * errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    return (Position) (list->head);
+}
+
+Position getLast(List * list, bool * errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    return (Position) (getFirst(list, errorCode))->previous;
+}
+
+void addElement(List * list, Position position, Value value, bool * errorCode) {
+    position = (ListElement *) position;
+    ListElement * newElement = calloc(1, sizeof(ListElement));
+    if (newElement == NULL) {
+        *errorCode = true;
+        return;
+    }
+    newElement->value = value;
+    if (listSize(list) == 0) {
+        newElement->next = newElement;
+        newElement->previous = newElement;
+        list->head = newElement;
+    }
+    else {
+        newElement->previous = position;
+        newElement->next = position->next;
+        position->next->previous = newElement;
+        position->next = newElement;
+    }
+    ++list->listSize;
+}
+
+void deleteElement(List * list, Position position, bool * errorCode) {
+    position = (ListElement *) position;
+    if (position == NULL) {
+        *errorCode = true;
+        return;
+    }
+    position->previous->next = position->next;
+    position->next->previous = position->previous;
+    if (position == getFirst(list, errorCode)) {
+        list->head = position->next;
+    }
+    free(position);
+    --list->listSize;
+    if (listSize(list) == 0) {
+        list->head = NULL;
+    }
+}
+
+void deleteList(List ** list, bool * errorCode) {
+    ListElement * cleaner = getFirst(*list, errorCode);
+    while (listSize(*list)) {
+        Position temp = cleaner;
+        cleaner = cleaner->next;
+        deleteElement(*list, temp, errorCode);
+    }
+    *list == NULL;
+}
+

@@ -2,18 +2,20 @@
 
 bool listTests() {
     bool errorCode = false;
-    List * testList = createList(&errorCode);
-    Position position = NULL;
-    addElement(testList, &position, 1, &errorCode);
-    addElement(testList, &position, 2, &errorCode);
-
-    Position testGetFirst = getFirst(testList, &errorCode);
-    Position testGetLast = getLast(testList, &errorCode);
-
-    Value testGetNext = getValue(getNext(testGetFirst, &errorCode), &errorCode);
-    Value testGetPrevious = getValue(getPrevious(testList, testGetLast, &errorCode), &errorCode);
-    Position first = getFirst(testList, &errorCode);
-    deleteElement(testList, &first, &errorCode);
-    deleteList(&testList);
-    return !errorCode && testGetNext == 2 && testGetPrevious == 1;
+    List * list = createList(&errorCode);
+    Position mainPointer = NULL;
+    if (list == NULL) {
+        return false;
+    }
+    addElement(list, mainPointer, 10, &errorCode);
+    addElement(list, mainPointer, 20, &errorCode);
+    Value test1 = getValue(getNext(getLast(list, &errorCode), &errorCode), &errorCode);
+    Value test2 = getValue(getPrevious(list, getFirst(list, &errorCode), &errorCode), &errorCode);
+    bool test3 = listSize(list) == 2;
+    Position pos1 = getFirst(list, &errorCode);
+    Position pos2 = getLast(list, &errorCode);
+    deleteElement(list, pos2, &errorCode);
+    deleteElement(list, pos1, &errorCode);
+    deleteList(&list, &errorCode);
+    return test1 == 10 && test2 == 20 && test3 && !errorCode;
 }

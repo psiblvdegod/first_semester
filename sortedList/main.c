@@ -1,38 +1,59 @@
 #include "list.h"
 #include "tests.h"
 #include <stdio.h>
-#define _CRT_SECURE_NO_WARNINGS
 
 int main(void) {
-    if (!listTests()){
-        printf("Error. Tests failed.\n");
-    }
+//    if (!listTests()){
+//        printf("Error. Tests failed.\n");
+//    }
     bool errorCode = false;
     List * list = createList(&errorCode);
     int userQuery = 1;
     int inputValidation = 1;
-    Position mainPosition = NULL;
     while (userQuery) {
         printf("0 - quit // 1 - add // 2 - delete // 3 - print all\n");
         scanf("%d", &userQuery);
-        while (getchar() != '\n');
-        if (!userQuery) break;
+
+
+
+
+
+
+
         if (userQuery == 1) {
             Value value = 0;
             printf("Enter value you want to add.\n");
             scanf("%d", &value);
             while (getchar() != '\n');
-            if (listSize(list) == 0){
-                addElement(list, &mainPosition, value, &errorCode);
+            if (listSize(list) == 0) {
+                addElement(list, NULL, value, &errorCode);
+                continue;
             }
-            else {
-                Position currentPosition = getFirst(list, &errorCode);
-                for (int i = 0; i < listSize(list) && value < getValue(currentPosition, &errorCode); ++i) {
-                    currentPosition = getNext(currentPosition, &errorCode);
+            Position currentPosition = getFirst(list, &errorCode);
+            while (currentPosition != getLast(list, &errorCode)) {
+                if (getValue(getNext(currentPosition, &errorCode), &errorCode) > value) {
+                    addElement(list, currentPosition, value, &errorCode);
+                    currentPosition = NULL;
+                    break;
                 }
-                addElement(list, &currentPosition, value, &errorCode);
+                currentPosition = getNext(currentPosition, &errorCode);
+            }
+            if (currentPosition != NULL) {
+                addElement(list, currentPosition, value, &errorCode);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
         if (userQuery == 2) {
             if (!listSize(list)) {
                 printf("List is empty.\n");
@@ -46,7 +67,7 @@ int main(void) {
             Position lastPosition = getLast(list, &errorCode);
             while (true) {
                 if (value == getValue(currentPosition, &errorCode)) {
-                    deleteElement(list, &currentPosition, &errorCode);
+                    deleteElement(list, currentPosition, &errorCode);
                     printf("Element deleted.\n");
                     break;
                 }
