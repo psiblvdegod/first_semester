@@ -23,7 +23,7 @@ void deleteList(List ** list, bool * errorCode);
 Value getValue(Position position, bool * errorCode);
 
 //if there is only one element in the list, these functions return a pointer to it
-Position getFirst(List * list, bool * errorCode);
+Position getGuardian(List * list, bool * errorCode);
 Position getLast(List * list, bool * errorCode);
 Position getNext(Position position, bool * errorCode);
 Position getPrevious(List * list, Position position, bool * errorCode);

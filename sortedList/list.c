@@ -13,12 +13,16 @@ struct List {
 
 List * createList(bool * errorCode) {
     List * list = calloc(1, sizeof(List));
-    if (list == NULL) {
+    ListElement * guardian = calloc(1 , sizeof(ListElement));
+    if (list == NULL || guardian == NULL) {
         *errorCode = true;
         return NULL;
     }
-    list->head = NULL;
-    list->listSize = 0;
+    guardian->value = 0;
+    list->head = guardian;
+    guardian->next = guardian;
+    guardian->previous = guardian;
+    list->listSize = 1;
     return list;
 }
 
@@ -51,7 +55,7 @@ Position getPrevious(List * list, Position position, bool * errorCode) {
     return (Position) ((ListElement *) position)->previous;
 }
 
-Position getFirst(List * list, bool * errorCode) {
+Position getGuardian(List * list, bool * errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return NULL;
@@ -64,10 +68,14 @@ Position getLast(List * list, bool * errorCode) {
         *errorCode = true;
         return NULL;
     }
-    return (Position) (getFirst(list, errorCode))->previous;
+    return (Position) (getGuardian(list, errorCode))->previous;
 }
 
 void addElement(List * list, Position position, Value value, bool * errorCode) {
+    if (position == NULL) {
+        *errorCode = true;
+        return;
+    }
     position = (ListElement *) position;
     ListElement * newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
@@ -95,11 +103,11 @@ void deleteElement(List * list, Position position, bool * errorCode) {
         *errorCode = true;
         return;
     }
+    if (position == getGuardian(list, errorCode)) {
+        return;
+    }
     position->previous->next = position->next;
     position->next->previous = position->previous;
-    if (position == getFirst(list, errorCode)) {
-        list->head = position->next;
-    }
     free(position);
     --list->listSize;
     if (listSize(list) == 0) {
@@ -108,7 +116,7 @@ void deleteElement(List * list, Position position, bool * errorCode) {
 }
 
 void deleteList(List ** list, bool * errorCode) {
-    ListElement * cleaner = getFirst(*list, errorCode);
+    ListElement * cleaner = getGuardian(*list, errorCode);
     while (listSize(*list)) {
         Position temp = cleaner;
         cleaner = cleaner->next;

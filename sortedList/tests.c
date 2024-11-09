@@ -3,19 +3,15 @@
 bool listTests() {
     bool errorCode = false;
     List * list = createList(&errorCode);
-    Position mainPointer = NULL;
+    Position position = getGuardian(list, &errorCode);
     if (list == NULL) {
         return false;
     }
-    addElement(list, mainPointer, 10, &errorCode);
-    addElement(list, mainPointer, 20, &errorCode);
-    Value test1 = getValue(getNext(getLast(list, &errorCode), &errorCode), &errorCode);
-    Value test2 = getValue(getPrevious(list, getFirst(list, &errorCode), &errorCode), &errorCode);
-    bool test3 = listSize(list) == 2;
-    Position pos1 = getFirst(list, &errorCode);
-    Position pos2 = getLast(list, &errorCode);
-    deleteElement(list, pos2, &errorCode);
+    addElement(list, position, 10, &errorCode);
+    addElement(list, getNext(position, &errorCode), 20, &errorCode);
+    Value test1 = getValue(getPrevious(list, getLast(list, &errorCode), &errorCode), &errorCode);
+    bool test2 = listSize(list) == 3;
+    Position pos1 = getNext(getGuardian(list, &errorCode), &errorCode);
     deleteElement(list, pos1, &errorCode);
-    deleteList(&list, &errorCode);
-    return test1 == 10 && test2 == 20 && test3 && !errorCode;
+    return test1 == 10 && test2  && !errorCode;
 }

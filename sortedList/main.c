@@ -3,23 +3,19 @@
 #include <stdio.h>
 
 int main(void) {
-//    if (!listTests()){
-//        printf("Error. Tests failed.\n");
-//    }
+    if (!listTests()){
+        printf("Error. Tests failed.\n");
+    }
     bool errorCode = false;
     List * list = createList(&errorCode);
     int userQuery = 1;
-    int inputValidation = 1;
     while (userQuery) {
+        if (errorCode) {
+            printf("Error.\n");
+            return -1;
+        }
         printf("0 - quit // 1 - add // 2 - delete // 3 - print all\n");
         scanf("%d", &userQuery);
-
-
-
-
-
-
-
         if (userQuery == 1) {
             Value value = 0;
             printf("Enter value you want to add.\n");
@@ -29,7 +25,7 @@ int main(void) {
                 addElement(list, NULL, value, &errorCode);
                 continue;
             }
-            Position currentPosition = getFirst(list, &errorCode);
+            Position currentPosition = getGuardian(list, &errorCode);
             while (currentPosition != getLast(list, &errorCode)) {
                 if (getValue(getNext(currentPosition, &errorCode), &errorCode) > value) {
                     addElement(list, currentPosition, value, &errorCode);
@@ -42,18 +38,6 @@ int main(void) {
                 addElement(list, currentPosition, value, &errorCode);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
         if (userQuery == 2) {
             if (!listSize(list)) {
                 printf("List is empty.\n");
@@ -61,9 +45,9 @@ int main(void) {
             }
             Value value = 0;
             printf("Enter value you want to delete.\n");
-            inputValidation = scanf("%d", &value);
+            scanf("%d", &value);
             while (getchar() != '\n');
-            Position currentPosition = getFirst(list, &errorCode);
+            Position currentPosition = getNext(getGuardian(list, &errorCode), &errorCode);
             Position lastPosition = getLast(list, &errorCode);
             while (true) {
                 if (value == getValue(currentPosition, &errorCode)) {
@@ -79,17 +63,18 @@ int main(void) {
             }
         }
         if (userQuery == 3) {
-            if (!listSize(list)) {
+            if (listSize(list) <= 1) {
                 printf("List is empty.\n");
                 continue;
             }
             printf("Your list:\n");
-            Position currentPosition = getFirst(list, &errorCode);
-            for (int i = 0; i < listSize(list); ++i) {
+            Position currentPosition = getNext(getGuardian(list, &errorCode), &errorCode);
+            for (int i = 0; i < listSize(list) - 1; ++i) {
                 printf("%d ", getValue(currentPosition, &errorCode));
                 currentPosition = getNext(currentPosition, &errorCode);
             }
             printf("\n");
         }
     }
+    deleteList(&list, &errorCode);
 }
