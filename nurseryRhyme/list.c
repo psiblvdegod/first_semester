@@ -27,18 +27,10 @@ int listSize(List * list) {
 }
 
 Position getNext(Position position, bool * errorCode) {
-//    if (((ListElement *) position)->next == NULL) {
-//        *errorCode = true;
-//        return NULL;
-//    }
     return (Position) ((ListElement *) position)->next;
 }
 
 Position getPrevious(List * list, Position position, bool * errorCode) {
-//    if (((ListElement *) position)->previous == list->head) {
-//        *errorCode = true;
-//        return NULL;
-//    }
     return (Position) ((ListElement *) position)->previous;
 }
 
@@ -74,16 +66,14 @@ void addElement(List * list, Position * mainPosition, Value value, bool * errorC
     *mainPosition = newElement;
 }
 
-void deleteElement(List * list, Position * mainPosition, bool * errorCode) {
-    ListElement * position = *mainPosition;
+void deleteElement(List * list, Position position, bool * errorCode) {
+    position = (ListElement *) position;
     if (position == NULL) {
         *errorCode = true;
         return;
     }
     position->previous->next = position->next;
-   // if (position->next != NULL) {
     position->next->previous = position->previous;
-   // }
    if (position == getFirst(list, errorCode)) {
        list->head = position->next;
    }
@@ -96,7 +86,7 @@ void deleteList(List ** list, bool * errorCode) {
     while (listSize(*list)) {
         Position temp = cleaner;
         cleaner = cleaner->next;
-        deleteElement(*list, &temp, errorCode);
+        deleteElement(*list, temp, errorCode);
     }
     *list == NULL;
 }

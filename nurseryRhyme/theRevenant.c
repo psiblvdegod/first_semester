@@ -1,11 +1,10 @@
 #include "theRevenant.h"
-#include "list.h"
 
 int getPositionOfTheRevenant (int mortality, int victimsAmount, bool * errorCode) {
     List * list = createList(errorCode);
     if (list == NULL) {
         *errorCode = true;
-        return -1;
+        return 0;
     }
     Position creatingListPosition = NULL;
     for (int i = 1; i <= victimsAmount; ++i) {
@@ -17,7 +16,7 @@ int getPositionOfTheRevenant (int mortality, int victimsAmount, bool * errorCode
         if (j == mortality) {
             Position temp = currentPosition;
             currentPosition = getNext(currentPosition, errorCode);
-            deleteElement(list, &temp, errorCode);
+            deleteElement(list, temp, errorCode);
             j = 0;
             continue;
         }
