@@ -1,8 +1,3 @@
-//
-// Created by psiblvdegod on 09.11.2024.
-//
+#include "mergeSort.h"
 
-#ifndef MERGESORT_TESTS_H
-#define MERGESORT_TESTS_H
-
-#endif //MERGESORT_TESTS_H
+bool mergeTest();

@@ -2,101 +2,63 @@
 
 typedef struct ListElement {
     Value value;
-    struct ListElement * next;
     struct ListElement * previous;
+    struct ListElement * next;
 } ListElement;
 
-struct List {
-    ListElement * head;
-    int listSize;
-};
+Node addElement(Node node, Value value, bool * errorCode) {
+    node = (ListElement *) node;
+    ListElement * newElement = calloc(1, sizeof(ListElement));
+    newElement->value = value;
+    newElement->previous = node;
+    newElement->next = NULL;
+    if (node != NULL) {
+        if (node->next != NULL) {
+            node->next->previous = newElement;
+        }
+        newElement->next = node->next;
+        node->next = newElement;
+    }
+    return (Node) newElement;
+}
 
-List * createList(bool * errorCode) {
-    List * list = calloc(1, sizeof(List));
-    if (list == NULL) {
+Node deleteElement(Node node, bool * errorCode) {
+    node = (ListElement *) node;
+    if (node == NULL) {
         *errorCode = true;
         return NULL;
     }
-    list->head = NULL;
-    list->listSize = 0;
-    return list;
-}
-
-int listSize(List * list) {
-    return list->listSize;
-}
-
-Position getNext(Position position, bool * errorCode) {
-    return (Position) ((ListElement *) position)->next;
-}
-
-Position getPrevious(List * list, Position position, bool * errorCode) {
-    return (Position) ((ListElement *) position)->previous;
-}
-
-Position getFirst(List * list, bool * errorCode) {
-    return (Position) (list->head);
-}
-
-Position getLast(List * list, bool * errorCode) {
-    return (Position) (getFirst(list, errorCode))->previous;
-}
-
-void addElement(List * list, Position * externalPosition, Value value, bool * errorCode) {
-    ListElement * position = *externalPosition;
-    ListElement * newElement = calloc(1, sizeof(ListElement));
-    if (newElement == NULL) {
-        *errorCode = true;
-        return;
+    if (node->next != NULL) {
+        node->next->previous = node->previous;
     }
-    newElement->value = value;
-    if (position == NULL) {
-        newElement->next = newElement;
-        newElement->previous = newElement;
-        list->head = newElement;
+    if (node->previous != NULL) {
+        node->previous->next = node->next;
+    }
+    Node previousElement = (Node) node->previous;
+    free(node);
+    return previousElement;
+}
+
+Node getNext(Node node, bool * errorCode) {
+    if (node == NULL) {
+        return NULL;
+    }
+    return ((ListElement *) node)->next;
+}
+
+Node getPrevious(Node node, bool * errorCode) {
+    if (node == NULL) {
+        return NULL;
+    }
+    return ((ListElement *) node)->previous;
+}
+
+
+Value getValue(Node node, bool * errorCode) {
+    if (node == NULL) {
+        *errorCode = true;
     }
     else {
-        newElement->previous = position;
-        newElement->next = position->next;
-        position->next->previous = newElement;
-        position->next = newElement;
+        return node->value;
     }
-    *externalPosition = newElement;
-    ++list->listSize;
-}
-
-void deleteElement(List * list, Position * externalPosition, bool * errorCode) {
-    ListElement * position = *externalPosition;
-    if (position == NULL) {
-        *errorCode = true;
-        return;
-    }
-    position->previous->next = position->next;
-    position->next->previous = position->previous;
-    if (position == getFirst(list, errorCode)) {
-        list->head = position->next;
-    }
-    if (list->listSize == 1) {
-        *externalPosition = NULL;
-    }
-    free(position);
-    --list->listSize;
-}
-
-void deleteList(List ** list, bool * errorCode) {
-    ListElement * cleaner = getFirst(*list, errorCode);
-    while (listSize(*list)) {
-        Position temp = cleaner;
-        cleaner = cleaner->next;
-        deleteElement(*list, &temp, errorCode);
-    }
-    *list = NULL;
-}
-
-Value getValue(Position position, bool * errorCode) {
-//    if (position == NULL) {
-//        //*errorCode = true;
-//        return;
-//    }
-    return ((ListElement *)position)->value;
 }

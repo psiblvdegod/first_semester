@@ -1,3 +1,4 @@
 #include "list.h"
+#include <string.h>
 
-List * merge(List * firstList, List * secondList, bool * errorCode);
+Node mergeSort(Node firstNode, Node secondNode, bool * errorCode);

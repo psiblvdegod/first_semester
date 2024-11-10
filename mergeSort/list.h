@@ -1,30 +1,19 @@
 #pragma once
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include "contact.h"
 
+typedef struct ListElement * Node;
+
 typedef Contact Value;
 
-typedef struct ListElement * Position;
+Node addElement(Node node, Value value, bool * errorCode);
 
-typedef struct List List;
+Node deleteElement(Node node, bool * errorCode);
 
-List * createList(bool * errorCode);
+Node getNext(Node node, bool * errorCode);
 
-//after adding moves position on new element
-void addElement(List * list, Position * position, Value value, bool * errorCode);
+Node getPrevious(Node node, bool * errorCode);
 
-void deleteElement(List * list, Position * position, bool * errorCode);
+Value getValue(Node node, bool * errorCode);
 
-int listSize(List * list);
-
-void deleteList(List ** list, bool * errorCode);
-
-Value getValue(Position position, bool * errorCode);
-
-//if there is only one element in the list, these functions return a pointer to it
-Position getFirst(List * list, bool * errorCode);
-Position getLast(List * list, bool * errorCode);
-Position getNext(Position position, bool * errorCode);
-Position getPrevious(List * list, Position position, bool * errorCode);

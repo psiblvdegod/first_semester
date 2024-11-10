@@ -1,34 +1,29 @@
 #include "mergeSort.h"
-/*
-List * merge(List * firstList, List * secondList, bool * errorCode) {
-    List * mergedList = createList(errorCode);
-    Position positionMergedList = NULL;
-    Position positionFirst = getFirst(firstList, errorCode);
-    Position positionSecond = getFirst(secondList, errorCode);
 
-    while (positionFirst != NULL || positionSecond != NULL) {
-        Value valueFromFirst = getValue(positionFirst, errorCode);
-        Value valueFromSecond = getValue(positionSecond, errorCode);
-        if (positionFirst == NULL) {
-            while (positionSecond != NULL) {
-                addElement(mergedList, &positionSecond, )
-            }
+Node mergeSort(Node firstNode, Node secondNode, bool * errorCode) {
+    Node mergedList = NULL;
+    do {
+        if (firstNode == NULL) {
+            mergedList = addElement(mergedList, getValue(secondNode, errorCode), errorCode);
+            secondNode = getPrevious(secondNode, errorCode);
+            continue;
         }
-        if (valueFromFirst < valueFromSecond) {
-            addElement(mergedList, &positionMergedList, valueFromFirst, errorCode);
-            if (positionFirst != getLast(firstList, errorCode)) {
-                positionFirst = getNext(positionFirst, errorCode);
-            }
+        if (secondNode == NULL) {
+            mergedList = addElement(mergedList, getValue(firstNode, errorCode), errorCode);
+            firstNode = getPrevious(firstNode, errorCode);
+            continue;
+        }
+        char * firstNodeKey = getValue(firstNode, errorCode).key;
+        char * secondNodeKey = getValue(secondNode, errorCode).key;
+        bool comparisonResult = strcmp(firstNodeKey, secondNodeKey) > 0 ? true : false;
+        if (comparisonResult) {
+            mergedList = addElement(mergedList, getValue(firstNode, errorCode), errorCode);
+            firstNode = getPrevious(firstNode, errorCode);
         }
         else {
-            addElement(mergedList, &positionMergedList, valueFromSecond, errorCode);
-            if (positionSecond != getLast(secondList, errorCode)) {
-                positionSecond = getNext(positionSecond, errorCode);
-            }
+            mergedList = addElement(mergedList, getValue(secondNode, errorCode), errorCode);
+            secondNode = getPrevious(secondNode, errorCode);
         }
-
-    }
-    //deleteList(&firstList, errorCode);
-    //deleteList(&secondList, errorCode);
+    } while(firstNode != NULL || secondNode != NULL);
     return mergedList;
-}*/
+}
