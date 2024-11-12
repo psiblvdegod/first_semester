@@ -8,6 +8,7 @@ enum {byName = 0, byNumber = 1} sortingCriteria;
 int main(void) {
     mergeTest();
     bool errorCode = false;
+    printf("enter sorting criteria 0/1 : name/number\n");
     scanf ("%d", &sortingCriteria);
     FILE * file = fopen("/Users/psiblvdegod/Desktop/123/homework/mergeSort/contacts.txt", "r");
     Node contacts = NULL;
@@ -18,6 +19,6 @@ int main(void) {
         Contact newContact = {sortingCriteria? number : name, sortingCriteria? name : number};
         contacts = addElement(contacts, newContact, &errorCode);
     }
-    //mergeSort();
+    contacts = mergeSort(contacts, &errorCode);
     fclose(file);
 }

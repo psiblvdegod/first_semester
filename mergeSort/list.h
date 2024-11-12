@@ -9,11 +9,7 @@ typedef Contact Value;
 
 Node addElement(Node node, Value value, bool * errorCode);
 
-Node deleteElement(Node node, bool * errorCode);
-
 Node getNext(Node node, bool * errorCode);
-
-Node getPrevious(Node node, bool * errorCode);
 
 Value getValue(Node node, bool * errorCode);
 
