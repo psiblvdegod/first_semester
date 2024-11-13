@@ -1,6 +1,7 @@
-a 1
-c 3
-b 2
-d 4
-f 6
-g 7
+Bane 005
+Pudge 007
+Axe 003
+Invoker 002
+Anti-Mage 001
+Morphling 004
+Techies 009
