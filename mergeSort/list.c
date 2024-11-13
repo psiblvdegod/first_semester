@@ -28,3 +28,11 @@ Value getValue(Node node, bool * errorCode) {
         return node->value;
     }
 }
+
+void disposeNode(Node node, bool * errorCode) {
+    while (node != NULL) {
+        Node temp = node;
+        node = getNext(node, errorCode);
+        free(temp);
+    }
+}

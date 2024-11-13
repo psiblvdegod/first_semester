@@ -3,8 +3,6 @@
 #include "mergeSort.h"
 #include "tests.h"
 
-enum {byName = 0, byNumber = 1} sortingCriteria;
-
 void printAllContacts(Node node, bool * errorCode) {
     if (node == NULL) {
         printf("File is empty.\n");
@@ -17,11 +15,17 @@ void printAllContacts(Node node, bool * errorCode) {
     }
 }
 
+enum {byName = 0, byNumber = 1} sortingCriteria;
+
+
 int main(void) {
-    mergeTest();
+    if (!mergeTest() || !mergeSortTest()) {
+        printf("Error. Tests failed.\n");
+        return -1;
+    }
     bool errorCode = false;
-    printf("enter sorting criteria 0/1 : name/number\n");
-    scanf ("%d", &sortingCriteria);
+    printf("enter sorting criteria\nby number - 1\nby name - any other symbol\n");
+    scanf("%d", &sortingCriteria);
     FILE * file = fopen("/Users/psiblvdegod/Desktop/123/homework/mergeSort/contacts.txt", "r");
     Node contacts = NULL;
     while(!feof(file)) {
@@ -32,6 +36,10 @@ int main(void) {
         contacts = addElement(contacts, newContact, &errorCode);
     }
     contacts = mergeSort(contacts, &errorCode);
+    if (errorCode) {
+        printf("Error.\n");
+        return -1;
+    }
     printAllContacts(contacts, &errorCode);
     fclose(file);
 }

@@ -39,12 +39,14 @@ Node getMiddle(Node node, bool * errorCode) {
     return middle;
 }
 
-Node reverse(Node node, bool * errorCode) {
+Node reverseList(Node node, bool * errorCode) {
     Node reversedNode = NULL;
+    Node temp = node;
     while (node != NULL) {
         reversedNode = addElement(reversedNode, getValue(node, errorCode), errorCode);
         node = getNext(node, errorCode);
     }
+    disposeNode(temp, errorCode);
     return reversedNode;
 }
 
@@ -52,7 +54,6 @@ Node mergeSort(Node head, bool * errorCode) {
     if (getNext(head, errorCode) == NULL) {
         return head;
     }
-
     Node firstNode = NULL;
     Node secondNode = NULL;
     Node middle = getMiddle(head, errorCode);
@@ -65,10 +66,8 @@ Node mergeSort(Node head, bool * errorCode) {
         secondNode = addElement(secondNode, getValue(tempNode, errorCode), errorCode);
         tempNode = getNext(tempNode, errorCode);
     }
-
-    firstNode =  reverse(mergeSort(firstNode, errorCode), errorCode);
-    secondNode = reverse(mergeSort(secondNode, errorCode), errorCode);
-
+    firstNode =  reverseList(mergeSort(firstNode, errorCode), errorCode);
+    secondNode = reverseList(mergeSort(secondNode, errorCode), errorCode);
     return merge(firstNode, secondNode, errorCode);
 }
 
