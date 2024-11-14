@@ -11,21 +11,18 @@ Tree * buildTree(char * string, bool * errorCode) {
         Node * previousOperation = getHead(stack, errorCode);
         Node * leftChild = getChild(previousOperation, left, errorCode);
         Node * rightChild = getChild(previousOperation, right, errorCode);
-        if (leftChild != NULL && rightChild != NULL) {
-            pop(stack, errorCode);
-        }
-        previousOperation = getHead(stack, errorCode);
-        leftChild = getChild(previousOperation, left, errorCode);
-        rightChild = getChild(previousOperation, right, errorCode);
-        if (getValue(node, errorCode) <= 47) {
-            push(stack, node, errorCode);
-        }
+        bool addChildFlag = false; // no elif xDD
         if (leftChild == NULL) {
             addChild(previousOperation, node, left, errorCode);
-            continue;
+            addChildFlag = true;
         }
-        if (rightChild == NULL) {
+        if (rightChild == NULL && !addChildFlag) {
             addChild(previousOperation, node, right, errorCode);
+            pop(stack, errorCode);
+            addChildFlag = true;
+        }
+        if (getValue(node, errorCode) <= 47) {
+            push(stack, node, errorCode);
         }
     }
     return tree;
