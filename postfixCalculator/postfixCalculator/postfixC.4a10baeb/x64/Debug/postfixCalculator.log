@@ -1,7 +1,0 @@
-﻿  calculator.c
-  main.c
-  stack.c
-  tests.c
-  Создание кода...
-D:\Development\homework\postfixCalculator\postfixCalculator\calculator.c(46,1): warning C4716: calculator: должна возвращать значение
-  postfixCalculator.vcxproj -> D:\Development\homework\postfixCalculator\postfixCalculator\x64\Debug\postfixCalculator.exe
