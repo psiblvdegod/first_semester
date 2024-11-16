@@ -2,10 +2,6 @@
 #include <stdlib.h>
 
 Tree * buildTree(FILE * stream, bool * errorCode) {
-    typedef enum {
-        digit,
-        operation,
-    } ValueType;
 
     Tree * tree = NULL;
     Stack * stack = createStack(errorCode);
@@ -13,21 +9,16 @@ Tree * buildTree(FILE * stream, bool * errorCode) {
     while (!feof(stream)) {
         Node * node = NULL;
         int valueFromStream = getc(stream);
-        ValueType valueType;
+        bool isDigit = false;
         if (valueFromStream == ' ' || valueFromStream == '(' || valueFromStream == ')') {
             continue;
         }
         if ('0' <= valueFromStream && valueFromStream <= '9') {
             ungetc(valueFromStream, stream);
             fscanf(stream, "%d", &valueFromStream);
-            valueType = digit;
+            isDigit = true;
         }
-        else {
-            valueType = operation;
-        }
-
         node = createNode(valueFromStream, errorCode);
-
         if (tree == NULL) {
             tree = createTree(node, errorCode);
             push(stack, node, errorCode);
@@ -48,7 +39,7 @@ Tree * buildTree(FILE * stream, bool * errorCode) {
             pop(stack, errorCode);
             addChildFlag = true;
         }
-        if (valueType == operation) {
+        if (!isDigit) {
             push(stack, node, errorCode);
         }
     }

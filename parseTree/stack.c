@@ -1,7 +1,7 @@
 #include "stack.h"
 #include <stdlib.h>
 
-typedef struct {
+typedef struct StackElement {
     StackElementValue value;
     struct StackElement * previous;
 } StackElement;

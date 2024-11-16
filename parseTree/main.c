@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "tree.h"
 #include "parse.h"
 
@@ -11,6 +10,7 @@ int main(void) {
         return -1;
     }
     Tree * tree = buildTree(file, &errorCode);
-    //printAllNodes(getRoot(tree), &errorCode);
-    printf("%d ", calculateTreeExample(tree, &errorCode));
+    printf("prefix tree notation:\n");
+    printAllNodes(getRoot(tree), &errorCode);
+    printf("\ncalculating result: %d ", calculateTreeExample(tree, &errorCode));
 }

@@ -7,16 +7,19 @@ typedef struct Node {
     struct Node * rightChild;
 } Node;
 
+typedef struct Tree {
+    Node * root;
+} Tree;
+
 Node * createNode(Value value, bool * errorCode) {
     Node * node = calloc(1, sizeof(Node));
     if (node == NULL) {
         *errorCode = true;
+        return NULL;
     }
-    else {
-        node->value = value;
-        node->leftChild = NULL;
-        node->rightChild = NULL;
-    }
+    node->value = value;
+    node->leftChild = NULL;
+    node->rightChild = NULL;
     return node;
 }
 
@@ -34,6 +37,9 @@ void addChild(Node * parent, Node * child, Position position, bool * errorCode) 
 }
 
 Node * getRoot(Tree * tree) {
+    if (tree == NULL) {
+        return NULL;
+    }
     return tree->root;
 }
 
