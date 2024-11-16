@@ -5,14 +5,11 @@
 
 int main(void) {
     bool errorCode = false;
-    FILE * file = fopen("/Users/psiblvdegod/Desktop/123/homework/parseTree/text.txt", "r");
+    FILE * file = fopen("/Users/psiblvdegod/Desktop/homework/parseTree/text.txt", "r");
     if (file == NULL) {
         printf("Error. File not found.\n");
         return -1;
     }
-    char * string = calloc(50, sizeof(char));
-    fscanf(file, "%s", string);
-    Tree * tree = buildTree(string, &errorCode);
-    printf("123");
-    free(string);
+    Tree * tree = buildTree(file, &errorCode);
+    printAllNodes(getRoot(tree), &errorCode);
 }

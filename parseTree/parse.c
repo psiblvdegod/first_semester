@@ -1,16 +1,44 @@
 #include "parse.h"
 #include <stdlib.h>
-#include <stdio.h>
 
-Tree * buildTree(char * string, bool * errorCode) {
-    Tree * tree = createTree(createNode(string[0], errorCode), errorCode);
+Tree * buildTree(FILE * stream, bool * errorCode) {
+
+    typedef enum {
+        digit,
+        operation,
+    } ValueType;
+
+    Tree * tree = NULL;
     Stack * stack = createStack(errorCode);
-    push(stack, getRoot(tree), errorCode);
-    for (int i = 1; string[i] != '\0'; ++i) {
-        Node * node = createNode(string[i], errorCode);
+
+    while (!feof(stream)) {
+        Node * node = NULL;
+        int valueFromStream = getc(stream);
+        ValueType valueType;
+        if (valueFromStream == ' ' || valueFromStream == '(' || valueFromStream == ')') {
+            continue;
+        }
+        if ('0' <= valueFromStream && valueFromStream <= '9') {
+            ungetc(valueFromStream, stream);
+            fscanf(stream, "%d", &valueFromStream);
+            valueType = digit;
+        }
+        else {
+            valueType = operation;
+        }
+
+        node = createNode(valueFromStream, errorCode);
+
+        if (tree == NULL) {
+            tree = createTree(node, errorCode);
+            push(stack, node, errorCode);
+            continue;
+        }
+
         Node * previousOperation = getHead(stack, errorCode);
         Node * leftChild = getChild(previousOperation, left, errorCode);
         Node * rightChild = getChild(previousOperation, right, errorCode);
+
         bool addChildFlag = false; // no elif xDD
         if (leftChild == NULL) {
             addChild(previousOperation, node, left, errorCode);
@@ -21,17 +49,41 @@ Tree * buildTree(char * string, bool * errorCode) {
             pop(stack, errorCode);
             addChildFlag = true;
         }
-        if (getValue(node, errorCode) <= 47) {
+        if (valueType == operation) {
             push(stack, node, errorCode);
         }
     }
     return tree;
 }
 
-void traversal(Tree tree, bool * errorCode) {
-    Node * leaper = tree.root;
-    while (getChild(leaper, left, errorCode) != NULL) {
-        printf("%c", getValue(leaper, errorCode));
-        leaper = getChild(leaper, left, errorCode);
+void printAllNodes(Node * node, bool * errorCode) {
+    if (node == NULL) {
+        return;
     }
+    if (getChild(node, left, errorCode) != NULL) {
+        printf("%c ", getValue(node, errorCode));
+    }
+    else {
+        printf("%d ", getValue(node ,errorCode));
+    }
+    printAllNodes(getChild(node, left, errorCode), errorCode);
+    printAllNodes(getChild(node, right, errorCode), errorCode);
+}
+
+void calculateTreeExample(Node * node, Value lastValue, int currentValue, bool * errorCode) {
+    if (node == NULL) {
+        return;
+    }
+    int operand1, operand2;
+    char operation;
+    if (getChild(node, left, errorCode) == NULL) {
+        operand1 = currentValue;
+        operation = (char) lastValue;
+        operand2 = getValue(node, errorCode);
+    }
+    else {
+
+    }
+    printAllNodes(getChild(node, left, errorCode), errorCode);
+    printAllNodes(getChild(node, right, errorCode), errorCode);
 }

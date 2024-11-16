@@ -3,7 +3,7 @@
 
 typedef struct Node Node;
 
-typedef char Value;
+typedef int Value;
 
 typedef struct Tree {
     Node * root;

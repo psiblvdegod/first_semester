@@ -2,5 +2,9 @@
 
 #include "tree.h"
 #include "stack.h"
+#include <stdio.h>
 
-Tree * buildTree(char * string, bool * errorCode);
+Tree * buildTree(FILE * stream, bool * errorCode);
+
+void printAllNodes(Node * node, bool * errorCode);
+

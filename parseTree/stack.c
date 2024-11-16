@@ -1,10 +1,10 @@
 #include "stack.h"
 #include <stdlib.h>
 
-typedef struct StackElement {
-    Node * node;
+typedef struct {
+    StackElementValue value;
     struct StackElement * previous;
-} StackElement ;
+} StackElement;
 
 typedef struct Stack {
     StackElement * head;
@@ -18,13 +18,13 @@ Stack * createStack(bool * errorCode) {
     return stack;
 }
 
-void push(Stack * stack, Node * node, bool * errorCode) {
+void push(Stack * stack, StackElementValue value, bool * errorCode) {
     StackElement * newElement = calloc(1, sizeof(StackElement));
     if (newElement == NULL) {
         *errorCode = true;
         return;
     }
-    newElement->node = node;
+    newElement->value = value;
     newElement->previous = stack->head;
     stack->head = newElement;
 }
@@ -34,7 +34,7 @@ Node * getHead(Stack * stack, bool * errorCode) {
         *errorCode = true;
         return NULL;
     }
-    return stack->head->node;
+    return stack->head->value;
 }
 
 void pop(Stack * stack, bool * errorCode) {

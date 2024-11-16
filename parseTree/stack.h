@@ -4,6 +4,8 @@
 
 typedef struct Stack Stack;
 
+typedef Node * StackElementValue;
+
 Stack * createStack(bool * errorCode);
 
 void push(Stack * stack, Node * value, bool * errorCode);
