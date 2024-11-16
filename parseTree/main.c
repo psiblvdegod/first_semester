@@ -11,5 +11,6 @@ int main(void) {
         return -1;
     }
     Tree * tree = buildTree(file, &errorCode);
-    printAllNodes(getRoot(tree), &errorCode);
+    //printAllNodes(getRoot(tree), &errorCode);
+    calculateTreeExample(tree, &errorCode);
 }
