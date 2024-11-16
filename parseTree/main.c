@@ -12,5 +12,5 @@ int main(void) {
     }
     Tree * tree = buildTree(file, &errorCode);
     //printAllNodes(getRoot(tree), &errorCode);
-    calculateTreeExample(tree, &errorCode);
+    printf("%d ", calculateTreeExample(tree, &errorCode));
 }

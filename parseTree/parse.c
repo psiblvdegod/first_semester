@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 Tree * buildTree(FILE * stream, bool * errorCode) {
-
     typedef enum {
         digit,
         operation,
@@ -70,12 +69,12 @@ void printAllNodes(Node * node, bool * errorCode) {
     printAllNodes(getChild(node, right, errorCode), errorCode);
 }
 
-void doSymmetricalTraversal(Node * node, int traversalResult[], int * index, bool * errorCode) {
+void doSymmetricalTraversal(Node * node, Node * traversalResult[], int * index, bool * errorCode) {
     if (node == NULL) {
         return;
     }
     doSymmetricalTraversal(getChild(node, left, errorCode), traversalResult, index, errorCode);
-    traversalResult[*index] = getValue(node, errorCode);
+    traversalResult[*index] = node;
     ++(*index);
     doSymmetricalTraversal(getChild(node, right, errorCode), traversalResult, index, errorCode);
 }
@@ -86,14 +85,33 @@ int calculateTreeExample(Tree * tree, bool * errorCode) {
         *errorCode = true;
         return -1;
     }
-    int * traversalResult = malloc(sizeof(tree));
-    int index = 0;
+    Node ** traversalResult = malloc(sizeof(tree));
+    int traversalResultLength = 0;
     if (traversalResult == NULL) {
         *errorCode = true;
         return -1;
     }
-    doSymmetricalTraversal(root, traversalResult, &index, errorCode);
-    for (int i = 0; i < index; ++i) {
-        printf("%d ", traversalResult[i]);
+    doSymmetricalTraversal(root, traversalResult, &traversalResultLength, errorCode);
+    int calculatingResult = getValue(traversalResult[0], errorCode);
+    for (int i = 2; i < traversalResultLength; ++i) {
+        int operand = getValue(traversalResult[i], errorCode);
+        int operation = getValue(traversalResult[i-1], errorCode);
+        switch(operation) {
+            case '+':
+                calculatingResult += operand;
+                break;
+            case '-':
+                calculatingResult -= operand;
+                break;
+            case '*':
+                calculatingResult *= operand;
+                break;
+            case '/':
+                calculatingResult /= operand;
+                break;
+            default:
+                continue;
+        }
     }
+    return calculatingResult;
 }
