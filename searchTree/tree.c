@@ -83,13 +83,14 @@ int getKey(Node * node, bool * errorCode) {
     return node->key;
 }
 
-Node * getNextPosition(Node * currentNode, Node * newNode, bool * errorCode) {
+Node * getNodeByKey(Node * currentNode, int key, bool * errorCode) {
     if (currentNode == NULL) {
         return NULL;
     }
-    currentNode = getChild(currentNode, getKey(currentNode, errorCode) > getKey(newNode, errorCode) ? left : right, errorCode);
-    getNextPosition(currentNode, newNode, errorCode);
-    return currentNode;
+    Node * result = currentNode;
+    currentNode = getChild(currentNode, key < getKey(currentNode, errorCode) ? left : right, errorCode);
+    getNodeByKey(currentNode, key, errorCode);
+    return result;
 }
 
 void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode) {
@@ -118,9 +119,9 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode) {
     if (tree == NULL || newNode == NULL) {
         return;
     }
-    Node * root = getRoot(tree);
-    Node * position = getNextPosition(root, newNode, errorCode);
     int newNodeKey = getKey(newNode, errorCode);
+    Node * root = getRoot(tree);
+    Node * position = getNodeByKey(root, newNodeKey, errorCode);
     int positionKey = getKey(position, errorCode);
     if (newNodeKey < positionKey) {
         addChild(position, newNode, left, errorCode);
