@@ -1,16 +1,22 @@
 #include "tree.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "tests.h"
 
-void queryProcessing(Tree * tree, int userQuery, bool * errorCode) {
+void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
     if (userQuery == 1) {
         char *value = calloc(50, sizeof(char));
         int key = 0;
         printf("Enter value and key.\n");
         scanf("%s%d", value, &key);
         Node *node = createNode(value, key, errorCode);
-        addNode(tree, node, errorCode);
-        if (!errorCode) {
+        if (*tree == NULL) {
+            *tree = createTree(node, errorCode);
+        }
+        else {
+            addNode(*tree, node, errorCode);
+        }
+        if (!(*errorCode)) {
             printf("Node added.\n");
         } else {
             printf("Error.\n");
@@ -22,6 +28,7 @@ void queryProcessing(Tree * tree, int userQuery, bool * errorCode) {
         printf("Enter key.\n");
         scanf("%d", &key);
         Node * node = getNodeByKey(getRoot(tree), key, errorCode);
+        node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
         if (getKey(node, errorCode) == key && userQuery == 2) {
             printf("%s\n", getValue(node, errorCode));
         }
@@ -38,6 +45,7 @@ void queryProcessing(Tree * tree, int userQuery, bool * errorCode) {
         printf("Enter key.\n");
         scanf("%d", &key);
         Node * node = getNodeByKey(getRoot(tree), key, errorCode);
+        node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
         if (getKey(node, errorCode) == key) {
             disposeNode(tree, node, errorCode);
             printf("Node deleted.\n");
@@ -49,14 +57,14 @@ void queryProcessing(Tree * tree, int userQuery, bool * errorCode) {
 }
 
 int main(void) {
+    test();
     int userQuery = 1;
     bool errorCode = false;
-    Node * root = createNode("root", 0, &errorCode);
-    Tree * tree = createTree(root, &errorCode);
+    Tree * tree = NULL;
     while (userQuery) {
         printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");
         scanf("%d", &userQuery);
-        queryProcessing(tree, userQuery, &errorCode);
+        queryProcessing(&tree, userQuery, &errorCode);
     }
 
 }

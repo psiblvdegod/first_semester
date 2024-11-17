@@ -84,31 +84,29 @@ int getKey(Node * node, bool * errorCode) {
 }
 
 Node * getNodeByKey(Node * currentNode, int key, bool * errorCode) {
-    if (currentNode == NULL) {
-        return NULL;
+    Node * child = NULL;
+    if (key < getKey(currentNode, errorCode)) {
+        child = getChild(currentNode, left, errorCode);
     }
-    Node * result = currentNode;
-    currentNode = getChild(currentNode, key < getKey(currentNode, errorCode) ? left : right, errorCode);
-    getNodeByKey(currentNode, key, errorCode);
-    return result;
+    else {
+        child = getChild(currentNode, right, errorCode);
+    }
+    if (child == NULL) {
+        return currentNode;
+    }
+    getNodeByKey(child, key, errorCode);
 }
 
 void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode) {
-    Node * currentNode = getRoot(tree);
     int deletingNodeKey = getKey(deletingNode, errorCode);
-    while (getChild(currentNode, left, errorCode) != deletingNode && getChild(currentNode, right, errorCode) != deletingNode) {
-        if (getKey(currentNode, errorCode) < deletingNodeKey) {
-            currentNode = getChild(currentNode, left, errorCode);
+    Node * parent = getNodeByKey(getRoot(tree), deletingNodeKey, errorCode);
+    if (parent != NULL) {
+        if (parent->leftChild == deletingNode) {
+            parent->leftChild = NULL;
         }
-        else {
-            currentNode = getChild(currentNode, right, errorCode);
+        if (parent->rightChild == deletingNode) {
+            parent->rightChild = NULL;
         }
-    }
-    if (getChild(currentNode, left, errorCode) == deletingNode) {
-        currentNode->leftChild = NULL;
-    }
-    else {
-        currentNode->rightChild = NULL;
     }
     addNode(tree, getChild(deletingNode, left, errorCode), errorCode);
     addNode(tree, getChild(deletingNode, right, errorCode), errorCode);
