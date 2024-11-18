@@ -3,20 +3,23 @@
 
 bool test() {
     bool errorCode = false;
-    Node * node1 = createNode("111", 11, &errorCode);
-    Node * node2 = createNode("000", 0, &errorCode);
-    Node * node3 = createNode("333", 33, &errorCode);
-    Node * node4 = createNode("444", 44, &errorCode);
-    Node * node5 = createNode("222", 22, &errorCode);
+    Node * node11 = createNode("111", 11, &errorCode);
+    Node * node33 = createNode("333", 33, &errorCode);
+    Node * node44 = createNode("444", 44, &errorCode);
+    Node * node22 = createNode("222", 22, &errorCode);
+    Node * node25 = createNode("15", 25, &errorCode);
 
-    Tree * tree = createTree(node1, &errorCode);
-    addNode(tree, node2, &errorCode);
-    addNode(tree, node3, &errorCode);
-    addNode(tree, node4, &errorCode);
-    addNode(tree, node5, &errorCode);
 
-    Node * parent = getParentByNode(tree, node1, &errorCode);
+    Tree * tree = createTree(node11, &errorCode);
+    addNode(tree, node33, &errorCode);
+    addNode(tree, node44, &errorCode);
+    addNode(tree, node22, &errorCode);
+    addNode(tree, node25, &errorCode);
 
-    disposeNode(tree, node3, &errorCode);
+    //Node * parent = getParentByNode(tree, node1, &errorCode);
+
+    disposeNode(tree, node33, &errorCode);
+    disposeNode(tree, node25, &errorCode);
+    disposeNode(tree, node44, &errorCode);
     printf("1");
 }

@@ -44,7 +44,7 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
         int key = 0;
         printf("Enter key.\n");
         scanf("%d", &key);
-        Node * node = getNodeByKey(getRoot(tree), key, errorCode);
+        Node * node = getNodeByKey(tree, key, errorCode);
         node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
         if (getKey(node, errorCode) == key) {
             disposeNode(tree, node, errorCode);
