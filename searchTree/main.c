@@ -19,7 +19,7 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
             return;
         }
         Node *node = createNode(value, key, errorCode);
-        if (*tree == NULL) {
+        if (getRoot(*tree) == NULL) {
             *tree = createTree(node, errorCode);
         }
         else {
@@ -42,7 +42,6 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
             return;
         }
         Node * node = getNodeByKey(*tree, key, errorCode);
-        //node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
         if (getKey(node, errorCode) == key && userQuery == 2) {
             printf("%s\n", getValue(node, errorCode));
         }
@@ -75,14 +74,23 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
 }
 
 int main(void) {
-    test();
+    printf("%d", operationsWithTreeTest());
     int userQuery = 1;
     bool errorCode = false;
     Tree * tree = NULL;
     while (userQuery) {
         printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");
-        scanf("%d", &userQuery);
+        int inputValidation = scanf("%d", &userQuery);
+        while(getchar() != '\n');
+        if (inputValidation != 1  || userQuery < 0 || userQuery > 4) {
+            printf("Invalid value.\n");
+            continue;
+        }
         queryProcessing(&tree, userQuery, &errorCode);
+        if (errorCode) {
+            printf("Something went wrong.\n");
+            errorCode = false;
+        }
     }
     printf("1");
 }

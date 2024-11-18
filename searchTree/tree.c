@@ -12,6 +12,12 @@ typedef struct Tree {
     Node * root;
 } Tree;
 
+//child's position for addChild() and getChild()
+typedef enum {
+    left,
+    right
+} Position;
+
 Node * createNode(Value value, int key, bool * errorCode) {
     Node * node = calloc(1, sizeof(Node));
     if (node == NULL) {
@@ -38,13 +44,6 @@ void addChild(Node * parent, Node * child, Position position, bool * errorCode) 
     }
 }
 
-Node * getRoot(Tree * tree) {
-    if (tree == NULL) {
-        return NULL;
-    }
-    return tree->root;
-}
-
 Node * getChild(Node * parent, Position position, bool * errorCode) {
     if (parent == NULL) {
         return NULL;
@@ -55,16 +54,6 @@ Node * getChild(Node * parent, Position position, bool * errorCode) {
     else {
         return parent->rightChild;
     }
-}
-
-Tree * createTree(Node * root, bool * errorCode) {
-    Tree * tree = calloc(1, sizeof(Tree));
-    if (tree == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    tree->root = root;
-    return tree;
 }
 
 Value getValue(Node * node, bool * errorCode) {
@@ -81,6 +70,23 @@ int getKey(Node * node, bool * errorCode) {
         return -1;
     }
     return node->key;
+}
+
+Tree * createTree(Node * root, bool * errorCode) {
+    Tree * tree = calloc(1, sizeof(Tree));
+    if (tree == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    tree->root = root;
+    return tree;
+}
+
+Node * getRoot(Tree * tree) {
+    if (tree == NULL) {
+        return NULL;
+    }
+    return tree->root;
 }
 
 Node * getNodeByKey(Tree * tree, int key, bool * errorCode) {
@@ -114,22 +120,6 @@ Node * getParentByNode(Tree * tree, Node * node, bool * errorCode) {
     return currentNode;
 }
 
-void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode) {
-    int deletingNodeKey = getKey(deletingNode, errorCode);
-    Node * parent = getParentByNode(tree, deletingNode, errorCode);
-    if (parent != NULL) {
-        if (parent->leftChild == deletingNode) {
-            parent->leftChild = NULL;
-        }
-        if (parent->rightChild == deletingNode) {
-            parent->rightChild = NULL;
-        }
-    }
-    addNode(tree, getChild(deletingNode, left, errorCode), errorCode);
-    addNode(tree, getChild(deletingNode, right, errorCode), errorCode);
-    free(deletingNode);
-}
-
 void addNode(Tree * tree, Node * newNode, bool * errorCode) {
     if (tree == NULL || newNode == NULL) {
         return;
@@ -148,4 +138,28 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode) {
         disposeNode(tree, position, errorCode);
         addNode(tree, newNode, errorCode);
     }
+}
+
+void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode) {
+    if (getRoot(tree) == deletingNode) {
+        if (getChild(deletingNode, left,errorCode) != NULL) {
+            tree->root = getChild(deletingNode, left, errorCode);
+            addNode(tree, getChild(deletingNode, right, errorCode), errorCode);
+        }
+        else {
+            tree->root = getChild(deletingNode, right, errorCode);
+        }
+        free(deletingNode);
+        return;
+    }
+    Node *parent = getParentByNode(tree, deletingNode, errorCode);
+    if (parent->leftChild == deletingNode) {
+        parent->leftChild = NULL;
+    }
+    else if (parent->rightChild == deletingNode) {
+        parent->rightChild = NULL;
+    }
+    addNode(tree, getChild(deletingNode, left, errorCode), errorCode);
+    addNode(tree, getChild(deletingNode, right, errorCode), errorCode);
+    free(deletingNode);
 }
