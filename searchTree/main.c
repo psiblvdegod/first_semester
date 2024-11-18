@@ -5,10 +5,19 @@
 
 void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
     if (userQuery == 1) {
-        char *value = calloc(50, sizeof(char));
+        char * value = calloc(50, sizeof(char));
+        if (value == NULL) {
+            printf("Memory allocation error.\n");
+            return;
+        }
         int key = 0;
         printf("Enter value and key.\n");
-        scanf("%s%d", value, &key);
+        int inputValidation = scanf("%s%d", value, &key);
+        while(getchar() != '\n');
+        if (inputValidation != 2) {
+            printf("Invalid value.\n");
+            return;
+        }
         Node *node = createNode(value, key, errorCode);
         if (*tree == NULL) {
             *tree = createTree(node, errorCode);
@@ -26,9 +35,14 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
     if (userQuery == 2 || userQuery == 3) {
         int key = 0;
         printf("Enter key.\n");
-        scanf("%d", &key);
-        Node * node = getNodeByKey(getRoot(tree), key, errorCode);
-        node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
+        int inputValidation = scanf("%d", &key);
+        while(getchar() != '\n');
+        if (inputValidation != 1) {
+            printf("Invalid value.\n");
+            return;
+        }
+        Node * node = getNodeByKey(*tree, key, errorCode);
+        //node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
         if (getKey(node, errorCode) == key && userQuery == 2) {
             printf("%s\n", getValue(node, errorCode));
         }
@@ -43,11 +57,15 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
     if (userQuery == 4) {
         int key = 0;
         printf("Enter key.\n");
-        scanf("%d", &key);
-        Node * node = getNodeByKey(tree, key, errorCode);
-        node = getChild(node, key < getKey(node, errorCode) ? left : right, errorCode);
+        int inputValidation = scanf("%d", &key);
+        while(getchar() != '\n');
+        if (inputValidation != 1) {
+            printf("Invalid value.\n");
+            return;
+        }
+        Node * node = getNodeByKey(*tree, key, errorCode);
         if (getKey(node, errorCode) == key) {
-            disposeNode(tree, node, errorCode);
+            disposeNode(*tree, node, errorCode);
             printf("Node deleted.\n");
         }
         else {
@@ -66,5 +84,5 @@ int main(void) {
         scanf("%d", &userQuery);
         queryProcessing(&tree, userQuery, &errorCode);
     }
-
+    printf("1");
 }

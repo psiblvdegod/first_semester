@@ -21,5 +21,4 @@ bool test() {
     disposeNode(tree, node33, &errorCode);
     disposeNode(tree, node25, &errorCode);
     disposeNode(tree, node44, &errorCode);
-    printf("1");
 }

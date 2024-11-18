@@ -86,11 +86,11 @@ int getKey(Node * node, bool * errorCode) {
 Node * getNodeByKey(Tree * tree, int key, bool * errorCode) {
     Node * result = getRoot(tree);
     Node * currentNode =  getRoot(tree);
-    while (currentNode != NULL) {
+    while (currentNode != NULL && getKey(currentNode, errorCode) != key) {
         if (key < getKey(currentNode, errorCode)) {
             currentNode = getChild(currentNode, left, errorCode);
         }
-        else {
+        else if (key > getKey(currentNode, errorCode)) {
             currentNode = getChild(currentNode, right, errorCode);
         }
         if (currentNode != NULL) {
@@ -141,10 +141,10 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode) {
     if (newNodeKey < positionKey) {
         addChild(position, newNode, left, errorCode);
     }
-    if (newNodeKey > positionKey) {
+    else if (newNodeKey > positionKey) {
         addChild(position, newNode, right, errorCode);
     }
-    if (newNodeKey == positionKey) {
+    else if (newNodeKey == positionKey) {
         disposeNode(tree, position, errorCode);
         addNode(tree, newNode, errorCode);
     }
