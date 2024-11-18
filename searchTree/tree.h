@@ -30,6 +30,8 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode);
 
 void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode);
 
-Node * getNodeByKey(Node * currentNode, int key, bool * errorCode);
+Node * getNodeByKey(Tree * tree, int key, bool * errorCode);
 
 int getKey(Node * node, bool * errorCode);
+
+Node * getParentByNode(Tree * tree, Node * node, bool * errorCode);

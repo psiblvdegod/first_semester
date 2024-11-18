@@ -83,23 +83,40 @@ int getKey(Node * node, bool * errorCode) {
     return node->key;
 }
 
-Node * getNodeByKey(Node * currentNode, int key, bool * errorCode) {
-    Node * child = NULL;
-    if (key < getKey(currentNode, errorCode)) {
-        child = getChild(currentNode, left, errorCode);
+Node * getNodeByKey(Tree * tree, int key, bool * errorCode) {
+    Node * result = getRoot(tree);
+    Node * currentNode =  getRoot(tree);
+    while (currentNode != NULL) {
+        if (key < getKey(currentNode, errorCode)) {
+            currentNode = getChild(currentNode, left, errorCode);
+        }
+        else {
+            currentNode = getChild(currentNode, right, errorCode);
+        }
+        if (currentNode != NULL) {
+            result = currentNode;
+        }
     }
-    else {
-        child = getChild(currentNode, right, errorCode);
+    return result;
+}
+
+Node * getParentByNode(Tree * tree, Node * node, bool * errorCode) {
+    int key = getKey(node, errorCode);
+    Node * currentNode = getRoot(tree);
+    while (currentNode != NULL && getChild(currentNode, left, errorCode) != node && getChild(currentNode, right, errorCode) != node) {
+        if (key < getKey(currentNode, errorCode)) {
+            currentNode = getChild(currentNode, left, errorCode);
+        }
+        else {
+            currentNode = getChild(currentNode, right, errorCode);
+        }
     }
-    if (child == NULL) {
-        return currentNode;
-    }
-    getNodeByKey(child, key, errorCode);
+    return currentNode;
 }
 
 void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode) {
     int deletingNodeKey = getKey(deletingNode, errorCode);
-    Node * parent = getNodeByKey(getRoot(tree), deletingNodeKey, errorCode);
+    Node * parent = getParentByNode(tree, deletingNode, errorCode);
     if (parent != NULL) {
         if (parent->leftChild == deletingNode) {
             parent->leftChild = NULL;
@@ -119,7 +136,7 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode) {
     }
     int newNodeKey = getKey(newNode, errorCode);
     Node * root = getRoot(tree);
-    Node * position = getNodeByKey(root, newNodeKey, errorCode);
+    Node * position = getNodeByKey(tree, newNodeKey, errorCode);
     int positionKey = getKey(position, errorCode);
     if (newNodeKey < positionKey) {
         addChild(position, newNode, left, errorCode);
