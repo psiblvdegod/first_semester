@@ -42,6 +42,24 @@ Tree * buildTree(FILE * stream, bool * errorCode) {
     return tree;
 }
 
+int calculate(Node * node, bool * errorCode) {
+    if (getChild(node, left) == NULL) {
+        return getValue(node, errorCode);
+    }
+    Node * leftChild = getChild(node, left);
+    Node * rightChild = getChild(node, right);
+    switch(getValue(node, errorCode)) {
+        case '+':
+            return calculate(leftChild, errorCode) + calculate(rightChild, errorCode);
+        case '-':
+            return calculate(leftChild, errorCode) - calculate(rightChild, errorCode);
+        case '*':
+            return calculate(leftChild, errorCode) * calculate(rightChild, errorCode);
+        case '/':
+            return calculate(leftChild, errorCode) / calculate(rightChild, errorCode);
+    }
+}
+
 void printAllNodes(Node * node, bool * errorCode) {
     if (node == NULL) {
         return;
@@ -54,51 +72,4 @@ void printAllNodes(Node * node, bool * errorCode) {
     }
     printAllNodes(getChild(node, left), errorCode);
     printAllNodes(getChild(node, right), errorCode);
-}
-
-void doSymmetricalTraversal(Node * node, Node * traversalResult[], int * index, bool * errorCode) {
-    if (node == NULL) {
-        return;
-    }
-    doSymmetricalTraversal(getChild(node, left), traversalResult, index, errorCode);
-    traversalResult[*index] = node;
-    ++(*index);
-    doSymmetricalTraversal(getChild(node, right), traversalResult, index, errorCode);
-}
-
-int calculateTreeExample(Tree * tree, bool * errorCode) {
-    Node * root = getRoot(tree);
-    if (tree == NULL || root == NULL) {
-        *errorCode = true;
-        return -1;
-    }
-    Node ** traversalResult = malloc(sizeof(tree));
-    int traversalResultLength = 0;
-    if (traversalResult == NULL) {
-        *errorCode = true;
-        return -1;
-    }
-    doSymmetricalTraversal(root, traversalResult, &traversalResultLength, errorCode);
-    int calculatingResult = getValue(traversalResult[0], errorCode);
-    for (int i = 2; i < traversalResultLength; ++i) {
-        int operand = getValue(traversalResult[i], errorCode);
-        int operation = getValue(traversalResult[i-1], errorCode);
-        switch(operation) {
-            case '+':
-                calculatingResult += operand;
-                break;
-            case '-':
-                calculatingResult -= operand;
-                break;
-            case '*':
-                calculatingResult *= operand;
-                break;
-            case '/':
-                calculatingResult /= operand;
-                break;
-            default:
-                continue;
-        }
-    }
-    return calculatingResult;
 }

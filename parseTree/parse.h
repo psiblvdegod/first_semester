@@ -15,6 +15,5 @@ Tree * buildTree(FILE * stream, bool * errorCode);
 //checking for the presence of leftChild.
 void printAllNodes(Node * node, bool * errorCode);
 
-void doSymmetricalTraversal(Node * node, Node * traversalResult[], int * index, bool * errorCode);
-
-int calculateTreeExample(Tree * tree, bool * errorCode);
+//best function ever created ngl
+int calculate(Node * root, bool * errorCode);

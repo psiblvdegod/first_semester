@@ -17,5 +17,5 @@ int main(void) {
     Tree * tree = buildTree(file, &errorCode);
     printf("prefix tree notation:\n");
     printAllNodes(getRoot(tree), &errorCode);
-    printf("\ncalculating result: %d ", calculateTreeExample(tree, &errorCode));
+    printf("\ncalculating result: %d ", calculate(getRoot(tree), &errorCode));
 }
