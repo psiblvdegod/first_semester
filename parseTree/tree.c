@@ -43,7 +43,7 @@ Node * getRoot(Tree * tree) {
     return tree->root;
 }
 
-Node * getChild(Node * parent, Position position, bool * errorCode) {
+Node * getChild(Node * parent, Position position) {
     if (parent == NULL) {
         return NULL;
     }

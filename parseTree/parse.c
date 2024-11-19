@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 Tree * buildTree(FILE * stream, bool * errorCode) {
-
     Tree * tree = NULL;
     Stack * stack = createStack(errorCode);
 
@@ -25,19 +24,16 @@ Tree * buildTree(FILE * stream, bool * errorCode) {
             continue;
         }
 
-        Node * previousOperation = getHead(stack, errorCode);
-        Node * leftChild = getChild(previousOperation, left, errorCode);
-        Node * rightChild = getChild(previousOperation, right, errorCode);
+        Node * operation = getHead(stack, errorCode);
+        Node * leftChild = getChild(operation, left);
+        Node * rightChild = getChild(operation, right);
 
-        bool addChildFlag = false; // no elif xDD
         if (leftChild == NULL) {
-            addChild(previousOperation, node, left, errorCode);
-            addChildFlag = true;
+            addChild(operation, node, left, errorCode);
         }
-        if (rightChild == NULL && !addChildFlag) {
-            addChild(previousOperation, node, right, errorCode);
+        else if (rightChild == NULL) {
+            addChild(operation, node, right, errorCode);
             pop(stack, errorCode);
-            addChildFlag = true;
         }
         if (!isDigit) {
             push(stack, node, errorCode);
@@ -50,24 +46,24 @@ void printAllNodes(Node * node, bool * errorCode) {
     if (node == NULL) {
         return;
     }
-    if (getChild(node, left, errorCode) != NULL) {
+    if (getChild(node, left) != NULL) {
         printf("%c ", getValue(node, errorCode));
     }
     else {
         printf("%d ", getValue(node ,errorCode));
     }
-    printAllNodes(getChild(node, left, errorCode), errorCode);
-    printAllNodes(getChild(node, right, errorCode), errorCode);
+    printAllNodes(getChild(node, left), errorCode);
+    printAllNodes(getChild(node, right), errorCode);
 }
 
 void doSymmetricalTraversal(Node * node, Node * traversalResult[], int * index, bool * errorCode) {
     if (node == NULL) {
         return;
     }
-    doSymmetricalTraversal(getChild(node, left, errorCode), traversalResult, index, errorCode);
+    doSymmetricalTraversal(getChild(node, left), traversalResult, index, errorCode);
     traversalResult[*index] = node;
     ++(*index);
-    doSymmetricalTraversal(getChild(node, right, errorCode), traversalResult, index, errorCode);
+    doSymmetricalTraversal(getChild(node, right), traversalResult, index, errorCode);
 }
 
 int calculateTreeExample(Tree * tree, bool * errorCode) {

@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include "tree.h"
 #include "parse.h"
+#include "tests.h"
 
 int main(void) {
+    if (!treeTests()) {
+        printf("Error. Tests failed.\n");
+        return -1;
+    }
     bool errorCode = false;
     FILE * file = fopen("/Users/psiblvdegod/Desktop/homework/parseTree/text.txt", "r");
     if (file == NULL) {

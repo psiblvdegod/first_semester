@@ -9,4 +9,6 @@ add_executable(parseTree main.c
         parse.h
         parse.c
         stack.c
-        stack.h)
+        stack.h
+        tests.c
+        tests.h)

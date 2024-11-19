@@ -17,7 +17,7 @@ Node * createNode(Value value, bool * errorCode);
 
 void addChild(Node * parent, Node * child, Position position, bool * errorCode);
 
-Node * getChild(Node * parent, Position position, bool * errorCode);
+Node * getChild(Node * parent, Position position);
 
 Value getValue(Node * node, bool * errorCode);
 
