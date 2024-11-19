@@ -1,3 +1,3 @@
 #include "tree.h"
 
-bool operationsWithTreeTest();
+bool treeTests();

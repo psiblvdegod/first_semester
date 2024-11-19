@@ -1,7 +1,7 @@
 #include "tests.h"
-#include <stdio.h>
+#include <string.h>
 
-bool operationsWithTreeTest() {
+bool treeTests() {
     bool errorCode = false;
     Node * node11 = createNode("111", 11, &errorCode);
     Node * node22 = createNode("222", 22, &errorCode);
@@ -14,6 +14,19 @@ bool operationsWithTreeTest() {
     addNode(tree, node44, &errorCode);
     addNode(tree, node33, &errorCode);
     addNode(tree, node55, &errorCode);
+
+    if (strcmp(getValue(node11, &errorCode), "111") != 0) {
+        return false;
+    }
+    if (getKey(node22, &errorCode) != 22) {
+        return false;
+    }
+    if (getParentByNode(tree, node33, &errorCode) != node44) {
+        return false;
+    }
+    if (getNodeByKey(tree, 55, &errorCode) != node55 || getNodeByKey(tree, 66, &errorCode) != node55) {
+        return false;
+    }
 
     disposeNode(tree, node22, &errorCode);
     disposeNode(tree, node44, &errorCode);

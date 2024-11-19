@@ -74,7 +74,7 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
 }
 
 int main(void) {
-    printf("%d", operationsWithTreeTest());
+    printf("%d", treeTests());
     int userQuery = 1;
     bool errorCode = false;
     Tree * tree = NULL;
@@ -92,5 +92,4 @@ int main(void) {
             errorCode = false;
         }
     }
-    printf("1");
 }
