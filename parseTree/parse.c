@@ -50,13 +50,13 @@ int calculate(Node * node, bool * errorCode) {
     Node * rightChild = getChild(node, right);
     switch(getValue(node, errorCode)) {
         case '+':
-            return calculate(leftChild, errorCode) + calculate(rightChild, errorCode);
+            return calculate(rightChild, errorCode) + calculate(leftChild, errorCode);
         case '-':
-            return calculate(leftChild, errorCode) - calculate(rightChild, errorCode);
+            return calculate(rightChild, errorCode) - calculate(leftChild, errorCode);
         case '*':
-            return calculate(leftChild, errorCode) * calculate(rightChild, errorCode);
+            return calculate(rightChild, errorCode) * calculate(leftChild, errorCode);
         case '/':
-            return calculate(leftChild, errorCode) / calculate(rightChild, errorCode);
+            return calculate(rightChild, errorCode) / calculate(leftChild, errorCode);
     }
 }
 
