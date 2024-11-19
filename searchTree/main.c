@@ -27,8 +27,6 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
         }
         if (!(*errorCode)) {
             printf("Node added.\n");
-        } else {
-            printf("Error.\n");
         }
         return;
     }
@@ -42,10 +40,10 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
             return;
         }
         Node * node = getNodeByKey(*tree, key, errorCode);
-        if (getKey(node, errorCode) == key && userQuery == 2) {
+        if (node != NULL && userQuery == 2) {
             printf("%s\n", getValue(node, errorCode));
         }
-        else if (getKey(node, errorCode) == key && userQuery == 3) {
+        else if (node != NULL && userQuery == 3) {
             printf("There is value with this key.\n");
         }
         else {
@@ -63,7 +61,7 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
             return;
         }
         Node * node = getNodeByKey(*tree, key, errorCode);
-        if (getKey(node, errorCode) == key) {
+        if (node != NULL) {
             disposeNode(*tree, node, errorCode);
             printf("Node deleted.\n");
         }
@@ -74,7 +72,10 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
 }
 
 int main(void) {
-    printf("%d", treeTests());
+    if (!treeTests()) {
+        printf("Error. Tests failed.\n");
+        return -1;
+    }
     int userQuery = 1;
     bool errorCode = false;
     Tree * tree = NULL;

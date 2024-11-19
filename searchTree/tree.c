@@ -90,15 +90,24 @@ Node * getRoot(Tree * tree) {
 }
 
 Node * getNodeByKey(Tree * tree, int key, bool * errorCode) {
+    if (tree == NULL) {
+        return NULL;
+    }
+    Node * currentNode = getRoot(tree);
+    while (currentNode != NULL && getKey(currentNode, errorCode) != key) {
+        currentNode = getChild(currentNode, key < getKey(currentNode, errorCode) ? left : right);
+    }
+    return currentNode;
+}
+
+Node * findSuitablePosition(Tree * tree, int key, bool * errorCode) {
+    if (tree == NULL) {
+        return NULL;
+    }
     Node * result = getRoot(tree);
     Node * currentNode =  getRoot(tree);
-    while (currentNode != NULL && getKey(currentNode, errorCode) != key) {
-        if (key < getKey(currentNode, errorCode)) {
-            currentNode = getChild(currentNode, left);
-        }
-        else if (key > getKey(currentNode, errorCode)) {
-            currentNode = getChild(currentNode, right);
-        }
+    while (currentNode != NULL) {
+        currentNode = getChild(currentNode, key < getKey(currentNode, errorCode) ? left : right);
         if (currentNode != NULL) {
             result = currentNode;
         }
@@ -125,8 +134,7 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode) {
         return;
     }
     int newNodeKey = getKey(newNode, errorCode);
-    Node * root = getRoot(tree);
-    Node * position = getNodeByKey(tree, newNodeKey, errorCode);
+    Node * position = findSuitablePosition(tree, newNodeKey, errorCode);
     int positionKey = getKey(position, errorCode);
     if (newNodeKey < positionKey) {
         addChild(position, newNode, left, errorCode);

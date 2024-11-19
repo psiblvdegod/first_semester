@@ -24,7 +24,10 @@ bool treeTests() {
     if (getParentByNode(tree, node33, &errorCode) != node44) {
         return false;
     }
-    if (getNodeByKey(tree, 55, &errorCode) != node55 || getNodeByKey(tree, 66, &errorCode) != node55) {
+    if (getNodeByKey(tree, 55, &errorCode) != node55) {
+        return false;
+    }
+    if (findSuitablePosition(tree, 66, &errorCode) != node55) {
         return false;
     }
 

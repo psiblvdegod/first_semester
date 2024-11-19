@@ -30,5 +30,6 @@ void addNode(Tree * tree, Node * newNode, bool * errorCode);
 
 void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode);
 
+Node * findSuitablePosition(Tree * tree, int key, bool * errorCode);
 
 
