@@ -42,7 +42,7 @@ Tree * buildTree(FILE * stream, bool * errorCode) {
     return tree;
 }
 
-int calculate(Node * node, bool * errorCode) {
+int calculateTree(Node * node, bool * errorCode) {
     if (getChild(node, left) == NULL) {
         return getValue(node, errorCode);
     }
@@ -50,13 +50,13 @@ int calculate(Node * node, bool * errorCode) {
     Node * rightChild = getChild(node, right);
     switch(getValue(node, errorCode)) {
         case '+':
-            return calculate(rightChild, errorCode) + calculate(leftChild, errorCode);
+            return calculateTree(rightChild, errorCode) + calculateTree(leftChild, errorCode);
         case '-':
-            return calculate(rightChild, errorCode) - calculate(leftChild, errorCode);
+            return calculateTree(rightChild, errorCode) - calculateTree(leftChild, errorCode);
         case '*':
-            return calculate(rightChild, errorCode) * calculate(leftChild, errorCode);
+            return calculateTree(rightChild, errorCode) * calculateTree(leftChild, errorCode);
         case '/':
-            return calculate(rightChild, errorCode) / calculate(leftChild, errorCode);
+            return calculateTree(rightChild, errorCode) / calculateTree(leftChild, errorCode);
     }
 }
 

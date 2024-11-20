@@ -15,7 +15,7 @@ bool treeTests() {
     addChild(node3, node4, left, &errorCode);
     addChild(node3, node5, right, &errorCode);
 
-    if (calculate(getRoot(tree), &errorCode) != 666) {
+    if (calculateTree(getRoot(tree), &errorCode) != 666) {
         return false;
     }
     if (getChild(node5, left) != NULL || getChild(node1, right) != node3) {

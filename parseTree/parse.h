@@ -15,5 +15,4 @@ Tree * buildTree(FILE * stream, bool * errorCode);
 //checking for the presence of leftChild.
 void printAllNodes(Node * node, bool * errorCode);
 
-//best function ever created ngl
-int calculate(Node * root, bool * errorCode);
+int calculateTree(Node * root, bool * errorCode);
