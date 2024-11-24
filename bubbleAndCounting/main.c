@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
-#define ARRAY_SIZE 10000
+#define ARRAY_SIZE 100000
 
 int main(void) {
     if (!bubbleSortTest() || !countingSortTest()) {
