@@ -76,6 +76,10 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
         if (nodeRightChild != NULL) {
             node->rightChild = nodeRightChild->leftChild;
             nodeRightChild->leftChild = node;
+
+            node->balance = nodeRightChild->balance == 0 ? 1 : 0; // с вики
+            nodeRightChild->balance = nodeRightChild->balance == 0 ? -1 : 0;
+
             return nodeRightChild;
         }
     }
@@ -85,6 +89,10 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
         if (nodeLeftChild != NULL) {
             node->leftChild = nodeLeftChild->rightChild;
             nodeLeftChild->rightChild = node;
+
+            node->balance = nodeLeftChild->balance == 0 ? -1 : 0; // с вики
+            nodeLeftChild->balance = nodeLeftChild->balance == 0 ? 1 : 0;
+
             return nodeLeftChild;
         }
     }
@@ -127,31 +135,6 @@ Node * balance(Node * node, bool * errorCode) {
     return node;
 }
 
-Node * insert (Node * currentNode, Node * newNode, bool * errorCode) {
-    if (newNode == NULL) {
-        return NULL;
-    }
-    if (currentNode == NULL) {
-        return newNode;
-    }
-    if (strcmp(newNode->key, currentNode->key) == 0) {
-        newNode->leftChild = currentNode->leftChild;
-        newNode->rightChild = currentNode->rightChild;
-        free(currentNode);
-        return newNode;
-    }
-    if (strcmp(newNode->key, currentNode->key) < 0) {
-        currentNode->leftChild = insert(currentNode->leftChild, newNode, errorCode);
-        --currentNode->balance;
-    }
-    if (strcmp(newNode->key, currentNode->key) > 0) {
-        currentNode->rightChild = insert(currentNode->rightChild, newNode, errorCode);
-        ++currentNode->balance;
-    }
-    return currentNode;
-    return balance(currentNode, errorCode);
-}
-
 Node *deleteNode(Node *node, Value key, bool * errorCode) {
     if (node == NULL) {
         *errorCode = true;
@@ -187,11 +170,6 @@ Node *deleteNode(Node *node, Value key, bool * errorCode) {
 }
 
 
-
-
-
-
-
 /*
 Node * insert(Node ** currentNode, Node * newNode, bool * errorCode) {
     if (newNode == NULL) {
@@ -212,4 +190,86 @@ Node * insert(Node ** currentNode, Node * newNode, bool * errorCode) {
     return *currentNode;
     //return balance(*currentNode, errorCode);
 }
-*/
+ */
+
+Node * insert (Node * currentNode, Node * newNode, bool * flag) {
+    if (newNode == NULL) {
+        return NULL;
+    }
+    if (currentNode == NULL) {
+        return newNode;
+    }
+    if (strcmp(newNode->key, currentNode->key) == 0) {
+        newNode->leftChild = currentNode->leftChild;
+        newNode->rightChild = currentNode->rightChild;
+        free(currentNode);
+        *flag = false; //ничего не делает
+        return newNode;
+    }
+    if (strcmp(newNode->key, currentNode->key) < 0) {
+        currentNode->leftChild = insert(currentNode->leftChild, newNode, flag);
+        if (*flag || currentNode->leftChild == newNode) {
+            --currentNode->balance;
+            //*flag = currentNode->balance != 0;
+            *flag = currentNode->rightChild == NULL;
+            if (currentNode->balance == 0) {
+                *flag = false;
+            }
+        }
+    }
+    if (strcmp(newNode->key, currentNode->key) > 0) {
+        currentNode->rightChild = insert(currentNode->rightChild, newNode, flag);
+        if (*flag || currentNode->rightChild == newNode) {
+            ++currentNode->balance;
+            //*flag = currentNode->balance != 0;
+            *flag = currentNode->leftChild == NULL;
+            if (currentNode->balance == 0) {
+                *flag = false;
+            }
+        }
+    }
+    return currentNode;
+    return balance(currentNode, flag);
+}
+
+
+/*
+bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
+    if (strcmp(key, node->value.key) == 0) {
+        node->value.value = value;
+        return false;
+    }
+
+    if (node->left == NULL && strcmp(key, node->value.key) < 0) {
+        Node* newNode = createTree(key, value, errorCode);
+        node->left = newNode;
+        --node->balance;
+        return node->balance != 0;
+    }
+    else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
+        Node* newNode = createTree(key, value, errorCode);
+        node->right = newNode;
+        ++node->balance;
+        return node->balance != 0;
+    }
+
+    bool needChangeBalance = false;
+    if (strcmp(key, node->value.key) > 0) {
+        needChangeBalance = addNode(node->right, key, value, errorCode);
+        if (needChangeBalance) {
+            ++node->balance;
+            return node->balance != 0;
+        }
+        return false;
+    }
+    if (strcmp(key, node->value.key) < 0) {
+        needChangeBalance = addNode(node->left, key, value, errorCode);
+        if (needChangeBalance) {
+            --node->balance;
+            return node->balance != 0;
+        }
+        return false;
+    }
+}
+
+ */

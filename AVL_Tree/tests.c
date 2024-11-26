@@ -53,21 +53,26 @@ bool rotationTests() {
     Node * node7 = createNode("g", "7", &errorCode);
     Node * node8 = createNode("h", "8", &errorCode);
     Node * node9 = createNode("i", "9", &errorCode);
-    Node * node10 = createNode("j", "10", &errorCode);
+    Node * node10 = createNode("j", "A", &errorCode);
 
 
     Node * node44 = createNode("dd", "4", &errorCode);
 
     Node * root = node8;
     root = insert(root, node9, &errorCode);
+    errorCode = false;
     root = insert(root, node2, &errorCode);
+    errorCode = false;
     root = insert(root, node1, &errorCode);
+    errorCode = false;
     root = insert(root, node0, &errorCode);
+    errorCode = false;
     root = insert(root, node4, &errorCode);
-    root = insert(root, node9, &errorCode);
+    errorCode = false;
     root = insert(root, node7, &errorCode);
+    errorCode = false;
     root = insert(root, node10, &errorCode);
-    root = insert(root, node4, &errorCode);
+    errorCode = false;
 
 
     root = deleteNode(root, "8", &errorCode);
