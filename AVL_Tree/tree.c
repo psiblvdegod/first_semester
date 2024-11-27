@@ -163,6 +163,9 @@ Node * balance(Node * node, bool * flag) {
             node->balance = 0;
         }
     }
+    if (node->balance == 0) {
+        *flag = false;
+    }
     return node;
 }
 
@@ -251,7 +254,9 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
             if (currentNode->balance == 0) {       // idk
                 *flag = false;
             }
-            *flag = currentNode->rightChild == NULL;
+            if (currentNode->leftChild == newNode) {
+                *flag = currentNode->rightChild == NULL;
+            }
         }
     }
     if (strcmp(newNode->key, currentNode->key) > 0) {
@@ -259,7 +264,9 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
         if (*flag || currentNode->rightChild == newNode) {
             --currentNode->balance;
             //*flag = currentNode->balance != 0;
-            *flag = currentNode->leftChild == NULL;
+            if (currentNode->rightChild == newNode) {
+                *flag = currentNode->leftChild == NULL;
+            }
             if (currentNode->balance == 0) {
                 *flag = false;
             }
