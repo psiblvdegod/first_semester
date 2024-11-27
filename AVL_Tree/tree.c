@@ -44,25 +44,19 @@ Value getValue(Node * node, bool * errorCode) {
     return node->value;
 }
 
-Value getKey(Node * node, bool * errorCode) {
-    if (node == NULL) {
-        *errorCode = true;
-        return "0";
+Node * getValueByKey(Node * currentNode, Value key, char ** result) {
+    if (currentNode == NULL) {
+        return NULL;
     }
-    return node->key;
-}
-
-Node * getNodeByKey(Node * currentNode, Value key, bool * errorCode) {
-    while (currentNode != NULL) {
-        if (strcmp(key, currentNode->key) < 0) {
-            currentNode = currentNode->leftChild;
-        }
-        else {
-            currentNode = currentNode->rightChild;
-        }
-        if (currentNode->key == key) {
-            return currentNode;
-        }
+    if (strcmp(key, currentNode->key) < 0) {
+        currentNode->leftChild = getValueByKey(currentNode->leftChild, key, result);
+    }
+    else if (strcmp(key, currentNode->key) > 0) {
+        currentNode->rightChild = getValueByKey(currentNode->rightChild, key, result);
+    }
+    if (strcmp(key, currentNode->key) == 0) {
+        *result = currentNode->value;
+        return currentNode;
     }
 }
 
@@ -171,66 +165,35 @@ Node * balance(Node * node, bool * flag) {
 
 Node *deleteNode(Node *node, Value key, bool * isHeightChanged) {
     bool externalFlagForInsert = false;
+    if (strcmp(key, node->key) < 0) {
+        node->leftChild = deleteNode(node->leftChild, key, isHeightChanged);
+    }
+    else if (strcmp(key, node->key) > 0){
+        node->rightChild = deleteNode(node->rightChild, key, isHeightChanged);
+    }
     if (strcmp(key, node->key) == 0) {
-        if (node->leftChild == NULL && node->rightChild == NULL) { //лист
+        if (node->leftChild == NULL && node->rightChild == NULL) {
             free(node);
             return NULL;
         }
-        else if (node->leftChild != NULL && node->rightChild != NULL) { //оба есть
-            if (node->balance <= 0) {
-                Node * children = insert(node->leftChild, node->rightChild, &externalFlagForInsert);
-                free(node);
-                return children;
-            }
-            else {
-                Node * children = insert(node->rightChild, node->leftChild, &externalFlagForInsert);
-                free(node);
-                return children;
-            }
+        else if (node->leftChild != NULL && node->rightChild != NULL) {
+            Node * children = insert(node->leftChild, node->rightChild, isHeightChanged);
+            free(node);
+            return children;
         }
-        else if (node->leftChild != NULL) { //левый
+        else if (node->leftChild != NULL) {
             Node * child = node->leftChild;
             free(node);
             return child;
         }
-        else if (node->rightChild != NULL) {// правый
+        else if (node->rightChild != NULL) {
             Node * child = node->rightChild;
             free(node);
             return child;
         }
     }
-    else if (strcmp(key, node->key) < 0) {
-        node->leftChild = deleteNode(node->leftChild, key, isHeightChanged);
-    }
-    else {
-        node->rightChild = deleteNode(node->rightChild, key, isHeightChanged);
-    }
-    return node;
-    //return balance(node, errorCode);
+    return balance(node, isHeightChanged);
 }
-
-
-/*
-Node * insert(Node ** currentNode, Node * newNode, bool * errorCode) {
-    if (newNode == NULL) {
-        return NULL;
-    }
-    if (*currentNode == NULL) {
-        *currentNode = newNode;
-        return NULL;
-    }
-    if (strcmp(newNode->key, (*currentNode)->key) < 0) {
-        insert(&((*currentNode)->leftChild), newNode, errorCode);
-        --(*currentNode)->balance;
-    }
-    else if (strcmp(newNode->key, (*currentNode)->key) > 0) {
-        insert(&((*currentNode)->rightChild), newNode, errorCode);
-        ++(*currentNode)->balance;
-    }
-    return *currentNode;
-    //return balance(*currentNode, errorCode);
-}
- */
 
 Node * insert (Node * currentNode, Node * newNode, bool * flag) {
     if (newNode == NULL) {
@@ -243,15 +206,14 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
         newNode->leftChild = currentNode->leftChild;
         newNode->rightChild = currentNode->rightChild;
         free(currentNode);
-        *flag = false; //ничего не делает
+        *flag = false;
         return newNode;
     }
     if (strcmp(newNode->key, currentNode->key) < 0) {
         currentNode->leftChild = insert(currentNode->leftChild, newNode, flag);
         if (*flag || currentNode->leftChild == newNode) {
             ++currentNode->balance;
-            //*flag = currentNode->balance != 0;   // одно из двух
-            if (currentNode->balance == 0) {       // idk
+            if (currentNode->balance == 0) {
                 *flag = false;
             }
             if (currentNode->leftChild == newNode) {
@@ -263,7 +225,6 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
         currentNode->rightChild = insert(currentNode->rightChild, newNode, flag);
         if (*flag || currentNode->rightChild == newNode) {
             --currentNode->balance;
-            //*flag = currentNode->balance != 0;
             if (currentNode->rightChild == newNode) {
                 *flag = currentNode->leftChild == NULL;
             }
@@ -272,49 +233,6 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
             }
         }
     }
-    //return currentNode;
     return balance(currentNode, flag);
 }
-
-
-/*
-bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
-    if (strcmp(key, node->value.key) == 0) {
-        node->value.value = value;
-        return false;
-    }
-
-    if (node->left == NULL && strcmp(key, node->value.key) < 0) {
-        Node* newNode = createTree(key, value, errorCode);
-        node->left = newNode;
-        --node->balance;
-        return node->balance != 0;
-    }
-    else if (node->right == NULL && strcmp(key, node->value.key) > 0) {
-        Node* newNode = createTree(key, value, errorCode);
-        node->right = newNode;
-        ++node->balance;
-        return node->balance != 0;
-    }
-
-    bool needChangeBalance = false;
-    if (strcmp(key, node->value.key) > 0) {
-        needChangeBalance = addNode(node->right, key, value, errorCode);
-        if (needChangeBalance) {
-            ++node->balance;
-            return node->balance != 0;
-        }
-        return false;
-    }
-    if (strcmp(key, node->value.key) < 0) {
-        needChangeBalance = addNode(node->left, key, value, errorCode);
-        if (needChangeBalance) {
-            --node->balance;
-            return node->balance != 0;
-        }
-        return false;
-    }
-}
-
- */
 

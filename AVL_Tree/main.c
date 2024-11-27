@@ -2,28 +2,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tests.h"
-/*
-void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
+
+void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
     if (userQuery == 1) {
         char * value = calloc(50, sizeof(char));
-        if (value == NULL) {
+        char * key = calloc(50, sizeof (char));
+        if (value == NULL || key == NULL) {
             printf("Memory allocation error.\n");
             return;
         }
-        int key = 0;
         printf("Enter value and key.\n");
-        int inputValidation = scanf("%s%d", value, &key);
+        int inputValidation = scanf("%s%s", value, key);
         while(getchar() != '\n');
         if (inputValidation != 2) {
             printf("Invalid value.\n");
             return;
         }
-        Node *node = createNode(value, key, errorCode);
-        if (getRoot(*tree) == NULL) {
-            *tree = createTree(node, errorCode);
+        bool isHeightChanged = false;
+        Node *node = createNode(value, key, &isHeightChanged);
+        if (*root == NULL) {
+            *root = node;
         }
         else {
-            addNode(*tree, node, errorCode);
+            insert(*root, node, &isHeightChanged);
         }
         if (!(*errorCode)) {
             printf("Node added.\n");
@@ -31,19 +32,24 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
         return;
     }
     if (userQuery == 2 || userQuery == 3) {
-        int key = 0;
+        char * key = calloc(50, sizeof (char));
+        if (key == NULL) {
+            printf("Memory allocation error.\n");
+            return;
+        }
         printf("Enter key.\n");
-        int inputValidation = scanf("%d", &key);
+        int inputValidation = scanf("%s", key);
         while(getchar() != '\n');
         if (inputValidation != 1) {
             printf("Invalid value.\n");
             return;
         }
-        Node * node = getNodeByKey(*tree, key, errorCode);
+        char * result = NULL;
+        Node * node = getValueByKey(*root, key, &result);
         if (node != NULL && userQuery == 2) {
             printf("%s\n", getValue(node, errorCode));
         }
-        else if (node != NULL && userQuery == 3) {
+        else if (result != NULL && userQuery == 3) {
             printf("There is value with this key.\n");
         }
         else {
@@ -52,35 +58,28 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
         return;
     }
     if (userQuery == 4) {
-        int key = 0;
+        char * key = calloc(50, sizeof (char));
+        if (key == NULL) {
+            printf("Memory allocation error.\n");
+            return;
+        }
         printf("Enter key.\n");
-        int inputValidation = scanf("%d", &key);
+        int inputValidation = scanf("%s", key);
         while(getchar() != '\n');
         if (inputValidation != 1) {
             printf("Invalid value.\n");
             return;
         }
-        Node * node = getNodeByKey(*tree, key, errorCode);
-        if (node != NULL) {
-            disposeNode(*tree, node, errorCode);
-            printf("Node deleted.\n");
-        }
-        else {
-            printf("No such key.\n");
-        }
+        bool isHeightChanged = false;
+        *root = deleteNode(*root, key, &isHeightChanged);
     }
 }
-*/
+
 int main(void) {
-    rotationTests();
-    /*
-    if (!treeTests()) {
-        printf("Error. Tests failed.\n");
-        return -1;
-    }
-     */
+    treeTests();
     int userQuery = 1;
     bool errorCode = false;
+    Node * root = NULL;
     while (userQuery) {
         printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");
         int inputValidation = scanf("%d", &userQuery);
@@ -89,7 +88,7 @@ int main(void) {
             printf("Invalid value.\n");
             continue;
         }
-        //queryProcessing(&tree, userQuery, &errorCode);
+        queryProcessing(&root, userQuery, &errorCode);
         if (errorCode) {
             printf("Something went wrong.\n");
             errorCode = false;
