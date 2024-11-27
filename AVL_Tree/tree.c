@@ -76,10 +76,6 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
         if (nodeRightChild != NULL) {
             node->rightChild = nodeRightChild->leftChild;
             nodeRightChild->leftChild = node;
-
-            node->balance = nodeRightChild->balance == 0 ? 1 : 0; // с вики
-            nodeRightChild->balance = nodeRightChild->balance == 0 ? -1 : 0;
-
             return nodeRightChild;
         }
     }
@@ -89,10 +85,6 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
         if (nodeLeftChild != NULL) {
             node->leftChild = nodeLeftChild->rightChild;
             nodeLeftChild->rightChild = node;
-
-            node->balance = nodeLeftChild->balance == 0 ? -1 : 0; // с вики
-            nodeLeftChild->balance = nodeLeftChild->balance == 0 ? 1 : 0;
-
             return nodeLeftChild;
         }
     }
@@ -104,69 +96,116 @@ Node * doBigRotation(Node * node, Side direction, bool * errorCode) {
         return NULL;
     }
     if (direction == left) {
-        Node * rightLeftDescendant = node->rightChild->leftChild;
-        doSmallRotation(node->rightChild, right, errorCode);
-        node->rightChild = rightLeftDescendant;
-        doSmallRotation(node, left, errorCode);
-        return rightLeftDescendant;
+        Node * centralDescendant = node->rightChild->leftChild;
+        node->rightChild->leftChild = centralDescendant->rightChild;
+        centralDescendant->rightChild = node->rightChild;
+        node->rightChild = centralDescendant->leftChild;
+        centralDescendant->leftChild = node;
+        return centralDescendant;
     }
     if (direction == right) {
-        Node * leftRightDescendant = node->leftChild->rightChild;
-        doSmallRotation(node->leftChild, left, errorCode);
-        node->leftChild = leftRightDescendant;
-        doSmallRotation(node, right, errorCode);
-        return leftRightDescendant;
+
     }
 }
 
 Node * balance(Node * node, bool * errorCode) {
-    if (node->balance >= 2) {
-        if (node->rightChild->balance >= 0) {
-            return doSmallRotation(node, left, errorCode);
+    if (node->balance == -2) {
+        if (node->rightChild->balance <= 0) {
+            node = doSmallRotation(node, left, errorCode);
+            if (node->balance == -1) {
+                node->balance = 0;
+                node->leftChild->balance = 0;
+            }
+            else if (node->balance == 0) {
+                node->balance = 1;
+                node->leftChild->balance = -1;
+            }
         }
-        return doBigRotation(node, left, errorCode);
+        else {
+            node = doBigRotation(node, left, errorCode);
+
+            if (node->balance == 1) {
+                node->leftChild->balance = 0;
+                node->rightChild->balance = -1;
+            } else if (node->balance == -1) {
+                node->leftChild->balance = 1;
+                node->rightChild->balance = 0;
+            } else if (node->balance == 0) {
+                node->leftChild->balance = 0;
+                node->rightChild->balance = 0;
+            }
+            node->balance = 0;
+        }
     }
-    if (node->balance <= -2) {
-        if (node->leftChild->balance <= 0) {
-            return doSmallRotation(node, right, errorCode);
+    if (node->balance == 2) {
+        if (node->leftChild->balance >= 0) {
+            node = doSmallRotation(node, right, errorCode);
+            if (node->balance == 1) {
+                node->balance = 0;
+                node->leftChild->balance = 0;
+            }
+            else if (node->balance == 0) {
+                node->balance = 1;
+                node->leftChild->balance = -1;
+            }
         }
-        return doBigRotation(node, right, errorCode);
+        else {
+            node = doBigRotation(node, right, errorCode);
+
+            if (node->balance == 1) {
+                node->leftChild->balance = -1;
+                node->rightChild->balance = 0;
+            } else if (node->balance == -1) {
+                node->leftChild->balance = 0;
+                node->rightChild->balance = 1;
+            } else if (node->balance == 0) {
+                node->leftChild->balance = 0;
+                node->rightChild->balance = 0;
+            }
+            node->balance = 0;
+        }
     }
     return node;
 }
 
-Node *deleteNode(Node *node, Value key, bool * errorCode) {
-    if (node == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
+Node *deleteNode(Node *node, Value key, bool * isHeightChanged) {
+    bool externalFlagForInsert = false;
     if (strcmp(key, node->key) == 0) {
         if (node->leftChild == NULL && node->rightChild == NULL) { //лист
             free(node);
             return NULL;
         }
-        else if (node->leftChild != NULL) { //есть левый и правый или только левый
-            insert(node->leftChild, node->rightChild, errorCode);
-            return node->leftChild; //надо как-то освободить память (для целой ветви)
+        else if (node->leftChild != NULL && node->rightChild != NULL) { //оба есть
+            if (node->balance <= 0) {
+                Node * children = insert(node->leftChild, node->rightChild, &externalFlagForInsert);
+                free(node);
+                return children;
+            }
+            else {
+                Node * children = insert(node->rightChild, node->leftChild, &externalFlagForInsert);
+                free(node);
+                return children;
+            }
         }
-        else if (node->rightChild != NULL) { //есть только правый
-            return node->rightChild; //надо как-то освободить память (только удаленный узел)
+        else if (node->leftChild != NULL) { //левый
+            Node * child = node->leftChild;
+            free(node);
+            return child;
+        }
+        else if (node->rightChild != NULL) {// правый
+            Node * child = node->rightChild;
+            free(node);
+            return child;
         }
     }
-    if (strcmp(key, node->key) < 0) {
-        node->leftChild = deleteNode(node->leftChild, key, errorCode);
-        if (!errorCode) {
-            ++node->leftChild->balance;
-        }
+    else if (strcmp(key, node->key) < 0) {
+        node->leftChild = deleteNode(node->leftChild, key, isHeightChanged);
     }
     else {
-        node->rightChild = deleteNode(node->rightChild, key, errorCode);
-        if (!errorCode) {
-            --node->leftChild->balance;
-        }
+        node->rightChild = deleteNode(node->rightChild, key, isHeightChanged);
     }
     return node;
-    return balance(node, errorCode);
+    //return balance(node, errorCode);
 }
 
 
@@ -209,18 +248,18 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
     if (strcmp(newNode->key, currentNode->key) < 0) {
         currentNode->leftChild = insert(currentNode->leftChild, newNode, flag);
         if (*flag || currentNode->leftChild == newNode) {
-            --currentNode->balance;
-            //*flag = currentNode->balance != 0;
-            *flag = currentNode->rightChild == NULL;
-            if (currentNode->balance == 0) {
+            ++currentNode->balance;
+            //*flag = currentNode->balance != 0;   // одно из двух
+            if (currentNode->balance == 0) {       // idk
                 *flag = false;
             }
+            *flag = currentNode->rightChild == NULL;
         }
     }
     if (strcmp(newNode->key, currentNode->key) > 0) {
         currentNode->rightChild = insert(currentNode->rightChild, newNode, flag);
         if (*flag || currentNode->rightChild == newNode) {
-            ++currentNode->balance;
+            --currentNode->balance;
             //*flag = currentNode->balance != 0;
             *flag = currentNode->leftChild == NULL;
             if (currentNode->balance == 0) {
