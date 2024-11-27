@@ -151,11 +151,11 @@ Node * balance(Node * node, bool * flag) {
             node = doBigRotation(node, right, flag);
 
             if (node->balance == 1) {
-                node->leftChild->balance = -1;
-                node->rightChild->balance = 0;
-            } else if (node->balance == -1) {
                 node->leftChild->balance = 0;
-                node->rightChild->balance = 1;
+                node->rightChild->balance = -1;
+            } else if (node->balance == -1) {
+                node->leftChild->balance = 1;
+                node->rightChild->balance = 0;
             } else if (node->balance == 0) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = 0;

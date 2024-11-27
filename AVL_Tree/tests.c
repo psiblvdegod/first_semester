@@ -73,6 +73,8 @@ bool rotationTests() {
     errorCode = false;
     root = insert(root, node10, &errorCode);
     errorCode = false;
+    root = insert(root, node6, &errorCode);
+    errorCode = false;
 
 
     root = deleteNode(root, "8", &errorCode);
