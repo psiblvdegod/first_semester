@@ -66,11 +66,8 @@ Node * getNodeByKey(Node * currentNode, Value key, bool * errorCode) {
     }
 }
 
-Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
-    if (node == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
+Node * doSmallRotation(Node * node, Side direction, bool * flag) {
+    *flag = false;
     if (direction == left) {
         Node * nodeRightChild = node->rightChild;
         if (nodeRightChild != NULL) {
@@ -79,7 +76,6 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
             return nodeRightChild;
         }
     }
-
     if (direction == right) {
         Node * nodeLeftChild = node->leftChild;
         if (nodeLeftChild != NULL) {
@@ -90,11 +86,8 @@ Node * doSmallRotation(Node * node, Side direction, bool * errorCode) {
     }
 }
 
-Node * doBigRotation(Node * node, Side direction, bool * errorCode) {
-    if (node == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
+Node * doBigRotation(Node * node, Side direction, bool * flag) {
+    *flag = false;
     if (direction == left) {
         Node * centralDescendant = node->rightChild->leftChild;
         node->rightChild->leftChild = centralDescendant->rightChild;
@@ -104,14 +97,19 @@ Node * doBigRotation(Node * node, Side direction, bool * errorCode) {
         return centralDescendant;
     }
     if (direction == right) {
-
+        Node * centralDescendant = node->leftChild->rightChild;
+        node->leftChild->rightChild = centralDescendant->leftChild;
+        centralDescendant->leftChild = node->leftChild;
+        node->leftChild = centralDescendant->rightChild;
+        centralDescendant->rightChild = node;
+        return centralDescendant;
     }
 }
 
-Node * balance(Node * node, bool * errorCode) {
+Node * balance(Node * node, bool * flag) {
     if (node->balance == -2) {
         if (node->rightChild->balance <= 0) {
-            node = doSmallRotation(node, left, errorCode);
+            node = doSmallRotation(node, left, flag);
             if (node->balance == -1) {
                 node->balance = 0;
                 node->leftChild->balance = 0;
@@ -122,7 +120,7 @@ Node * balance(Node * node, bool * errorCode) {
             }
         }
         else {
-            node = doBigRotation(node, left, errorCode);
+            node = doBigRotation(node, left, flag);
 
             if (node->balance == 1) {
                 node->leftChild->balance = 0;
@@ -139,18 +137,18 @@ Node * balance(Node * node, bool * errorCode) {
     }
     if (node->balance == 2) {
         if (node->leftChild->balance >= 0) {
-            node = doSmallRotation(node, right, errorCode);
+            node = doSmallRotation(node, right, flag);
             if (node->balance == 1) {
                 node->balance = 0;
-                node->leftChild->balance = 0;
+                node->rightChild->balance = 0;
             }
             else if (node->balance == 0) {
                 node->balance = 1;
-                node->leftChild->balance = -1;
+                node->rightChild->balance = -1;
             }
         }
         else {
-            node = doBigRotation(node, right, errorCode);
+            node = doBigRotation(node, right, flag);
 
             if (node->balance == 1) {
                 node->leftChild->balance = -1;
@@ -267,7 +265,7 @@ Node * insert (Node * currentNode, Node * newNode, bool * flag) {
             }
         }
     }
-    return currentNode;
+    //return currentNode;
     return balance(currentNode, flag);
 }
 
@@ -312,3 +310,4 @@ bool addNode(Node* node, const char* key, const char* value, bool* errorCode) {
 }
 
  */
+
