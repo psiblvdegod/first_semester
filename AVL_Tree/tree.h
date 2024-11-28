@@ -1,25 +1,21 @@
 #pragma once
 #include <stdbool.h>
 
-typedef enum {
-    left,
-    right
-} Side;
-
 typedef struct Node Node;
 
 typedef const char * Value;
 
 Node * createNode(Value value, Value key, bool * errorCode);
 
-Value getValue(Node * node, bool * errorCode);
+//returns NULL if value is not found
+Value findValueByKey(Node * root, Value key);
 
-Node * getValueByKey(Node * root, Value key, char ** result);
-
-Node * doSmallRotation(Node * node, Side direction, bool * errorCode);
-
-Node * doBigRotation(Node * node, Side direction, bool * errorCode);
-
+//adds node to tree. first root with createNode(...)
+//then use root = insert(root,...)
+//requires external boolean variable with false value.
+//isHeightChanged will be false after calling.
 Node * insert(Node * root, Node * newNode, bool * isHeightChanged);
 
+//requires external boolean variable with false value.
+//isHeightChanged will be false after calling.
 Node * dispose(Node * root, Value key, bool * isHeightChanged);

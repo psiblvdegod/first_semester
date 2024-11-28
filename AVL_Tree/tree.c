@@ -10,6 +10,9 @@ typedef struct Node {
     struct Node * rightChild;
 } Node;
 
+//defines rotation direction
+typedef enum { left, right } Direction;
+
 Node * createNode(Value value, Value key, bool * errorCode) {
     Node * node = calloc(1, sizeof(Node));
     if (node == NULL) {
@@ -24,31 +27,29 @@ Node * createNode(Value value, Value key, bool * errorCode) {
     return node;
 }
 
-Value getValue(Node * node, bool * errorCode) {
+Value findValueByKey(Node * node, Value key) {
     if (node == NULL) {
-        *errorCode = true;
+        return NULL;
+        //*errorCode = true;
+    }
+    while (node != NULL) {
+        if (strcmp(key, node->key) < 0) {
+            node = node->leftChild;
+        }
+        else if (strcmp(key, node->key) > 0) {
+            node = node->rightChild;
+        }
+        else if (strcmp(key, node->key) == 0) {
+            break;
+        }
+    }
+    if (node == NULL) {
         return NULL;
     }
     return node->value;
 }
 
-Node * getValueByKey(Node * currentNode, Value key, char ** result) {
-    if (currentNode == NULL) {
-        return NULL;
-    }
-    if (strcmp(key, currentNode->key) < 0) {
-        currentNode->leftChild = getValueByKey(currentNode->leftChild, key, result);
-    }
-    else if (strcmp(key, currentNode->key) > 0) {
-        currentNode->rightChild = getValueByKey(currentNode->rightChild, key, result);
-    }
-    if (strcmp(key, currentNode->key) == 0) {
-        *result = currentNode->value;
-        return currentNode;
-    }
-}
-
-Node * doSmallRotation(Node * node, Side direction, bool * flag) {
+Node * doSmallRotation(Node * node, Direction direction, bool * flag) {
     //*flag = false;
     if (direction == left) {
         Node * nodeRightChild = node->rightChild;
@@ -68,7 +69,7 @@ Node * doSmallRotation(Node * node, Side direction, bool * flag) {
     }
 }
 
-Node * doBigRotation(Node * node, Side direction, bool * flag) {
+Node * doBigRotation(Node * node, Direction direction, bool * flag) {
     //*flag = false;
     if (direction == left) {
         Node * centralDescendant = node->rightChild->leftChild;

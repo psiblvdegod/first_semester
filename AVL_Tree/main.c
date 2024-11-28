@@ -29,9 +29,8 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
         if (!(*errorCode)) {
             printf("Node added.\n");
         }
-        return;
     }
-    if (userQuery == 2 || userQuery == 3) {
+    else if (userQuery == 2 || userQuery == 3) {
         char * key = calloc(50, sizeof (char));
         if (key == NULL) {
             printf("Memory allocation error.\n");
@@ -44,20 +43,18 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
             printf("Invalid value.\n");
             return;
         }
-        char * result = NULL;
-        Node * node = getValueByKey(*root, key, &result);
-        if (node != NULL && userQuery == 2) {
-            printf("%s\n", getValue(node, errorCode));
-        }
-        else if (result != NULL && userQuery == 3) {
-            printf("There is value with this key.\n");
-        }
-        else {
+        Value result = findValueByKey(*root, key);
+        if (result == NULL) {
             printf("No such key.\n");
         }
-        return;
+        else if (userQuery == 2) {
+            printf("%s\n", result);
+        }
+        else if (userQuery == 3) {
+            printf("There is value with such key.\n");
+        }
     }
-    if (userQuery == 4) {
+    else if (userQuery == 4) {
         char * key = calloc(50, sizeof (char));
         if (key == NULL) {
             printf("Memory allocation error.\n");
@@ -72,11 +69,16 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
         }
         bool isHeightChanged = false;
         *root = dispose(*root, key, &isHeightChanged);
+        if (!(*errorCode)) {
+            printf("Node deleted.\n");
+        }
     }
 }
 
 int main(void) {
-    treeTests();
+    if (!treeTests()) {
+        printf("Error. Tests failed.\n");
+    }
     bool errorCode = false;
     int userQuery = 1;
     Node * root = NULL;
