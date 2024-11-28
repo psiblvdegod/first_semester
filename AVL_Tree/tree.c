@@ -152,6 +152,9 @@ Node * balance(Node * node, bool * flag) {
 }
 
 Node *dispose(Node *node, Value key, bool * isHeightChanged) {
+    if (node == NULL) {
+        return NULL;
+    }
     if (strcmp(key, node->key) < 0) {
         node->leftChild = dispose(node->leftChild, key, isHeightChanged);
         if (*isHeightChanged) {
