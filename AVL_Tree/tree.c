@@ -24,18 +24,6 @@ Node * createNode(Value value, Value key, bool * errorCode) {
     return node;
 }
 
-Node * getChild(Node * parent, Side position) {
-    if (parent == NULL) {
-        return NULL;
-    }
-    if (position == left) {
-        return parent->leftChild;
-    }
-    else {
-        return parent->rightChild;
-    }
-}
-
 Value getValue(Node * node, bool * errorCode) {
     if (node == NULL) {
         *errorCode = true;
@@ -61,7 +49,7 @@ Node * getValueByKey(Node * currentNode, Value key, char ** result) {
 }
 
 Node * doSmallRotation(Node * node, Side direction, bool * flag) {
-    *flag = false;
+    //*flag = false;
     if (direction == left) {
         Node * nodeRightChild = node->rightChild;
         if (nodeRightChild != NULL) {
@@ -81,7 +69,7 @@ Node * doSmallRotation(Node * node, Side direction, bool * flag) {
 }
 
 Node * doBigRotation(Node * node, Side direction, bool * flag) {
-    *flag = false;
+    //*flag = false;
     if (direction == left) {
         Node * centralDescendant = node->rightChild->leftChild;
         node->rightChild->leftChild = centralDescendant->rightChild;
@@ -163,34 +151,46 @@ Node * balance(Node * node, bool * flag) {
     return node;
 }
 
-Node *deleteNode(Node *node, Value key, bool * isHeightChanged) {
-    bool externalFlagForInsert = false;
+Node *dispose(Node *node, Value key, bool * isHeightChanged) {
     if (strcmp(key, node->key) < 0) {
-        node->leftChild = deleteNode(node->leftChild, key, isHeightChanged);
+        node->leftChild = dispose(node->leftChild, key, isHeightChanged);
+        if (*isHeightChanged) {
+            --node->balance;
+            if (node->balance == 1 || node->balance == -1) {
+                *isHeightChanged = false;
+            }
+        }
     }
     else if (strcmp(key, node->key) > 0){
-        node->rightChild = deleteNode(node->rightChild, key, isHeightChanged);
+        node->rightChild = dispose(node->rightChild, key, isHeightChanged);
+        if (*isHeightChanged) {
+            ++node->balance;
+            if (node->balance == 1 || node->balance == -1) {
+                *isHeightChanged = false;
+            }
+        }
     }
     if (strcmp(key, node->key) == 0) {
         if (node->leftChild == NULL && node->rightChild == NULL) {
-            free(node);
+            //free(node);
             return NULL;
         }
         else if (node->leftChild != NULL && node->rightChild != NULL) {
             Node * children = insert(node->leftChild, node->rightChild, isHeightChanged);
-            free(node);
+            //free(node);
             return children;
         }
         else if (node->leftChild != NULL) {
             Node * child = node->leftChild;
-            free(node);
+            //free(node);
             return child;
         }
         else if (node->rightChild != NULL) {
             Node * child = node->rightChild;
-            free(node);
+            //free(node);
             return child;
         }
+        *isHeightChanged = true;
     }
     return balance(node, isHeightChanged);
 }

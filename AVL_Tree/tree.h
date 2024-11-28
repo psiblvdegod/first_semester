@@ -22,4 +22,4 @@ Node * doBigRotation(Node * node, Side direction, bool * errorCode);
 
 Node * insert(Node * root, Node * newNode, bool * isHeightChanged);
 
-Node *deleteNode(Node * root, Value key, bool * isHeightChanged);
+Node * dispose(Node * root, Value key, bool * isHeightChanged);

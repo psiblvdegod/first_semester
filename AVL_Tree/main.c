@@ -24,7 +24,7 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
             *root = node;
         }
         else {
-            insert(*root, node, &isHeightChanged);
+            *root = insert(*root, node, &isHeightChanged);
         }
         if (!(*errorCode)) {
             printf("Node added.\n");
@@ -71,14 +71,14 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
             return;
         }
         bool isHeightChanged = false;
-        *root = deleteNode(*root, key, &isHeightChanged);
+        *root = dispose(*root, key, &isHeightChanged);
     }
 }
 
 int main(void) {
     treeTests();
-    int userQuery = 1;
     bool errorCode = false;
+    int userQuery = 1;
     Node * root = NULL;
     while (userQuery) {
         printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");

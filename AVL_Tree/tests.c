@@ -15,9 +15,6 @@ bool treeTests() {
     Node * node9 = createNode("i", "9", &errorCode);
     Node * node10 = createNode("j", "A", &errorCode);
 
-
-    Node * node44 = createNode("dd", "4", &errorCode);
-
     Node * root = node8;
     root = insert(root, node9, &errorCode);
     errorCode = false;
@@ -33,11 +30,9 @@ bool treeTests() {
     errorCode = false;
     root = insert(root, node10, &errorCode);
     errorCode = false;
-    root = insert(root, node6, &errorCode);
+    root = dispose(root, "8", &errorCode);
     errorCode = false;
-
-    root = deleteNode(root, "8", &errorCode);
-    root = deleteNode(root, "2", &errorCode);
-    root = deleteNode(root, "4", &errorCode);
-
+    root = dispose(root, "2", &errorCode);
+    errorCode = false;
+    root = dispose(root, "4", &errorCode);
 }
