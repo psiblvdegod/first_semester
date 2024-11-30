@@ -15,7 +15,7 @@ HashTable createHashTable(const int hashTableSize, bool * errorCode) {
         *errorCode = true;
         return NULL;
     }
-    HashTable hashTable = calloc(hashTableSize, 24); //43X
+    HashTable hashTable = calloc(hashTableSize, sizeof(List));
     if (hashTable == NULL) {
         *errorCode = true;
         return NULL;
@@ -39,7 +39,7 @@ int countElementsAmount(HashTable hashTable, const int hashTableSize, bool * err
     }
     int result = 0;
     for (int i = 0; i < hashTableSize; ++i) {
-        List * tableElement = hashTable[i];
+        List tableElement = hashTable[i];
         while (tableElement != NULL) {
             result += getFrequency(tableElement, errorCode);
             tableElement = getPrevious(tableElement);
@@ -55,7 +55,7 @@ int calculateMaxListLength(HashTable hashTable, const int hashTableSize, bool * 
     }
     int result = 0;
     for (int i = 0; i < hashTableSize; ++i) {
-        List * tableElement = hashTable[i];
+        List tableElement = hashTable[i];
         int tableElementLength = 0;
         while (tableElement != NULL) {
             ++tableElementLength;
@@ -76,7 +76,7 @@ double calculateAverageListLength(HashTable hashTable, const int hashTableSize, 
     for (int i = 0; i < hashTableSize; ++i) {
         if (hashTable[i] != NULL) {
             ++amountOfNotEmptyCells;
-            List * tableElement = hashTable[i];
+            List tableElement = hashTable[i];
             while (tableElement != NULL) {
                 ++cellsLength;
                 tableElement = getPrevious(tableElement);
@@ -105,7 +105,7 @@ int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bo
         return -1;
     }
     const int hash = hashFunction(hashTableSize, key);
-    List * list = hashTable[hash];
+    List list = hashTable[hash];
     while (list != NULL) {
         if (strcmp(key, getKey(list, errorCode)) == 0) {
             return getFrequency(list, errorCode);

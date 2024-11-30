@@ -1,7 +1,17 @@
 #include "tests.h"
+#include <stdio.h>
+#include <string.h>
 
 bool listTests() {
-    List * list =
+    bool errorCode = false;
+    List list = createListElement(NULL, "123", &errorCode);
+    list = createListElement(list, "234", &errorCode);
+    list = createListElement(list, "456", &errorCode);
+    list = createListElement(list, "567", &errorCode);
+    updateListByKey(list, "567", &errorCode);
+    const bool test1 = strcmp(getKey(getPrevious(list), &errorCode), "456") == 0;
+    const bool test2 = getFrequency(list, &errorCode) == 2;
+    return test1 && test2 && !errorCode;
 }
 
 bool hashTableTests() {

@@ -35,16 +35,19 @@ void printFrequencies(HashTable hashTable, const int hashTableSize, bool * error
         return;
     }
     for (int i = 0; i < hashTableSize; ++i) {
-        List * list = hashTable[i];
-        while (list != NULL) {
-            printf("%s - %d\n", getKey(list, errorCode), getFrequency(list, errorCode));
-            list = getPrevious(list);
+        List tableElement = hashTable[i];
+        while (tableElement != NULL) {
+            printf("%s - %d\n", getKey(tableElement, errorCode), getFrequency(tableElement, errorCode));
+            tableElement = getPrevious(tableElement);
         }
     }
 }
 
 int main(void) {
-    hashTableTests();
+    if (!hashTableTests() || !listTests()) {
+        printf("Error. Tests failed.\n");
+        return -1;
+    }
     bool errorCode = false;
     const char * path = "/Users/psiblvdegod/Desktop/homework/hashTable/text.txt";
     const int hashTableSize = 100;

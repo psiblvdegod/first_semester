@@ -3,3 +3,5 @@
 #include <stdbool.h>
 
 bool hashTableTests();
+
+bool listTests();

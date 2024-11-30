@@ -8,8 +8,8 @@ typedef struct ListElement {
     struct ListElement * previous;
 } ListElement;
 
-List * addElementToList(List * list, Key key, bool * errorCode) {
-    ListElement * newElement = calloc(1, sizeof(ListElement));
+List createListElement(List list, Key key, bool * errorCode) {
+    List newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
         *errorCode = true;
         return NULL;
@@ -17,10 +17,10 @@ List * addElementToList(List * list, Key key, bool * errorCode) {
     newElement->frequency = 1;
     newElement->key = key;
     newElement->previous = list;
-    return (List *)newElement;
+    return newElement;
 }
 
-List * updateListByKey(List * list, Key key, bool * errorCode) {
+List updateListByKey(List list, Key key, bool * errorCode) {
     ListElement * listElement = (ListElement *) list;
     while (listElement != NULL) {
         if (strcmp(listElement->key, key) == 0) {
@@ -29,29 +29,29 @@ List * updateListByKey(List * list, Key key, bool * errorCode) {
         }
         listElement = listElement->previous;
     }
-    list = addElementToList(list, key, errorCode);
+    list = createListElement(list, key, errorCode);
     return list;
 }
 
-List * getPrevious(List * list) {
+List getPrevious(List list) {
     if (list == NULL) {
         return NULL;
     }
-    return ((ListElement *) list->previous);
+    return list->previous;
 }
 
-int getFrequency(List * list, bool * errorCode) {
+int getFrequency(List list, bool * errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return -1;
     }
-    return ((ListElement *) list)->frequency;
+    return list->frequency;
 }
 
-Key getKey(List * list, bool * errorCode) {
+Key getKey(List list, bool * errorCode) {
     if (list == NULL) {
         *errorCode = true;
         return NULL;
     }
-    return ((ListElement *) list)->key;
+    return list->key;
 }
