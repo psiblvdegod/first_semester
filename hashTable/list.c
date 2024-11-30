@@ -32,3 +32,26 @@ List * updateListByKey(List * list, Key key, bool * errorCode) {
     list = addElementToList(list, key, errorCode);
     return list;
 }
+
+List * getPrevious(List * list) {
+    if (list == NULL) {
+        return NULL;
+    }
+    return ((ListElement *) list->previous);
+}
+
+int getFrequency(List * list, bool * errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return -1;
+    }
+    return ((ListElement *) list)->frequency;
+}
+
+Key getKey(List * list, bool * errorCode) {
+    if (list == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    return ((ListElement *) list)->key;
+}
