@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 
-void fillHashTable(List ** hashTable, const int hashTableSize, const char * path, bool * errorCode) {
+void fillHashTable(HashTable hashTable, const int hashTableSize, const char * path, bool * errorCode) {
     FILE * file = fopen(path, "r");
     if (file == NULL) {
         *errorCode = true;
@@ -17,18 +17,19 @@ void fillHashTable(List ** hashTable, const int hashTableSize, const char * path
         if (buffer == NULL) {
             *errorCode = true;
             printf("Memory allocation error.\n");
-            return;
+            break;
         }
         bool inputValidation = fscanf(file, "%s", buffer) == 1;
-        if (!inputValidation) return;
+        if (!inputValidation) break;
         updateHashTableByKey(hashTable, hashTableSize, buffer, errorCode);
         if (*errorCode) {
             printf("Something went wrong.\n");
         }
     }
+    fclose(file);
 }
 
-void printFrequencies(List ** hashTable, const int hashTableSize, bool * errorCode) {
+void printFrequencies(HashTable hashTable, const int hashTableSize, bool * errorCode) {
     if (hashTable == NULL) {
         *errorCode = true;
         return;
@@ -42,7 +43,7 @@ void printFrequencies(List ** hashTable, const int hashTableSize, bool * errorCo
     }
 }
 
-int findFrequencyByKey(List ** hashTable, const int hashTableSize, Key key, bool * errorCode) {
+int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
     if (hashTable == NULL) {
         *errorCode = true;
         return -1;
@@ -62,7 +63,7 @@ int main(void) {
     bool errorCode = false;
     const char * path = "/Users/psiblvdegod/Desktop/homework/hashTable/text.txt";
     const int hashTableSize = 100;
-    List ** hashTable = createHashTable(hashTableSize, &errorCode);
+    HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     fillHashTable(hashTable, hashTableSize, path, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");

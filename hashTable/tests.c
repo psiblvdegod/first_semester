@@ -5,5 +5,5 @@ bool listTests() {
 }
 
 bool hashTableTests() {
-    List ** hashTable = 
+    HashTable hashTable;
 }
