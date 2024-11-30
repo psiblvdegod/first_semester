@@ -10,15 +10,15 @@ void fillHashTable(List ** hashTable, const int hashTableSize, const char * path
         printf("File not found.\n");
         return;
     }
-    bool inputValidation = true;
-    while (inputValidation) {
+    while (true) {
         char * buffer = calloc(50, sizeof(char));
         if (buffer == NULL) {
             *errorCode = true;
             printf("Memory allocation error.\n");
             return;
         }
-        inputValidation = fscanf(file, "%s", buffer) == 1;
+        bool inputValidation = fscanf(file, "%s", buffer) == 1;
+        if (!inputValidation) return;
         updateHashTableByKey(hashTable, hashTableSize, buffer, errorCode);
         if (*errorCode) {
             printf("Something went wrong.\n");

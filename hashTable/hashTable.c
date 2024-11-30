@@ -4,7 +4,7 @@
 int hashFunction(const int hashTableSize, Key key) {
     int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
-        result = (result * key[i]) % (hashTableSize - 1) + 1;
+        result = (result + (unsigned char) key[i]) % hashTableSize;
     }
     return result;
 }
