@@ -8,9 +8,9 @@ bool treeTests() {
     Node *node3 = createNode("c", "3", &errorCode);
     Node *node4 = createNode("d", "4", &errorCode);
     Node *root = node1;
-    root = insert(root, node2, &errorCode);
-    errorCode = false;
     root = insert(root, node3, &errorCode);
+    errorCode = false;
+    root = insert(root, node2, &errorCode);
     errorCode = false;
     root = insert(root, node4, &errorCode);
     errorCode = false;
