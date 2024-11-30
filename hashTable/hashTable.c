@@ -1,4 +1,5 @@
 #include "hashTable.h"
+#include <string.h>
 #include <stdlib.h>
 
 int hashFunction(const int hashTableSize, Key key) {
@@ -70,14 +71,19 @@ double calculateAverageListLength(HashTable hashTable, const int hashTableSize, 
         *errorCode = true;
         return -1;
     }
-    const int amountOfElements = countElementsAmount(hashTable, hashTableSize, errorCode);
     int amountOfNotEmptyCells = 0;
+    int cellsLength = 0;
     for (int i = 0; i < hashTableSize; ++i) {
         if (hashTable[i] != NULL) {
             ++amountOfNotEmptyCells;
+            List * tableElement = hashTable[i];
+            while (tableElement != NULL) {
+                ++cellsLength;
+                tableElement = getPrevious(tableElement);
+            }
         }
     }
-    return ((double) amountOfElements) / ((double) amountOfNotEmptyCells);
+    return ((double) cellsLength) / ((double) amountOfNotEmptyCells);
 }
 
 double calculateFillFactor(HashTable hashTable, const int hashTableSize, bool * errorCode) {
@@ -86,9 +92,25 @@ double calculateFillFactor(HashTable hashTable, const int hashTableSize, bool * 
         return -1;
     }
     const int amountOfElements = countElementsAmount(hashTable, hashTableSize, errorCode);
-    int amountOfNotEmptyCells = 0;
+    int amountOfCells = 0;
     for (int i = 0; i < hashTableSize; ++i) {
-        ++amountOfNotEmptyCells;
+        ++amountOfCells;
     }
-    return ((double) amountOfElements) / ((double) amountOfNotEmptyCells);
+    return ((double) amountOfElements) / ((double) amountOfCells);
+}
+
+int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
+    if (hashTable == NULL) {
+        *errorCode = true;
+        return -1;
+    }
+    const int hash = hashFunction(hashTableSize, key);
+    List * list = hashTable[hash];
+    while (list != NULL) {
+        if (strcmp(key, getKey(list, errorCode)) == 0) {
+            return getFrequency(list, errorCode);
+        }
+        list = getPrevious(list);
+    }
+    return 0;
 }

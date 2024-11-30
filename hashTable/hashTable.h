@@ -17,3 +17,7 @@ int countElementsAmount(HashTable hashTable, int hashTableSize, bool * errorCode
 int calculateMaxListLength(HashTable hashTable, int hashTableSize, bool * errorCode);
 
 double calculateAverageListLength(HashTable hashTable, int hashTableSize, bool * errorCode);
+
+double calculateFillFactor(HashTable hashTable, int hashTableSize, bool * errorCode);
+
+int findFrequencyByKey(HashTable hashTable, int hashTableSize, Key key, bool * errorCode);

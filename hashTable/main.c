@@ -1,9 +1,9 @@
 #include "list.h"
 #include "hashTable.h"
+#include "tests.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 
 void fillHashTable(HashTable hashTable, const int hashTableSize, const char * path, bool * errorCode) {
     FILE * file = fopen(path, "r");
@@ -43,23 +43,8 @@ void printFrequencies(HashTable hashTable, const int hashTableSize, bool * error
     }
 }
 
-int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
-    if (hashTable == NULL) {
-        *errorCode = true;
-        return -1;
-    }
-    const int hash = hashFunction(hashTableSize, key);
-    List * list = hashTable[hash];
-    while (list != NULL) {
-        if (strcmp(key, getKey(list, errorCode)) == 0) {
-            return getFrequency(list, errorCode);
-        }
-        list = getPrevious(list);
-    }
-    return 0;
-}
-
 int main(void) {
+    hashTableTests();
     bool errorCode = false;
     const char * path = "/Users/psiblvdegod/Desktop/homework/hashTable/text.txt";
     const int hashTableSize = 100;
@@ -69,7 +54,7 @@ int main(void) {
         printf("Something went wrong.\n");
         return -1;
     }
-    printf("1 - get frequency by key. 2 - print all frequencies.\n");
+    printf("1 - get frequency by key. 2 - print all frequencies. 3 - print fill factor, max and average list length\n");
     int userQuery = 0;
     int inputValidation = scanf("%d", &userQuery);
     if (inputValidation != 1) {
@@ -97,5 +82,13 @@ int main(void) {
     }
     else if (userQuery == 2) {
         printFrequencies(hashTable, hashTableSize, &errorCode);
+    }
+    else if (userQuery == 3) {
+        const double fillFactor = calculateFillFactor(hashTable, hashTableSize, &errorCode);
+        const double averageListLength = calculateAverageListLength(hashTable, hashTableSize, &errorCode);
+        const int maxListLength = calculateMaxListLength(hashTable, hashTableSize, &errorCode);
+        printf("fill factor: %lf\n", fillFactor);
+        printf("average list length: %lf\n", averageListLength);
+        printf("max list length: %d\n", maxListLength);
     }
 }
