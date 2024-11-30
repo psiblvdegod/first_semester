@@ -34,8 +34,11 @@ void printFrequencies(List ** hashTable, const int hashTableSize, bool * errorCo
         return;
     }
     for (int i = 0; i < hashTableSize; ++i) {
-        if (hashTable[i] == NULL) continue;
-        printf("%s - %d\n", getKey(hashTable[i], errorCode), getFrequency(hashTable[i], errorCode));
+        List * list = hashTable[i];
+        while (list != NULL) {
+            printf("%s - %d\n", getKey(list, errorCode), getFrequency(list, errorCode));
+            list = getPrevious(list);
+        }
     }
 }
 
@@ -44,7 +47,7 @@ int findFrequencyByKey(List ** hashTable, const int hashTableSize, Key key, bool
         *errorCode = true;
         return -1;
     }
-    int hash = hashFunction(hashTableSize, key);
+    const int hash = hashFunction(hashTableSize, key);
     List * list = hashTable[hash];
     while (list != NULL) {
         if (strcmp(key, getKey(list, errorCode)) == 0) {

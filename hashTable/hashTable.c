@@ -15,9 +15,6 @@ List ** createHashTable(const int hashTableSize, bool * errorCode) {
         *errorCode = true;
         return NULL;
     }
-    for (int i = 0; i < hashTableSize; ++i) {
-        hashTable[i] = NULL;
-    }
     return hashTable;
 }
 
