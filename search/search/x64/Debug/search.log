@@ -1,6 +1,0 @@
-﻿  searchCode.c
-C:\Users\user\Desktop\git_repository\search\searchCode.c(9,9): warning C4098: insertionSort: функция типа "void", возвращающая значение
-C:\Users\user\Desktop\git_repository\search\searchCode.c(28,9): warning C4098: smartQsort: функция типа "void", возвращающая значение
-C:\Users\user\Desktop\git_repository\search\searchCode.c(112,5): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\user\Desktop\git_repository\search\searchCode.c(103,1): warning C4715: search: значение возвращается не при всех путях выполнения
-  search.vcxproj -> C:\Users\user\Desktop\git_repository\search\x64\Debug\search.exe
