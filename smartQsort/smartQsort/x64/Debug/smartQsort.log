@@ -1,4 +1,0 @@
-﻿  smartQsortCode.c
-C:\Users\user\Desktop\git_repository\smartQsort\smartQsortCode.c(8,9): warning C4098: insertionSort: функция типа "void", возвращающая значение
-C:\Users\user\Desktop\git_repository\smartQsort\smartQsortCode.c(27,9): warning C4098: smartQsort: функция типа "void", возвращающая значение
-  smartQsort.vcxproj -> C:\Users\user\Desktop\git_repository\smartQsort\x64\Debug\smartQsort.exe
