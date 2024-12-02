@@ -114,3 +114,27 @@ int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bo
     }
     return 0;
 }
+
+HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * errorCode) {
+    if (hashTable == NULL || hashTableSize < 0) {
+        *errorCode = true;
+        return hashTable;
+    }
+    const double fillFactor = calculateFillFactor(hashTable, hashTableSize, errorCode);
+    if (fillFactor < 2) {
+        return hashTable;
+    }
+    const int newSize = (int)(fillFactor) * hashTableSize;
+    HashTable newHashTable = createHashTable(newSize, errorCode);
+    if (*errorCode) {
+        return hashTable;
+    }
+    for (int i = 0; i < hashTableSize; ++i) {
+        while(hashTable[i] != NULL) {
+            updateHashTableByKey(newHashTable, newSize, getKey(hashTable[i], errorCode), errorCode);
+            hashTable[i] = getPrevious(hashTable[i]);
+        }
+    }
+    free(hashTable);
+    return newHashTable;
+}

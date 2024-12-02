@@ -19,8 +19,7 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char * pa
             printf("Memory allocation error.\n");
             break;
         }
-        bool inputValidation = fscanf(file, "%s", buffer) == 1;
-        if (!inputValidation) break;
+        if (fscanf(file, "%s", buffer) != 1) break;
         updateHashTableByKey(hashTable, hashTableSize, buffer, errorCode);
         if (*errorCode) {
             printf("Something went wrong.\n");
@@ -53,6 +52,7 @@ int main(void) {
     const int hashTableSize = 100;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     fillHashTable(hashTable, hashTableSize, path, &errorCode);
+    hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");
         return -1;

@@ -12,6 +12,11 @@ HashTable createHashTable(int hashTableSize, bool * errorCode);
 //uses updateListByKey.
 void updateHashTableByKey(HashTable hashTable, int hashTableSize, Key key, bool * errorCode);
 
+//counts fill factor. if it < 2 nothing happens.
+//else creates new table with bigger size and fills it with old values.
+//the old table will be freed, reassign the pointer.
+HashTable expandHashTable(HashTable hashTable, int hashTableSize, bool * errorCode);
+
 int countElementsAmount(HashTable hashTable, int hashTableSize, bool * errorCode);
 
 int calculateMaxListLength(HashTable hashTable, int hashTableSize, bool * errorCode);
