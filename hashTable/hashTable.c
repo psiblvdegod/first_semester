@@ -5,7 +5,7 @@
 int hashFunction(const int hashTableSize, Key key) {
     int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
-        result = (result + (unsigned char) key[i]) % hashTableSize;
+        result = (result + ((unsigned char) key[i]) * (i + 1)) % hashTableSize;
     }
     return result;
 }
@@ -41,7 +41,7 @@ int countElementsAmount(HashTable hashTable, const int hashTableSize, bool * err
     for (int i = 0; i < hashTableSize; ++i) {
         List tableElement = hashTable[i];
         while (tableElement != NULL) {
-            result += getFrequency(tableElement, errorCode);
+            ++result;
             tableElement = getPrevious(tableElement);
         }
     }
@@ -72,18 +72,13 @@ double calculateAverageListLength(HashTable hashTable, const int hashTableSize, 
         return -1;
     }
     int amountOfNotEmptyCells = 0;
-    int cellsLength = 0;
+    const int elementsAmount = countElementsAmount(hashTable, hashTableSize, errorCode);
     for (int i = 0; i < hashTableSize; ++i) {
         if (hashTable[i] != NULL) {
             ++amountOfNotEmptyCells;
-            List tableElement = hashTable[i];
-            while (tableElement != NULL) {
-                ++cellsLength;
-                tableElement = getPrevious(tableElement);
-            }
         }
     }
-    return ((double) cellsLength) / ((double) amountOfNotEmptyCells);
+    return ((double) elementsAmount) / ((double) amountOfNotEmptyCells);
 }
 
 double calculateFillFactor(HashTable hashTable, const int hashTableSize, bool * errorCode) {
@@ -91,12 +86,8 @@ double calculateFillFactor(HashTable hashTable, const int hashTableSize, bool * 
         *errorCode = true;
         return -1;
     }
-    const int amountOfElements = countElementsAmount(hashTable, hashTableSize, errorCode);
-    int amountOfCells = 0;
-    for (int i = 0; i < hashTableSize; ++i) {
-        ++amountOfCells;
-    }
-    return ((double) amountOfElements) / ((double) amountOfCells);
+    const int elementsAmount = countElementsAmount(hashTable, hashTableSize, errorCode);
+    return ((double) elementsAmount) / ((double) hashTableSize);
 }
 
 int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
@@ -138,3 +129,4 @@ HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * e
     free(hashTable);
     return newHashTable;
 }
+

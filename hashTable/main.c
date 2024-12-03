@@ -52,7 +52,7 @@ int main(void) {
     const int hashTableSize = 100;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     fillHashTable(hashTable, hashTableSize, path, &errorCode);
-    hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
+    //hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");
         return -1;
