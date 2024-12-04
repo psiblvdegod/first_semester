@@ -109,30 +109,31 @@ int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bo
     return 0;
 }
 
-HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL || hashTableSize < 0) {
+HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * errorCode) {
+    if (hashTable == NULL || *hashTableSize < 0) {
         *errorCode = true;
         return hashTable;
     }
-    const double fillFactor = calculateFillFactor(hashTable, hashTableSize, errorCode);
+    const double fillFactor = calculateFillFactor(hashTable, *hashTableSize, errorCode);
     if (fillFactor < 2) {
         return hashTable;
     }
-    const int newSize = (int)(fillFactor * hashTableSize * 2);
+    const int newSize = (int)(fillFactor * (*hashTableSize) * 2);
     HashTable newHashTable = createHashTable(newSize, errorCode);
     if (*errorCode) {
         return hashTable;
     }
-    for (int i = 0; i < hashTableSize; ++i) {
+    for (int i = 0; i < *hashTableSize; ++i) {
         while (hashTable[i] != NULL) {
-            const int hash = hashFunction(hashTableSize, getKey(hashTable[i], errorCode));
+            const int hash = hashFunction(*hashTableSize, getKey(hashTable[i], errorCode));
             Key key = getKey(hashTable[i], errorCode);
             Value frequency = getFrequency(hashTable[i], errorCode);
             newHashTable[hash] = updateList(newHashTable[hash], key, frequency, errorCode);
             hashTable[i] = getPrevious(hashTable[i]);
         }
     }
-    //free(hashTable);
+    free(hashTable);
+    *hashTableSize = newSize;
     return newHashTable;
 }
 

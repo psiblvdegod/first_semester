@@ -15,7 +15,8 @@ void updateHashTable(HashTable hashTable, int hashTableSize, Key key, bool * err
 //counts fill factor. if it < 2 nothing happens.
 //else creates new table with bigger size and fills it with old values.
 //the old table will be freed, reassign the pointer.
-HashTable expandHashTable(HashTable hashTable, int hashTableSize, bool * errorCode);
+//changes hashTableSize to size of new hash table (that's why it's int * instead of const int)
+HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * errorCode);
 
 int countElementsAmount(HashTable hashTable, int hashTableSize, bool * errorCode);
 

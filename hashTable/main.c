@@ -29,17 +29,16 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char * pa
 }
 
 int main(void) {
-    /*
     if (!hashTableTests() || !listTests()) {
         printf("Error. Tests failed.\n");
         return -1;
-    }*/
+    }
     bool errorCode = false;
     const char * path = "/Users/psiblvdegod/Desktop/homework/hashTable/text.txt";
-    const int hashTableSize = 100;
+    int hashTableSize = 100;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     fillHashTable(hashTable, hashTableSize, path, &errorCode);
-    hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
+    //hashTable = expandHashTable(hashTable, &hashTableSize, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");
         return -1;
