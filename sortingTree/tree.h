@@ -5,23 +5,20 @@ typedef struct Node Node;
 
 typedef const char * Value;
 
-typedef enum { left, right } Direction;
+//child's position for getChild
+typedef enum { left, right } Side;
 
+//creates node with NULL children.
+//to link nodes into trees, use insert()
 Node * createNode(Value value, bool * errorCode);
 
-//returns NULL if value is not found
-Value findValueByKey(Node * root, Value key);
-
-//adds node to tree. first root with createNode(...)
+//adds node to tree. first create root with createNode(...)
 //then use root = insert(root,...)
-//requires external boolean variable with false value.
-//isHeightChanged will be false after calling.
-Node * insert(Node * root, Node * newNode, bool * isHeightChanged);
+Node * insert (Node * currentNode, Node * newNode);
 
-//requires external boolean variable with false value.
-//isHeightChanged will be false after calling.
-Node * dispose(Node * root, Value key, bool * isHeightChanged);
+//side = left to get left child, side = right to right child.
+//returns NULL if there is no child.
+Node * getChild(Node * node, Side side);
 
-Node * getChild(Node * node, Direction side);
-
+//gets value, returns NULL if node is NULL.
 Value getValue(Node * node);

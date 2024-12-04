@@ -1,16 +1,21 @@
-#include <stdio.h>
+#include "test.h"
 #include "sorting.h"
 #include "tree.h"
 
 int main(void) {
+    if (!treeSortTests() || !treeTests()) {
+        return -1;
+    }
     bool errorCode = false;
     Value array[] = {"123", "234", "567","91" ,"12"};
-    int arraySize = 5;
+    const int arraySize = sizeof(array) / sizeof(Value);
     treeSort(array, arraySize, &errorCode);
-    /*
-    Node * root = buildTree(array, arraySize, &errorCode);
-    int external = 0;
-    symmetricalTraversal(root, array, &external, &errorCode);
-     */
-    int a = 0;
+    if (errorCode) {
+        printf("Something went wrong.\n");
+        return -1;
+    }
+    printf("Sorted array:\n");
+    for (int i = 0; i < arraySize; ++i) {
+        printf("%s ", array[i]);
+    }
 }
