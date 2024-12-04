@@ -28,20 +28,6 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char * pa
     fclose(file);
 }
 
-void printFrequencies(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL) {
-        *errorCode = true;
-        return;
-    }
-    for (int i = 0; i < hashTableSize; ++i) {
-        List tableElement = hashTable[i];
-        while (tableElement != NULL) {
-            printf("%s - %d\n", getKey(tableElement, errorCode), getFrequency(tableElement, errorCode));
-            tableElement = getPrevious(tableElement);
-        }
-    }
-}
-
 int main(void) {
     if (!hashTableTests() || !listTests()) {
         printf("Error. Tests failed.\n");
@@ -52,7 +38,7 @@ int main(void) {
     const int hashTableSize = 100;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     fillHashTable(hashTable, hashTableSize, path, &errorCode);
-    //hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
+    hashTable = expandHashTable(hashTable, hashTableSize, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");
         return -1;
@@ -90,6 +76,10 @@ int main(void) {
         const double fillFactor = calculateFillFactor(hashTable, hashTableSize, &errorCode);
         const double averageListLength = calculateAverageListLength(hashTable, hashTableSize, &errorCode);
         const int maxListLength = calculateMaxListLength(hashTable, hashTableSize, &errorCode);
+        if (errorCode) {
+            printf("Something went wrong.\n");
+            return -1;
+        }
         printf("fill factor: %lf\n", fillFactor);
         printf("average list length: %lf\n", averageListLength);
         printf("max list length: %d\n", maxListLength);

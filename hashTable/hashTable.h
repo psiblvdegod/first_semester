@@ -26,3 +26,5 @@ double calculateAverageListLength(HashTable hashTable, int hashTableSize, bool *
 double calculateFillFactor(HashTable hashTable, int hashTableSize, bool * errorCode);
 
 int findFrequencyByKey(HashTable hashTable, int hashTableSize, Key key, bool * errorCode);
+
+void printFrequencies(HashTable hashTable, int hashTableSize, bool * errorCode);

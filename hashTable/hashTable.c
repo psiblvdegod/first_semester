@@ -1,4 +1,5 @@
 #include "hashTable.h"
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -122,7 +123,9 @@ HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * e
     }
     for (int i = 0; i < hashTableSize; ++i) {
         while(hashTable[i] != NULL) {
-            updateHashTableByKey(newHashTable, newSize, getKey(hashTable[i], errorCode), errorCode);
+            for (int j = 0; j < getFrequency(hashTable[i], errorCode); ++j) {
+                updateHashTableByKey(newHashTable, newSize, getKey(hashTable[i], errorCode), errorCode);
+            }
             hashTable[i] = getPrevious(hashTable[i]);
         }
     }
@@ -130,3 +133,16 @@ HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * e
     return newHashTable;
 }
 
+void printFrequencies(HashTable hashTable, const int hashTableSize, bool * errorCode) {
+    if (hashTable == NULL) {
+        *errorCode = true;
+        return;
+    }
+    for (int i = 0; i < hashTableSize; ++i) {
+        List tableElement = hashTable[i];
+        while (tableElement != NULL) {
+            printf("%s - %d\n", getKey(tableElement, errorCode), getFrequency(tableElement, errorCode));
+            tableElement = getPrevious(tableElement);
+        }
+    }
+}
