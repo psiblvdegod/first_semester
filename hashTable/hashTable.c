@@ -125,10 +125,8 @@ HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * error
     }
     for (int i = 0; i < *hashTableSize; ++i) {
         while (hashTable[i] != NULL) {
-            const int hash = hashFunction(*hashTableSize, getKey(hashTable[i], errorCode));
-            Key key = getKey(hashTable[i], errorCode);
-            Value frequency = getFrequency(hashTable[i], errorCode);
-            newHashTable[hash] = updateList(newHashTable[hash], key, frequency, errorCode);
+            const int hash = hashFunction(newSize, getKey(hashTable[i], errorCode));
+            newHashTable[hash] = updateList(newHashTable[hash], getKey(hashTable[i], errorCode), getFrequency(hashTable[i], errorCode), errorCode);
             hashTable[i] = getPrevious(hashTable[i]);
         }
     }
