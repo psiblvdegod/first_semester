@@ -10,74 +10,18 @@ Node * buildTree(Value *array, const int arraySize, bool * errorCode) {
     return root;
 }
 
-/*
-Tree * buildTree(FILE * stream, bool * errorCode) {
-    Tree * tree = NULL;
-    Stack * stack = createStack(errorCode);
-
-    while (!feof(stream)) {
-        Node * node = NULL;
-        int valueFromStream = getc(stream);
-        bool isDigit = false;
-        if (valueFromStream == ' ' || valueFromStream == '(' || valueFromStream == ')') {
-            continue;
-        }
-        if ('0' <= valueFromStream && valueFromStream <= '9') {
-            ungetc(valueFromStream, stream);
-            fscanf(stream, "%d", &valueFromStream);
-            isDigit = true;
-        }
-        node = createNode(valueFromStream, errorCode);
-        if (tree == NULL) {
-            tree = createTree(node, errorCode);
-            push(stack, node, errorCode);
-            continue;
-        }
-
-        Node * operation = getHead(stack, errorCode);
-        Node * leftChild = getChild(operation, left);
-        Node * rightChild = getChild(operation, right);
-
-        if (leftChild == NULL) {
-            addChild(operation, node, left, errorCode);
-        }
-        else if (rightChild == NULL) {
-            addChild(operation, node, right, errorCode);
-            pop(stack, errorCode);
-        }
-        if (!isDigit) {
-            push(stack, node, errorCode);
-        }
-    }
-    return tree;
-}
-*/
-/*
-int calculateTree(Node * node, bool * errorCode) {
-    if (getChild(node, left) == NULL) {
-        return getValue(node, errorCode);
-    }
-    Node * leftChild = getChild(node, left);
-    Node * rightChild = getChild(node, right);
-    switch(getValue(node, errorCode)) {
-        case '+':
-            return calculateTree(rightChild, errorCode) + calculateTree(leftChild, errorCode);
-        case '-':
-            return calculateTree(rightChild, errorCode) - calculateTree(leftChild, errorCode);
-        case '*':
-            return calculateTree(rightChild, errorCode) * calculateTree(leftChild, errorCode);
-        case '/':
-            return calculateTree(rightChild, errorCode) / calculateTree(leftChild, errorCode);
-    }
-}
-*/
-void treeSort(Node * node, Value * array, int * external, bool * errorCode) {
+void symmetricalTraversal(Node * node, Value * array, int * external, bool * errorCode) {
     if (node == NULL) {
         return;
     }
-    printAllNodes(getChild(node, left), array, external, errorCode);
-    printf("%s ", getValue(node));
+    symmetricalTraversal(getChild(node, left), array, external, errorCode);
     array[*external] = getValue(node);
     ++(*external);
-    printAllNodes(getChild(node, right), array, external, errorCode);
+    symmetricalTraversal(getChild(node, right), array, external, errorCode);
+}
+
+void treeSort(Value *array, const int arraySize, bool * errorCode) {
+    Node * root = buildTree(array, arraySize, errorCode);
+    int externalVariableForTraversal = 0;
+    symmetricalTraversal(root, array, &externalVariableForTraversal, errorCode);
 }
