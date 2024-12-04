@@ -1,7 +1,7 @@
 #include "sorting.h"
 #include <stdlib.h>
 
-Node * treeSorting(Value *array, const int arraySize, bool * errorCode) {
+Node * buildTree(Value *array, const int arraySize, bool * errorCode) {
     Node * root = createNode(array[0], errorCode);
     for (int i = 1; i < arraySize; ++i) {
         Node * newNode = createNode(array[i], errorCode);
@@ -70,18 +70,12 @@ int calculateTree(Node * node, bool * errorCode) {
             return calculateTree(rightChild, errorCode) / calculateTree(leftChild, errorCode);
     }
 }
-
+*/
 void printAllNodes(Node * node, bool * errorCode) {
     if (node == NULL) {
         return;
     }
-    if (getChild(node, left) != NULL) {
-        printf("%c ", getValue(node, errorCode));
-    }
-    else {
-        printf("%d ", getValue(node ,errorCode));
-    }
     printAllNodes(getChild(node, left), errorCode);
+    printf("%s ", getValue(node));
     printAllNodes(getChild(node, right), errorCode);
 }
-*/

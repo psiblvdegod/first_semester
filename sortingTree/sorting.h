@@ -16,4 +16,6 @@ void printAllNodes(Node * node, bool * errorCode);
 
 int calculateTree(Node * root, bool * errorCode);
 
-Node * treeSorting(Value *array, int arraySize, bool * errorCode);
+
+//builds tree of array's values. returns root.
+Node * buildTree(Value *array, int arraySize, bool * errorCode);
