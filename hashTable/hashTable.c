@@ -4,6 +4,9 @@
 #include <stdlib.h>
 
 int hashFunction(const int hashTableSize, Key key) {
+    if (hashTableSize < 1 || key == NULL) {
+        return 0;
+    }
     int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
         result = (result + ((unsigned char) key[i]) * (i + 1)) % hashTableSize;
@@ -19,18 +22,17 @@ HashTable createHashTable(const int hashTableSize, bool * errorCode) {
     HashTable hashTable = calloc(hashTableSize, sizeof(List));
     if (hashTable == NULL) {
         *errorCode = true;
-        return NULL;
     }
     return hashTable;
 }
 
-void updateHashTableByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
+void updateHashTable(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
     if (hashTable == NULL || hashTableSize <= 0) {
         *errorCode = true;
         return;
     }
     const int hash = hashFunction(hashTableSize, key);
-    hashTable[hash] = updateListByKey(hashTable[hash], key, errorCode);
+    hashTable[hash] = updateList(hashTable[hash], key, 1, errorCode);
 }
 
 int countElementsAmount(HashTable hashTable, const int hashTableSize, bool * errorCode) {
@@ -116,20 +118,21 @@ HashTable expandHashTable(HashTable hashTable, const int hashTableSize, bool * e
     if (fillFactor < 2) {
         return hashTable;
     }
-    const int newSize = (int)(fillFactor) * hashTableSize;
+    const int newSize = (int)(fillFactor * hashTableSize * 2);
     HashTable newHashTable = createHashTable(newSize, errorCode);
     if (*errorCode) {
         return hashTable;
     }
     for (int i = 0; i < hashTableSize; ++i) {
-        while(hashTable[i] != NULL) {
-            for (int j = 0; j < getFrequency(hashTable[i], errorCode); ++j) {
-                updateHashTableByKey(newHashTable, newSize, getKey(hashTable[i], errorCode), errorCode);
-            }
+        while (hashTable[i] != NULL) {
+            const int hash = hashFunction(hashTableSize, getKey(hashTable[i], errorCode));
+            Key key = getKey(hashTable[i], errorCode);
+            Value frequency = getFrequency(hashTable[i], errorCode);
+            newHashTable[hash] = updateList(newHashTable[hash], key, frequency, errorCode);
             hashTable[i] = getPrevious(hashTable[i]);
         }
     }
-    free(hashTable);
+    //free(hashTable);
     return newHashTable;
 }
 

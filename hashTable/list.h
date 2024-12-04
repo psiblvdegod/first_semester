@@ -6,13 +6,16 @@ typedef struct ListElement * List;
 
 typedef const char * Key;
 
+typedef int Value;
+
 //creates and adds element to list.
 //list may be NULL.
-List createListElement(List list, Key key, bool * errorCode);
+List createListElement(List list, Key key, Value frequency, bool * errorCode);
+
 
 //if there is element with such key in the list increases frequency.
 //else adds element making frequency = 1.
-List updateListByKey(List list, Key key, bool * errorCode);
+List updateList(List list, Key key, Value frequency, bool * errorCode);
 
 List getPrevious(List list);
 

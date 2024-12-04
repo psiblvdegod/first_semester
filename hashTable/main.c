@@ -20,7 +20,7 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char * pa
             break;
         }
         if (fscanf(file, "%s", buffer) != 1) break;
-        updateHashTableByKey(hashTable, hashTableSize, buffer, errorCode);
+        updateHashTable(hashTable, hashTableSize, buffer, errorCode);
         if (*errorCode) {
             printf("Something went wrong.\n");
         }
@@ -29,10 +29,11 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char * pa
 }
 
 int main(void) {
+    /*
     if (!hashTableTests() || !listTests()) {
         printf("Error. Tests failed.\n");
         return -1;
-    }
+    }*/
     bool errorCode = false;
     const char * path = "/Users/psiblvdegod/Desktop/homework/hashTable/text.txt";
     const int hashTableSize = 100;

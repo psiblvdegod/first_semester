@@ -3,34 +3,33 @@
 #include <string.h>
 
 typedef struct ListElement {
-    int frequency;
+    Value frequency;
     Key key;
     struct ListElement * previous;
 } ListElement;
 
-List createListElement(List list, Key key, bool * errorCode) {
+List createListElement(List list, Key key, Value frequency, bool * errorCode) {
     List newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
         *errorCode = true;
         return NULL;
     }
-    newElement->frequency = 1;
+    newElement->frequency = frequency;
     newElement->key = key;
     newElement->previous = list;
     return newElement;
 }
 
-List updateListByKey(List list, Key key, bool * errorCode) {
+List updateList(List list, Key key, Value frequency, bool * errorCode) {
     ListElement * listElement = (ListElement *) list;
     while (listElement != NULL) {
         if (strcmp(listElement->key, key) == 0) {
-            listElement->frequency += 1;
+            listElement->frequency += frequency;
             return list;
         }
         listElement = listElement->previous;
     }
-    list = createListElement(list, key, errorCode);
-    return list;
+    return createListElement(list, key, frequency, errorCode);
 }
 
 List getPrevious(List list) {

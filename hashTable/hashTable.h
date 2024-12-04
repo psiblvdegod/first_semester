@@ -10,7 +10,7 @@ HashTable createHashTable(int hashTableSize, bool * errorCode);
 //if there is element with such key in the table increases frequency.
 //else adds element making frequency = 1.
 //uses updateListByKey.
-void updateHashTableByKey(HashTable hashTable, int hashTableSize, Key key, bool * errorCode);
+void updateHashTable(HashTable hashTable, int hashTableSize, Key key, bool * errorCode);
 
 //counts fill factor. if it < 2 nothing happens.
 //else creates new table with bigger size and fills it with old values.

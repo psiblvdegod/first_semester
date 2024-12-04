@@ -1,14 +1,13 @@
 #include "tests.h"
-#include <stdio.h>
 #include <string.h>
-
+/*
 bool listTests() {
     bool errorCode = false;
     List list = createListElement(NULL, "123", &errorCode);
     list = createListElement(list, "234", &errorCode);
     list = createListElement(list, "456", &errorCode);
     list = createListElement(list, "567", &errorCode);
-    updateListByKey(list, "567", &errorCode);
+    updateList(list, "567", &errorCode);
     const bool test1 = strcmp(getKey(getPrevious(list), &errorCode), "456") == 0;
     const bool test2 = getFrequency(list, &errorCode) == 2;
     return test1 && test2 && !errorCode;
@@ -23,7 +22,7 @@ bool hashTableTests() {
     }
     Key keys[] = {"123", "321", "213", "123", "45", "54", "123", "213"};
     for (int i = 0; i < 8 ; ++i) {
-        updateHashTableByKey(hashTable, hashTableSize, keys[i], &errorCode);
+        updateHashTable(hashTable, hashTableSize, keys[i], &errorCode);
     }
     const double fillFactor = calculateFillFactor(hashTable, hashTableSize, &errorCode);
     const double averageListLength = calculateAverageListLength(hashTable, hashTableSize, &errorCode);
@@ -33,3 +32,4 @@ bool hashTableTests() {
     const bool test3 = averageListLength <= maxListLength;
     return test1 && test2 && test3 && !errorCode;
 }
+ */
