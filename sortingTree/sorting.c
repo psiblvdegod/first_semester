@@ -71,11 +71,13 @@ int calculateTree(Node * node, bool * errorCode) {
     }
 }
 */
-void printAllNodes(Node * node, bool * errorCode) {
+void treeSort(Node * node, Value * array, int * external, bool * errorCode) {
     if (node == NULL) {
         return;
     }
-    printAllNodes(getChild(node, left), errorCode);
+    printAllNodes(getChild(node, left), array, external, errorCode);
     printf("%s ", getValue(node));
-    printAllNodes(getChild(node, right), errorCode);
+    array[*external] = getValue(node);
+    ++(*external);
+    printAllNodes(getChild(node, right), array, external, errorCode);
 }

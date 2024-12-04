@@ -5,7 +5,9 @@
 int main(void) {
     bool errorCode = false;
     Value array[] = {"123", "234", "567","91" ,"12"};
-    Node * root = buildTree(array, 5, &errorCode);
-    printAllNodes(root, &errorCode);
+    int arraySize = 5;
+    Node * root = buildTree(array, arraySize, &errorCode);
+    int external = 0;
+    treeSort(root, array, &external, &errorCode);
     int a = 0;
 }

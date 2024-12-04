@@ -12,8 +12,7 @@
 //prints in prefix notation.
 //distinguishes the number from the operation by
 //checking for the presence of leftChild.
-void printAllNodes(Node * node, bool * errorCode);
-
+void treeSort(Node * node, Value * array, int * external, bool * errorCode);
 int calculateTree(Node * root, bool * errorCode);
 
 
