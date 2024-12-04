@@ -27,13 +27,7 @@ Node * insert (Node * currentNode, Node * newNode) {
     if (currentNode == NULL) {
         return newNode;
     }
-    if (strcmp(newNode->value, currentNode->value) == 0) {
-        newNode->leftChild = currentNode->leftChild;
-        newNode->rightChild = currentNode->rightChild;
-        free(currentNode);
-        return newNode;
-    }
-    if (strcmp(newNode->value, currentNode->value) < 0) {
+    if (strcmp(newNode->value, currentNode->value) <= 0) {
         currentNode->leftChild = insert(currentNode->leftChild, newNode);
 
     }

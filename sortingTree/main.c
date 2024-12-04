@@ -7,7 +7,7 @@ int main(void) {
         return -1;
     }
     bool errorCode = false;
-    Value array[] = {"123", "234", "567","91" ,"12"};
+    Value array[] = {"135", "132", "23","2344" ,"3223", "5342", "12"};
     const int arraySize = sizeof(array) / sizeof(Value);
     treeSort(array, arraySize, &errorCode);
     if (errorCode) {
