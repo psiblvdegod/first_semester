@@ -8,7 +8,7 @@ typedef struct Contacts * Directory;
 
 Directory createDirectory(int size, bool * errorCode);
 
-void addContact(Directory directory, const char * newName, const char * newNumber);
+void addContact(Directory directory, const char * newName, const char * newNumber, bool * errorCode);
 
 void fillDirectoryFromFile(Directory directory, FILE * file, bool * errorCode);
 
@@ -18,4 +18,4 @@ void searchByName(Directory directory, const char * key);
 
 void searchByNumber(Directory directory, const char * key);
 
-void saveContacts(Directory directory);
+void saveContactsToFile(Directory directory, FILE * file, bool * errorCode);
