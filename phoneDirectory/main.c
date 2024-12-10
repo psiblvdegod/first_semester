@@ -1,81 +1,73 @@
 #include "phoneDirectory.h"
+#include "tests.h"
 
-void actions(Contact * contacts, int * amountOfContacts, Contact ** mainPointer, int userAnswer, int * errorCode ) {
+void queryProcessing(Directory directory, const int userQuery, bool * errorCode) {
     if (!(*errorCode)) {
-        printf("Somehing went wrong.\n");
+        printf("Something went wrong.\n");
         return;
     }
-    switch (userAnswer) {
-        case 1:
+    if (userQuery == 1) {
         printf("Enter name and phone number.\nDo not separate name and surname with a space.\n");
-        newContact(contacts, amountOfContacts, mainPointer);
+        const char *newName = calloc(50, sizeof(char));
+        const char *newNumber = calloc(30, sizeof(char));
+        if (newName == NULL || newNumber == NULL) {
+            printf("Memory allocation error.\n");
+            return;
+        }
+        addContact(directory, newName, newNumber);
         printf("Contact added.\n");
-        break;
-        case 2:
-        printAllContacts(contacts, *amountOfContacts);
-        break;
-        case 3:
-        printf("Enter name you want to find:\n");
-        char keyName[50] = {0};
-        scanf("%s", keyName);
-        Contact * resultSearchName = searchByName(contacts, *amountOfContacts, keyName);
-        if (resultSearchName == NULL) {
-            printf("Contact does not exist.\n");
-        }
-        else {
-            printf("Name: %s\nNumber: %s\n", resultSearchName->name, resultSearchName->number);
-        }
-        break;
-        case 4:
-        printf("Enter number you want to find:\n");
-        char keyNumber[30] = {0};
-        scanf("%s", keyNumber);
-        Contact * resultSearchNumber = searchByNumber(contacts, *amountOfContacts, keyNumber);
-        if (resultSearchNumber == NULL) {
-            printf("Contact does not exist.\n");
-        }
-        else {
-            printf("Name: %s\nNumber: %s\n", resultSearchNumber->name, resultSearchNumber->number);
-        }
-        break;
-        case 5:
-        saveContacts(contacts, *amountOfContacts);
-        break;
     }
-}
-
-bool test() {
-    FILE * file = fopen("test.txt", "r+");
-    Contact * contacts[5];
-    int amountOfContacts = 0;
-    Contact * testPointer = NULL;
-    readContactsFromFile(contacts, &amountOfContacts, &testPointer, file);
-    const bool testRead = (amountOfContacts == 1) && (!strcmp(contacts[0]->name, "test")) && (!strcmp(contacts[0]->number, "1"));
-    addContact(contacts, &amountOfContacts, &testPointer, "test", "2");
-    const bool testAdd = !strcmp(contacts[1]->name, "test") && !strcmp(contacts[1]->number, "2");
-    Contact * search1 = searchByName(contacts, amountOfContacts, "test");
-    Contact * search2 = searchByNumber(contacts, amountOfContacts, "2");
-    const bool testSearch = (search1 == contacts[0]) && (search2 == contacts[1]);
-    return testRead && testAdd && testSearch;
-    
+    else if (userQuery == 2) {
+        printAllContacts(directory);
+    }
+    else if (userQuery == 3) {
+        printf("Enter name you want to find:\n");
+        char name[50] = {0};
+        const int inputValidation = scanf("%s", name);
+        if (inputValidation != 1) {
+            printf("Invalid value.\n");
+            return;
+        }
+        searchByName(directory, name);
+    }
+    else if (userQuery == 4) {
+        printf("Enter number you want to find:\n");
+        char number[30] = {0};
+        const int inputValidation = scanf("%s", number);
+        if (inputValidation != 1) {
+            printf("Invalid value.\n");
+            return;
+        }
+        searchByNumber(directory, number);
+    }
+    else if (userQuery == 5) {
+        printAllContacts(directory);
+    }
 }
 
 int main(void) {
-    if (!test()) {
+    if (!phoneDirectoryTest()) {
         printf("Error. Test failed.\n");
         return -1;
     }
-    FILE * file = fopen("text.txt", "r");
-    Contact * contacts[100];
-    int amountOfContacts = 0;
-    Contact * mainPointer = NULL;
-    readContactsFromFile(contacts, &amountOfContacts, &mainPointer, file);
-    printf("0 exit\n1 add contact\n2 print contacts\n3 search by name\n4 search by number\n5 save contacts\n");
-    int userAnswer = -1;
-    while (userAnswer) {
-        int errorCode = scanf("%d", &userAnswer);
+    bool errorCode = false;
+    FILE * file = fopen("/Users/psiblvdegod/Desktop/homework/phoneDirectory/text.txt", "r");
+    if (file == NULL) {
+        printf("File opening error.\n");
+        return -1;
+    }
+    Directory directory = createDirectory(100, &errorCode);
+    fillDirectoryFromFile(directory, file, &errorCode);
+    printf("0 exit // 1 add contact // 2 print contacts\n3 search by name // 4 search by number // 5 save contacts\n");
+    int userQuery = -1;
+    while (userQuery) {
+        const int inputValidation = scanf("%d", &userQuery);
+        if (inputValidation != 1) {
+            printf("Invalid value.\n");
+            continue;
+        }
         while (getchar() != '\n');
-        actions(contacts, &amountOfContacts, &mainPointer, userAnswer, &errorCode);
+        queryProcessing(directory, userQuery, &errorCode);
     }
     fclose(file);
 }

@@ -1,8 +1,4 @@
-//
-// Created by psiblvdegod on 10.12.2024.
-//
+#pragma once
+#include <stdbool.h>
 
-#ifndef PHONEDIRECTORY_TESTS_H
-#define PHONEDIRECTORY_TESTS_H
-
-#endif //PHONEDIRECTORY_TESTS_H
+bool phoneDirectoryTest();
