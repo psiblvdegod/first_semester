@@ -3,4 +3,5 @@ project(phoneDirectory C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(phoneDirectory main.c phoneDirectory.c phoneDirectory.h test.c test.h)
+add_executable(phoneDirectory
+        main.c tests.c phoneDirectory.c)
