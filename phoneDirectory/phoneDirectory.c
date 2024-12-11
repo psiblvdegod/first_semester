@@ -82,14 +82,16 @@ void searchByNumber(Directory directory, const char * key) {
     printf("There is no such contact.\n");
 }
 
-void saveContactsToFile(Directory directory, FILE * file, bool * errorCode) {
-    if (file == NULL) {
+void saveContactsToFile(Directory directory, const char * filePath, bool * errorCode) {
+    if (filePath == NULL) {
         *errorCode = true;
     }
+    FILE * file = fopen(filePath, "w");
     for (int i = 0; i < directory->amountOfContacts; ++i) {
         Contact * currentContact = directory->contacts[i];
         fprintf(file, "%s %s\n", currentContact->name, currentContact->number);
     }
     fprintf(file, "\n");
     printf("Contacts saved.\n");
+    fclose(file);
 }

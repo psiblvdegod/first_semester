@@ -44,12 +44,6 @@ void queryProcessing(Directory directory, const int userQuery, FILE * file, bool
         }
         searchByNumber(directory, number);
     }
-    else if (userQuery == 5) {
-        saveContactsToFile(directory, file, errorCode);
-        if (*errorCode) {
-            printf("File saving error.\n");
-        }
-    }
     if (*errorCode) {
         printf("Something went wrong.\n");
         *errorCode = false;
@@ -62,7 +56,8 @@ int main(void) {
         return -1;
     }
     bool errorCode = false;
-    FILE * file = fopen("/Users/psiblvdegod/Desktop/homework/phoneDirectory/text.txt", "r");
+    const char * filePath = "/Users/psiblvdegod/Desktop/homework/phoneDirectory/text.txt";
+    FILE * file = fopen(filePath, "r");
     if (file == NULL) {
         printf("File opening error.\n");
         return -1;
@@ -83,6 +78,12 @@ int main(void) {
         }
         while (getchar() != '\n');
         queryProcessing(directory, userQuery, file, &errorCode);
+        if (userQuery == 5) {
+            saveContactsToFile(directory, filePath, &errorCode);
+            if (errorCode) {
+                printf("File saving error.\n");
+            }
+        }
     }
     fclose(file);
 }

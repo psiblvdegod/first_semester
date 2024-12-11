@@ -3,12 +3,8 @@
 bool phoneDirectoryTest() {
     bool errorCode = false;
     Directory directory = createDirectory(10, &errorCode);
-    printf("phoneDirectoryTest()\n");
-    addContact(directory, "first", "second", &errorCode);
-    addContact(directory, "third", "fourth", &errorCode);
-    printAllContacts(directory);
-    addContact(directory, "ifYouSeeThis", "searchWorksProperly", &errorCode);
-    searchByName(directory, "ifYouSeeThis");
-    printf("test finished.\n\n");
+    addContact(directory, "1st", "2nd", &errorCode);
+    addContact(directory, "3rd", "4th", &errorCode);
+    addContact(directory, "5th", "6th", &errorCode);
     return !errorCode;
 }
