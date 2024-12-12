@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct HashTableInternals {
+    List * table;
+    int size;
+} HashTableInternals;
+
 int hashFunction(const int hashTableSize, Key key) {
     if (hashTableSize < 1 || key == NULL) {
         return 0;
@@ -19,109 +24,18 @@ HashTable createHashTable(const int hashTableSize, bool * errorCode) {
         *errorCode = true;
         return NULL;
     }
-    HashTable hashTable = calloc(hashTableSize, sizeof(List));
-    if (hashTable == NULL) {
-        *errorCode = true;
-    }
-    return hashTable;
-}
-
-void updateHashTable(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
-    if (hashTable == NULL || hashTableSize <= 0) {
-        *errorCode = true;
-        return;
-    }
-    const int hash = hashFunction(hashTableSize, key);
-    hashTable[hash] = updateList(hashTable[hash], key, 1, errorCode);
-}
-
-int countElementsAmount(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL || hashTableSize <= 0) {
-        *errorCode = true;
-        return -1;
-    }
-    int result = 0;
-    for (int i = 0; i < hashTableSize; ++i) {
-        List tableElement = hashTable[i];
-        while (tableElement != NULL) {
-            ++result;
-            tableElement = getPrevious(tableElement);
-        }
-    }
-    return result;
-}
-
-double calculateFillFactor(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL || hashTableSize <= 0) {
-        *errorCode = true;
-        return -1;
-    }
-    const int elementsAmount = countElementsAmount(hashTable, hashTableSize, errorCode);
-    return ((double) elementsAmount) / ((double) hashTableSize);
-}
-
-int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
-    if (hashTable == NULL) {
-        *errorCode = true;
-        return -1;
-    }
-    const int hash = hashFunction(hashTableSize, key);
-    List list = hashTable[hash];
-    while (list != NULL) {
-        if (strcmp(key, getKey(list, errorCode)) == 0) {
-            return getFrequency(list, errorCode);
-        }
-        list = getPrevious(list);
-    }
-    return 0;
-}
-
-HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * errorCode) {
-    if (hashTable == NULL || *hashTableSize < 0) {
-        *errorCode = true;
-        return hashTable;
-    }
-    const double fillFactor = calculateFillFactor(hashTable, *hashTableSize, errorCode);
-    if (fillFactor < 2) {
-        return hashTable;
-    }
-    const int newSize = (int)(fillFactor * (*hashTableSize) * 2);
-    HashTable newHashTable = createHashTable(newSize, errorCode);
-    if (*errorCode) {
-        return hashTable;
-    }
-    for (int i = 0; i < *hashTableSize; ++i) {
-        while (hashTable[i] != NULL) {
-            const int hash = hashFunction(newSize, getKey(hashTable[i], errorCode));
-            newHashTable[hash] = updateList(newHashTable[hash], getKey(hashTable[i], errorCode), getFrequency(hashTable[i], errorCode), errorCode);
-            hashTable[i] = getPrevious(hashTable[i]);
-        }
-    }
-    free(hashTable);
-    *hashTableSize = newSize;
-    return newHashTable;
-}
-
-char * findCommonestElement(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL) {
+    List * table = calloc(hashTableSize, sizeof(List));
+    if (table == NULL) {
         *errorCode = true;
         return NULL;
     }
-    char * result = NULL;
-    int currentMaxAmount = 0;
-    for (int i = 0; i < hashTableSize; ++i) {
-        List tableElement = hashTable[i];
-        while (tableElement != NULL) {
-            const int frequency = getFrequency(tableElement, errorCode);
-            char * key = getKey(tableElement, errorCode);
-            result = currentMaxAmount < frequency ? key : result;
-            tableElement = getPrevious(tableElement);
-        }
-    }
-    return result;
+    HashTable hashTable = calloc(1, sizeof(HashTableInternals));
+    hashTable->table = table;
+    hashTable->size = hashTableSize;
+    return hashTable;
 }
 
-void fillHashTable(HashTable hashTable, const int hashTableSize, FILE * file, bool * errorCode) {
+void fillHashTable(HashTable hashTable, FILE * file, bool * errorCode) {
     if (file == NULL) {
         *errorCode = true;
         printf("File not found.\n");
@@ -134,10 +48,44 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, FILE * file, bo
             printf("Memory allocation error.\n");
             break;
         }
-        if (fscanf(file, "%s", buffer) != 1) break;
-        updateHashTable(hashTable, hashTableSize, buffer, errorCode);
+        if (fscanf(file, "%s", buffer) != 1) {
+            break;
+        }
+        updateHashTable(hashTable, buffer, errorCode);
         if (*errorCode) {
             printf("Something went wrong.\n");
+            return;
         }
     }
+}
+
+void updateHashTable(HashTable hashTable, Key key, bool *errorCode) {
+    if (hashTable == NULL || hashTable->size <= 0) {
+        *errorCode = true;
+        return;
+    }
+    const int hash = hashFunction(hashTable->size, key);
+    hashTable->table[hash] = updateList(hashTable->table[hash], key, 1, errorCode);
+}
+
+const char *findCommonestElement(HashTable hashTable, bool * errorCode) {
+    if (hashTable == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    char * result = NULL;
+    int currentMaxAmount = 0;
+    for (int i = 0; i < hashTable->size; ++i) {
+        List tableElement = hashTable->table[i];
+        while (tableElement != NULL) {
+            const int frequency = getFrequency(tableElement, errorCode);
+            const char * key = getKey(tableElement, errorCode);
+            if (currentMaxAmount < frequency) {
+                currentMaxAmount = frequency;
+                result = (char *)key;
+            }
+            tableElement = getPrevious(tableElement);
+        }
+    }
+    return result;
 }
