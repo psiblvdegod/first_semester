@@ -1,4 +1,5 @@
 #include "tests.h"
+#include "phoneDirectory.h"
 
 bool phoneDirectoryTest() {
     bool errorCode = false;

@@ -1,8 +1,12 @@
 #include "phoneDirectory.h"
 #include "tests.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void queryProcessing(Directory directory, const int userQuery, FILE * file, bool * errorCode) {
-    if (userQuery == 1) {
+void queryProcessing(Directory directory, const char userQuery, bool * errorCode) {
+    if (userQuery == '1') {
         printf("Enter name and phone number.\nDo not separate name and surname with a space.\n");
         char *newName = calloc(50, sizeof(char));
         char *newNumber = calloc(30, sizeof(char));
@@ -11,6 +15,7 @@ void queryProcessing(Directory directory, const int userQuery, FILE * file, bool
             return;
         }
         const int inputValidation = scanf("%s %s", newName, newNumber);
+        while (getchar() != '\n');
         if (inputValidation != 2) {
             printf("Invalid value.\n");
             return;
@@ -21,10 +26,10 @@ void queryProcessing(Directory directory, const int userQuery, FILE * file, bool
         }
         printf("Contact added.\n");
     }
-    else if (userQuery == 2) {
+    else if (userQuery == '2') {
         printAllContacts(directory);
     }
-    else if (userQuery == 3) {
+    else if (userQuery == '3') {
         printf("Enter name you want to find:\n");
         char name[50] = {0};
         const int inputValidation = scanf("%s", name);
@@ -34,7 +39,7 @@ void queryProcessing(Directory directory, const int userQuery, FILE * file, bool
         }
         searchByName(directory, name);
     }
-    else if (userQuery == 4) {
+    else if (userQuery == '4') {
         printf("Enter number you want to find:\n");
         char number[30] = {0};
         const int inputValidation = scanf("%s", number);
@@ -56,7 +61,7 @@ int main(void) {
         return -1;
     }
     bool errorCode = false;
-    const char * filePath = "/Users/psiblvdegod/Desktop/homework/phoneDirectory/text.txt";
+    const char * filePath = "../text.txt";
     FILE * file = fopen(filePath, "r");
     if (file == NULL) {
         printf("File opening error.\n");
@@ -68,21 +73,19 @@ int main(void) {
         printf("Directory creating error.\n");
         return -1;
     }
-    int userQuery = -1;
+    char userQuery = -1;
     while (userQuery) {
         printf("0 exit // 1 add contact // 2 print contacts\n3 search by name // 4 search by number // 5 save contacts\n");
-        const int inputValidation = scanf("%d", &userQuery);
-        if (inputValidation != 1 || userQuery < 0 || userQuery > 5) {
+        scanf("%c", &userQuery);
+        while (getchar() != '\n');
+        if (userQuery < '0' || userQuery > '5') {
             printf("Invalid value.\n");
             continue;
         }
-        while (getchar() != '\n');
-        queryProcessing(directory, userQuery, file, &errorCode);
-        if (userQuery == 5) {
+        queryProcessing(directory, userQuery, &errorCode);
+        if (userQuery == '5') {
             saveContactsToFile(directory, filePath, &errorCode);
-            if (errorCode) {
-                printf("File saving error.\n");
-            }
+            printf("%s.\n", errorCode ? "File saving error" : "Contacts saved");
         }
     }
     fclose(file);

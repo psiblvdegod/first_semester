@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -85,13 +84,16 @@ void searchByNumber(Directory directory, const char * key) {
 void saveContactsToFile(Directory directory, const char * filePath, bool * errorCode) {
     if (filePath == NULL) {
         *errorCode = true;
+        return;
     }
     FILE * file = fopen(filePath, "w");
+    if (file == NULL) {
+        *errorCode = true;
+        return;
+    }
     for (int i = 0; i < directory->amountOfContacts; ++i) {
         Contact * currentContact = directory->contacts[i];
         fprintf(file, "%s %s\n", currentContact->name, currentContact->number);
     }
-    fprintf(file, "\n");
-    printf("Contacts saved.\n");
     fclose(file);
 }
