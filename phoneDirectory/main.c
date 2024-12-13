@@ -33,6 +33,7 @@ void queryProcessing(Directory directory, const char userQuery, bool * errorCode
         printf("Enter name you want to find:\n");
         char name[50] = {0};
         const int inputValidation = scanf("%s", name);
+        while (getchar() != '\n');
         if (inputValidation != 1) {
             printf("Invalid value.\n");
             return;
@@ -43,6 +44,7 @@ void queryProcessing(Directory directory, const char userQuery, bool * errorCode
         printf("Enter number you want to find:\n");
         char number[30] = {0};
         const int inputValidation = scanf("%s", number);
+        while (getchar() != '\n');
         if (inputValidation != 1) {
             printf("Invalid value.\n");
             return;
@@ -74,7 +76,7 @@ int main(void) {
         return -1;
     }
     char userQuery = -1;
-    while (userQuery) {
+    while (userQuery != '0') {
         printf("0 exit // 1 add contact // 2 print contacts\n3 search by name // 4 search by number // 5 save contacts\n");
         scanf("%c", &userQuery);
         while (getchar() != '\n');
