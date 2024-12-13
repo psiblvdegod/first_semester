@@ -25,11 +25,11 @@ HashTable createHashTable(const int hashTableSize, bool * errorCode) {
         return NULL;
     }
     List * table = calloc(hashTableSize, sizeof(List));
-    if (table == NULL) {
+    HashTable hashTable = calloc(1, sizeof(HashTableInternals));
+    if (table == NULL || hashTable == NULL) {
         *errorCode = true;
         return NULL;
     }
-    HashTable hashTable = calloc(1, sizeof(HashTableInternals));
     hashTable->table = table;
     hashTable->size = hashTableSize;
     return hashTable;
