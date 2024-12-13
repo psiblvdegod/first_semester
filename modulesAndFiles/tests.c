@@ -12,6 +12,6 @@ bool hashTableTest() {
     updateHashTable(hashTable, "345", &errorCode);
     updateHashTable(hashTable, "123", &errorCode);
     updateHashTable(hashTable, "657", &errorCode);
-    const bool test = strcmp(findCommonestElement(hashTable, &errorCode), "123") == 0;
-    return test && !errorCode;
+    const bool findTest = strcmp(findCommonestElement(hashTable, &errorCode), "123") == 0;
+    return findTest && !errorCode;
 }

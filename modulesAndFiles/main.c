@@ -8,7 +8,7 @@ int main(void) {
         printf("Error. Test failed.\n");
         return -1;
     }
-        bool errorCode = false;
+    bool errorCode = false;
     const int hashTableSize = 1000;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     if (hashTable == NULL) {
