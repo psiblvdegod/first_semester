@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "tests.h"
 #include "hashTable.h"
 
 int main(void) {
-    bool errorCode = false;
+    if (!hashTableTest()) {
+        printf("Error. Test failed.\n");
+        return -1;
+    }
+        bool errorCode = false;
     const int hashTableSize = 1000;
     HashTable hashTable = createHashTable(hashTableSize, &errorCode);
     if (hashTable == NULL) {
