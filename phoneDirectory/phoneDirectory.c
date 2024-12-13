@@ -37,6 +37,10 @@ void addContact(Directory directory, const char * newName, const char * newNumbe
 }
 
 void fillDirectoryFromFile(Directory directory, FILE * file, bool * errorCode) {
+    if (directory == NULL || file == NULL) {
+        *errorCode = true;
+        return;
+    }
     while (true) {
         char * newName = calloc(50, sizeof(char));
         char * newNumber = calloc(30, sizeof(char));
@@ -52,6 +56,10 @@ void fillDirectoryFromFile(Directory directory, FILE * file, bool * errorCode) {
 }
 
 void printAllContacts(Directory directory) {
+    if (directory == NULL || directory->amountOfContacts == 0) {
+        printf("Directory is empty.\n");
+        return;
+    }
     printf("Your contacts:\n");
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact * currentContact = directory->contacts[i];

@@ -16,10 +16,10 @@ void fillDirectoryFromFile(Directory directory, FILE *file, bool *errorCode);
 
 void printAllContacts(Directory directory);
 
-//prints contact or reports that it doesn't exist
+// prints contact or reports that it doesn't exist
 void searchByName(Directory directory, const char * key);
 
-//prints contact or reports that it doesn't exist
+// prints contact or reports that it doesn't exist
 void searchByNumber(Directory directory, const char * key);
 
 // opens file from filePath to write and saves contacts in directory to it.
