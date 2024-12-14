@@ -10,3 +10,5 @@ Graph buildGraph(const char *filePath, bool *errorCode);
 void printCapitals(Graph graph);
 
 void printMatrix(Graph graph);
+
+void printAdjacencyLists(Graph graph);

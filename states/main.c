@@ -6,7 +6,9 @@
 int main(void) {
     bool errorCode = false;
     Graph graph = buildGraph("../text.txt", &errorCode);
-    //printCapitals(graph);
+    printCapitals(graph);
+    printf("\n\n");
     printMatrix(graph);
+    printAdjacencyLists(graph);
     int a = 0;
 }
