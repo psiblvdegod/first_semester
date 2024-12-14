@@ -14,11 +14,11 @@ typedef struct Node {
     struct Node *previous;
 } Node;
 
-typedef struct GraphInternals {
+struct Graph {
     int **adjacencyMatrix;
     int verticesAmount;
     Vertex **vertices;
-} GraphInternals;
+};
 
 Node *addNode(Node *previous, Vertex* vertex) {
     Node *node = calloc(1, sizeof(Node));
@@ -44,7 +44,7 @@ Vertex *createVertex(Value number, bool *errorCode) {
 }
 
 Graph createGraph(const int verticesAmount, bool *errorCode) {
-    Graph graph = calloc(1, sizeof(GraphInternals));
+    Graph graph = calloc(1, sizeof(struct Graph));
     if (graph == NULL) {
         *errorCode = true;
         return NULL;
@@ -76,10 +76,6 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
         }
     }
     return graph;
-}
-
-Node *linkNodes(Node *node, bool *errorCode) {
-
 }
 
 Graph buildGraph(const char *filePath, bool *errorCode) {
@@ -120,10 +116,6 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
     }
     fclose(file);
     return graph;
-}
-
-void addNearestCity(Vertex **cities, Vertex *capital, bool *errorCode) {
-    Vertex * nearestCity = *cities;
 }
 
 void printCapitals(Graph graph) {

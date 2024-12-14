@@ -3,7 +3,7 @@
 
 typedef int Value;
 
-typedef struct GraphInternals* Graph;
+typedef struct Graph* Graph;
 
 Graph buildGraph(const char *filePath, bool *errorCode);
 
