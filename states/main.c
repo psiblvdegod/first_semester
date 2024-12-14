@@ -11,5 +11,5 @@ int main(void) {
     printMatrix(graph);
     printf("\n");
     printAdjacencyLists(graph);
-    int a = 0;
+    printf("breakpoint");
 }

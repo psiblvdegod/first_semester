@@ -3,4 +3,4 @@ project(states C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(states main.c graph.c shortestWay.c)
+add_executable(states main.c graph.c shortestWay.c queue.c)
