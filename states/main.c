@@ -6,5 +6,6 @@
 int main(void) {
     bool errorCode = false;
     Graph graph = buildGraph("../text.txt", &errorCode);
+    printCapitals(graph);
     int a = 0;
 }

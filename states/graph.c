@@ -72,10 +72,10 @@ Graph buildGraph(const char * filePath, bool *errorCode) {
         graph->adjacencyMatrix[j][i] = length;
     }
 
-    int capitalsAmount;
+    int capitalsAmount = 0;
     fscanf(file, "%d", &capitalsAmount);
     for (int k = 0; k < capitalsAmount; ++k) {
-        int capital;
+        int capital = 0;
         fscanf(file, "%d", &capital);
         graph->vertices[capital]->isCapital = true;
         graph->vertices[capital]->state = capital;
@@ -85,6 +85,13 @@ Graph buildGraph(const char * filePath, bool *errorCode) {
 
 void addNearestCity(Vertex **cities, Vertex *capital, bool *errorCode) {
     Vertex * nearestCity = *cities;
+}
+
+void printCapitals(Graph graph) {
+    Vertex **vertices = graph->vertices;
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        printf("%d - %d\n", i, vertices[i]->isCapital);
+    }
 }
 
 /*
