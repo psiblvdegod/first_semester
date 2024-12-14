@@ -20,7 +20,7 @@ Vertex *createVertex(bool *errorCode) {
         return NULL;
     }
     vertex->isCapital = false;
-    vertex->state = 0;
+    vertex->state = -1;
     return vertex;
 }
 
@@ -91,6 +91,16 @@ void printCapitals(Graph graph) {
     Vertex **vertices = graph->vertices;
     for (int i = 0; i < graph->verticesAmount; ++i) {
         printf("%d - %d\n", i, vertices[i]->isCapital);
+    }
+}
+
+void printMatrix(Graph graph) {
+    int **matrix = graph->adjacencyMatrix;
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        for (int j = 0; j < graph->verticesAmount; ++j) {
+            printf("%d\t", matrix[i][j]);
+        }
+        printf("\n");
     }
 }
 
