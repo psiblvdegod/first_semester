@@ -149,6 +149,40 @@ void printAdjacencyLists(Graph graph) {
     }
 }
 
+void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
+    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
+    int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
+    int **adjacencyMatrix = graph->adjacencyMatrix;
+
+    Queue queue = createQueue();
+    if (shortestWays == NULL || queue == NULL) {
+        *errorCode = true;
+        return;
+    }
+    enqueue(queue, startingVertex);
+    while (!isQueueEmpty(queue)) {
+        Vertex *currentVertex = dequeue(queue);
+        isVertexVisited[currentVertex->number] = true;
+        Node *linkedVertices = currentVertex->linkedVertices;
+        while(linkedVertices != NULL) {
+            const int number = linkedVertices->vertex->number;
+            if (isVertexVisited[number] == false) {
+                enqueue(queue, linkedVertices->vertex);
+                if (shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number] < shortestWays[number] || shortestWays[number] == 0) {
+                    shortestWays[number] = shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number];
+                }
+            }
+            linkedVertices = linkedVertices->previous;
+        }
+    }
+    printf("start: %d\n", startingVertex->number);
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        printf("%d - %d\n", i, shortestWays[i]);
+    }
+}
+
+
+
 void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
     Queue queue = createQueue();
@@ -172,7 +206,8 @@ void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
 }
 
 void test(Graph graph, bool *errorCode) {
-    doWidthTraversal(graph, graph->vertices[1], errorCode);
+    //doWidthTraversal(graph, graph->vertices[1], errorCode);
+    dijkstra(graph, graph->vertices[1], errorCode);
 }
 
 /*
