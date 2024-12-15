@@ -11,6 +11,11 @@ struct Queue {
     QueueElement *tail;
 };
 
+Queue createQueue() {
+    Queue queue = calloc(1, sizeof(struct Queue));
+    return queue;
+}
+
 void enqueue(Queue queue, QueueValue value) {
     QueueElement *newElement = calloc(1, sizeof(QueueElement));
     if (newElement == NULL) {
@@ -28,7 +33,7 @@ void enqueue(Queue queue, QueueValue value) {
 
 QueueValue dequeue(Queue queue) {
     if (queue == NULL || queue->head == NULL) {
-        return -1;
+        return NULL;
     }
     QueueElement *temp = queue->head;
     QueueValue value = queue->head->value;
@@ -38,4 +43,8 @@ QueueValue dequeue(Queue queue) {
     queue->head = queue->head->previous;
     free(temp);
     return value;
+}
+
+bool isQueueEmpty(Queue queue) {
+    return queue->head == NULL;
 }

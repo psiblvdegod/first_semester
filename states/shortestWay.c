@@ -4,4 +4,5 @@
 
 
 
-int findShortestWayLength(Graph graph, const int vertex, const int state, bool *errorCode);
+int findShortestWayLength(Graph graph, const int vertex, const int state, bool *errorCode) {
+}

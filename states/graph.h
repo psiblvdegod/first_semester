@@ -12,3 +12,5 @@ void printCapitals(Graph graph);
 void printMatrix(Graph graph);
 
 void printAdjacencyLists(Graph graph);
+
+void test(Graph graph, bool *errorCode);

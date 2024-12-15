@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -146,6 +147,32 @@ void printAdjacencyLists(Graph graph) {
         }
         printf("\n");
     }
+}
+
+void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
+    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
+    Queue queue = createQueue();
+    if (isVertexVisited == NULL || queue == NULL) {
+        *errorCode = true;
+        return;
+    }
+    enqueue(queue, startingVertex);
+    while (!isQueueEmpty(queue)) {
+        Vertex *currentVertex = dequeue(queue);
+        printf("%d ", currentVertex->number);
+        isVertexVisited[currentVertex->number] = true;
+        Node *linkedVertices = currentVertex->linkedVertices;
+        while(linkedVertices != NULL) {
+            if (isVertexVisited[linkedVertices->vertex->number] == false) {
+                enqueue(queue, linkedVertices->vertex);
+            }
+            linkedVertices = linkedVertices->previous;
+        }
+    }
+}
+
+void test(Graph graph, bool *errorCode) {
+    doWidthTraversal(graph, graph->vertices[1], errorCode);
 }
 
 /*
