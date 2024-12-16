@@ -151,7 +151,7 @@ void printAdjacencyLists(Graph graph) {
 }
 // Dijkstra's algorithm
 void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
-    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
+    int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
     int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
     int **adjacencyMatrix = graph->adjacencyMatrix;
     Queue queue = createQueue();
@@ -161,19 +161,29 @@ void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
     }
 
     enqueue(queue, startingVertex);
+    isVertexVisited[startingVertex->number] = 2;
     while (!isQueueEmpty(queue)) {
         Vertex *currentVertex = dequeue(queue);
-        isVertexVisited[currentVertex->number] = true;
+        if (isVertexVisited[currentVertex->number] != 2) {
+            isVertexVisited[currentVertex->number] = 1;
+        }
         Node *linkedVertices = currentVertex->linkedVertices;
+        bool isAll = true;
         while (linkedVertices != NULL) {
             const int number = linkedVertices->vertex->number;
-            if (isVertexVisited[number] == false) {
+            if (isVertexVisited[number] == 0) {
+                isAll = false;
+            }
+            if (isVertexVisited[number] != 2) {
                 enqueue(queue, linkedVertices->vertex);
                 if (shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number] < shortestWays[number] || shortestWays[number] == 0) {
                     shortestWays[number] = shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number];
                 }
             }
             linkedVertices = linkedVertices->previous;
+        }
+        if (isAll) {
+            isVertexVisited[currentVertex->number] = 2;
         }
     }
     printf("start: %d\n", startingVertex->number);
