@@ -10,6 +10,7 @@ typedef struct Vertex {
     struct Node *linkedVertices;
 } Vertex;
 
+//list of vertices
 typedef struct Node {
     Vertex *vertex;
     struct Node *previous;
@@ -148,23 +149,23 @@ void printAdjacencyLists(Graph graph) {
         printf("\n");
     }
 }
-
+// Dijkstra's algorithm
 void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
     int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
     int **adjacencyMatrix = graph->adjacencyMatrix;
-
     Queue queue = createQueue();
-    if (shortestWays == NULL || queue == NULL) {
+    if (shortestWays == NULL || queue == NULL || isVertexVisited == NULL || adjacencyMatrix == NULL) {
         *errorCode = true;
         return;
     }
+
     enqueue(queue, startingVertex);
     while (!isQueueEmpty(queue)) {
         Vertex *currentVertex = dequeue(queue);
         isVertexVisited[currentVertex->number] = true;
         Node *linkedVertices = currentVertex->linkedVertices;
-        while(linkedVertices != NULL) {
+        while (linkedVertices != NULL) {
             const int number = linkedVertices->vertex->number;
             if (isVertexVisited[number] == false) {
                 enqueue(queue, linkedVertices->vertex);

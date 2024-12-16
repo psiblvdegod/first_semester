@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include "graph.h"
 
 int main(void) {
@@ -14,5 +13,4 @@ int main(void) {
     printf("\n");
     test(graph, &errorCode);
     printf("\nbreakpoint");
-
 }
