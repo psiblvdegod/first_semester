@@ -21,3 +21,7 @@ void printAdjacencyLists(Graph graph);
 
 // garbage.
 void test(Graph graph, bool *errorCode);
+
+void conquerNearestCity(Graph graph, int state, bool *errorCode);
+
+void printStateAffiliation(Graph graph);

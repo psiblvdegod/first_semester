@@ -122,9 +122,13 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
 
 void printCapitals(Graph graph) {
     Vertex **vertices = graph->vertices;
+    printf("Capitals: ");
     for (int i = 0; i < graph->verticesAmount; ++i) {
-        printf("%d - %d\n", i, vertices[i]->isCapital);
+        if (vertices[i]->isCapital) {
+            printf("%d ", vertices[i]->number);
+        }
     }
+    printf("\n");
 }
 
 void printMatrix(Graph graph) {
@@ -150,14 +154,14 @@ void printAdjacencyLists(Graph graph) {
     }
 }
 // Dijkstra's algorithm
-void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
+int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
     int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
     int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
     int **adjacencyMatrix = graph->adjacencyMatrix;
     Queue queue = createQueue();
     if (shortestWays == NULL || queue == NULL || isVertexVisited == NULL || adjacencyMatrix == NULL) {
         *errorCode = true;
-        return;
+        return NULL;
     }
 
     enqueue(queue, startingVertex);
@@ -186,13 +190,57 @@ void dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
             isVertexVisited[currentVertex->number] = 2;
         }
     }
+    free(isVertexVisited);
+    return shortestWays;
     printf("start: %d\n", startingVertex->number);
     for (int i = 0; i < graph->verticesAmount; ++i) {
         printf("%d - %d\n", i, shortestWays[i]);
     }
 }
 
+void conquerNearestCity(Graph graph, const int state, bool *errorCode) {
+    Vertex **cities = graph->vertices;
+    if (cities == NULL) {
+        *errorCode = true;
+        return;
+    }
+    if (!cities[state]->isCapital) { // no capital == no state
+        return;
+    }
+    int newCity = -1;
+    int newCityDistance = -1;
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        if (cities[i]->state != state) {
+            continue;
+        }
 
+        int *shortestWays = dijkstra(graph, cities[i], errorCode);
+        if (shortestWays == NULL) {
+            *errorCode = true;
+            return;
+        }
+
+        int nearestCity = -1;
+        int nearestCityDistance = -1;
+        for (int j = 0; j < graph->verticesAmount; ++j) {
+            if (cities[j]->state != -1 || shortestWays[j] == 0) {
+                continue;
+            }
+            if (nearestCity == -1 || shortestWays[j] < nearestCityDistance) {
+                nearestCity = cities[j]->number;
+                nearestCityDistance = shortestWays[j];
+            }
+        }
+
+        if (newCity == -1 || nearestCityDistance < newCityDistance) {
+            newCity = nearestCity;
+            newCityDistance = nearestCityDistance;
+        }
+
+        free(shortestWays);
+    }
+    cities[newCity]->state = state;
+}
 
 void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
@@ -216,9 +264,32 @@ void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
     }
 }
 
+void printStateAffiliation(Graph graph) {
+    Vertex **cities = graph->vertices;
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        if (!cities[i]->isCapital) {
+            continue;
+        }
+        printf("%d : ", cities[i]->number);
+        for (int j = 0; j < graph->verticesAmount; ++j) {
+            if (cities[j]->state == cities[i]->state) {
+                printf("%d ", cities[j]->number);
+            }
+        }
+        printf("\n");
+    }
+    printf("free cities: ");
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        if (cities[i]->state == -1) {
+            printf("%d ", cities[i]->number);
+        }
+    }
+    printf("\n");
+}
+
 void test(Graph graph, bool *errorCode) {
     //doWidthTraversal(graph, graph->vertices[1], errorCode);
-    dijkstra(graph, graph->vertices[1], errorCode);
+    dijkstra(graph, graph->vertices[5], errorCode);
 }
 
 /*
