@@ -19,9 +19,6 @@ void printMatrix(Graph graph);
 // prints adjacency lists for every vertex in the graph.
 void printAdjacencyLists(Graph graph);
 
-// garbage.
-void test(Graph graph, bool *errorCode);
-
 void conquerNearestCity(Graph graph, int state, bool *errorCode);
 
 void printStateAffiliation(Graph graph);

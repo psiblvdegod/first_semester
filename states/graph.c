@@ -100,6 +100,38 @@ void setCapital(Graph graph, const int city, bool *errorCode) {
     graph->vertices[city]->state = city;
 }
 
+void distributeCities(Graph graph, const int capitalsAmount, bool *errorCode) {
+    if (graph == NULL || capitalsAmount <= 0) {
+        *errorCode = true;
+        return;
+    }
+    int *capitals = calloc(capitalsAmount, sizeof(int));
+    if (capitals == NULL) {
+        *errorCode = true;
+        return;
+    }
+    for (int i = 0, j = 0; i < graph->verticesAmount; ++i) {
+        if (graph->vertices[i]->isCapital) {
+            capitals[j] = graph->vertices[i]->number;
+            ++j;
+        }
+    }
+    for (int i = 0, j = 0;; i == capitalsAmount ? i = 0 : ++i) {
+        bool isAllDistributed = true;
+        for (; j < graph->verticesAmount; ++j) {
+            if (graph->vertices[j]->state == -1) {
+                graph->vertices[j]->state = capitals[i];
+                isAllDistributed = false;
+                break;
+            }
+        }
+        if (isAllDistributed) {
+            free(capitals);
+            return;
+        }
+    }
+}
+
 Graph buildGraph(const char *filePath, bool *errorCode) {
     FILE * file = fopen(filePath, "r");
     if (file == NULL) {
@@ -121,6 +153,11 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
         setEdge(graph, vertex1, vertex2, length, errorCode);
     }
 
+    Node *capitals = calloc(1, sizeof(Node));
+    if (capitals == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
     int capitalsAmount = 0;
     fscanf(file, "%d", &capitalsAmount);
     for (int k = 0; k < capitalsAmount; ++k) {
@@ -128,6 +165,7 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
         fscanf(file, "%d", &capital);
         setCapital(graph, capital, errorCode);
     }
+    distributeCities(graph, capitalsAmount, errorCode);
     fclose(file);
     return graph;
 }
@@ -166,8 +204,8 @@ void printAdjacencyLists(Graph graph) {
     }
 }
 // Dijkstra's algorithm
-int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL || startingVertex == NULL) {
+int* dijkstra(Graph graph, const int startingVertex, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
         *errorCode = true;
         return NULL;
     }
@@ -176,8 +214,8 @@ int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
     int **adjacencyMatrix = graph->adjacencyMatrix;
     Queue queue = createQueue();
 
-    enqueue(queue, startingVertex);
-    isVertexVisited[startingVertex->number] = 2;
+    enqueue(queue, graph->vertices[startingVertex]);
+    isVertexVisited[startingVertex] = 2;
     while (!isQueueEmpty(queue)) {
         Vertex *currentVertex = dequeue(queue);
         if (isVertexVisited[currentVertex->number] != 2) {
@@ -204,7 +242,7 @@ int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
     }
     free(isVertexVisited);
     return shortestWays;
-    printf("start: %d\n", startingVertex->number);
+    printf("start: %d\n", startingVertex);
     for (int i = 0; i < graph->verticesAmount; ++i) {
         printf("%d - %d\n", i, shortestWays[i]);
     }
@@ -226,7 +264,7 @@ void conquerNearestCity(Graph graph, const int state, bool *errorCode) {
             continue;
         }
 
-        int *shortestWays = dijkstra(graph, cities[i], errorCode);
+        int *shortestWays = dijkstra(graph, i, errorCode);
         if (shortestWays == NULL) {
             *errorCode = true;
             return;
@@ -276,6 +314,8 @@ void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
     }
 }
 
+
+
 void printStateAffiliation(Graph graph) {
     Vertex **cities = graph->vertices;
     for (int i = 0; i < graph->verticesAmount; ++i) {
@@ -298,12 +338,12 @@ void printStateAffiliation(Graph graph) {
     }
     printf("\n");
 }
-
+/*
 void test(Graph graph, bool *errorCode) {
     //doWidthTraversal(graph, graph->vertices[1], errorCode);
     dijkstra(graph, graph->vertices[5], errorCode);
 }
-
+*/
 /*
 typedef struct Edge {
     Vertex * vertex1;

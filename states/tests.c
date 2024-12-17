@@ -11,5 +11,5 @@ bool graphTests() {
     setEdge(graph, 2, 0, 20, &errorCode);
     setCapital(graph, 1, &errorCode);
     conquerNearestCity(graph, 1, &errorCode);
-    printStateAffiliation(graph);
+
 }
