@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "tests.h"
 #include "graph.h"
 
 void query_processing(const int user_query, Graph graph, bool *errorCode) {
@@ -24,7 +25,8 @@ void query_processing(const int user_query, Graph graph, bool *errorCode) {
 
 int main(void) {
     bool errorCode = false;
-    Graph graph = buildGraph("../text.txt", &errorCode);
+    graphTests();
+        Graph graph = buildGraph("../text.txt", &errorCode);
     int user_query = -1;
     while(user_query) {
         printf("1 - capitals. 2 - adj matrix. 3 - adj lists\n4 - conquer 5 - state affiliation\n");

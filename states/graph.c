@@ -167,14 +167,14 @@ void printAdjacencyLists(Graph graph) {
 }
 // Dijkstra's algorithm
 int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL || startingVertex == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
     int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
     int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
     int **adjacencyMatrix = graph->adjacencyMatrix;
     Queue queue = createQueue();
-    if (shortestWays == NULL || queue == NULL || isVertexVisited == NULL || adjacencyMatrix == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
 
     enqueue(queue, startingVertex);
     isVertexVisited[startingVertex->number] = 2;
@@ -211,11 +211,11 @@ int* dijkstra(Graph graph, Vertex *startingVertex, bool *errorCode) {
 }
 
 void conquerNearestCity(Graph graph, const int state, bool *errorCode) {
-    Vertex **cities = graph->vertices;
-    if (cities == NULL) {
+    if (graph == NULL || graph->vertices == NULL || state > graph->verticesAmount) {
         *errorCode = true;
         return;
     }
+    Vertex **cities = graph->vertices;
     if (!cities[state]->isCapital) { // no capital == no state
         return;
     }

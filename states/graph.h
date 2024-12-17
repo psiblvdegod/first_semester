@@ -29,3 +29,5 @@ void printStateAffiliation(Graph graph);
 Graph createGraph(int verticesAmount, bool *errorCode);
 
 void setEdge(Graph graph, int city1, int city2, int edgeLength, bool *errorCode);
+
+void setCapital(Graph graph, int city, bool *errorCode);
