@@ -4,13 +4,12 @@
 #include <stdlib.h>
 
 typedef struct Vertex {
-    Value state;
     Value number;
+    Value state;
     bool isCapital;
     struct Node *linkedVertices;
 } Vertex;
 
-//list of vertices
 typedef struct Node {
     Vertex *vertex;
     struct Node *previous;
@@ -22,9 +21,10 @@ struct Graph {
     Vertex **vertices;
 };
 
-Node *addNode(Node *previous, Vertex* vertex) {
+Node *addNode(Node *previous, Vertex* vertex, bool *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == NULL) {
+        *errorCode = true;
         return NULL;
     }
     node->previous = previous;
@@ -71,8 +71,8 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
         *errorCode = true;
         return NULL;
     }
-    for (int n = 0; n < verticesAmount; ++n) {
-        graph->vertices[n] = createVertex(n, errorCode);
+    for (int i = 0; i < verticesAmount; ++i) {
+        graph->vertices[i] = createVertex(i, errorCode);
         if (*errorCode) {
             return NULL;
         }
@@ -85,8 +85,8 @@ void setEdge(Graph graph, const int vertex1, const int vertex2, const int edgeLe
         *errorCode = true;
         return;
     }
-    graph->vertices[vertex1]->linkedVertices = addNode(graph->vertices[vertex1]->linkedVertices, graph->vertices[vertex2]);
-    graph->vertices[vertex2]->linkedVertices = addNode(graph->vertices[vertex2]->linkedVertices, graph->vertices[vertex1]);
+    graph->vertices[vertex1]->linkedVertices = addNode(graph->vertices[vertex1]->linkedVertices, graph->vertices[vertex2], errorCode);
+    graph->vertices[vertex2]->linkedVertices = addNode(graph->vertices[vertex2]->linkedVertices, graph->vertices[vertex1], errorCode);
     graph->adjacencyMatrix[vertex1][vertex2] = edgeLength;
     graph->adjacencyMatrix[vertex2][vertex1] = edgeLength;
 }
@@ -152,6 +152,9 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
         fscanf(file, "%d%d%d", &vertex1, &vertex2, &length);
         setEdge(graph, vertex1, vertex2, length, errorCode);
     }
+    if (*errorCode) {
+        return NULL;
+    }
 
     Node *capitals = calloc(1, sizeof(Node));
     if (capitals == NULL) {
@@ -168,6 +171,95 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
     distributeCities(graph, capitalsAmount, errorCode);
     fclose(file);
     return graph;
+}
+
+int* findShortestWay(Graph graph, const int startingVertex, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    int **adjacencyMatrix = graph->adjacencyMatrix;
+
+    int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
+    int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
+    Queue queue = createQueue();
+    if (queue == NULL || isVertexVisited == NULL | shortestWays == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+
+    enqueue(queue, graph->vertices[startingVertex]);
+    isVertexVisited[startingVertex] = 2;
+    while (!isQueueEmpty(queue)) {
+        Vertex *currentVertex = dequeue(queue);
+        if (isVertexVisited[currentVertex->number] != 2) {
+            isVertexVisited[currentVertex->number] = 1;
+        }
+        Node *linkedVertices = currentVertex->linkedVertices;
+        bool isAll = true;
+        while (linkedVertices != NULL) {
+            const int number = linkedVertices->vertex->number;
+            if (isVertexVisited[number] == 0) {
+                isAll = false;
+            }
+            if (isVertexVisited[number] != 2) {
+                enqueue(queue, linkedVertices->vertex);
+                if (shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number] < shortestWays[number] || shortestWays[number] == 0) {
+                    shortestWays[number] = shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number];
+                }
+            }
+            linkedVertices = linkedVertices->previous;
+        }
+        if (isAll) {
+            isVertexVisited[currentVertex->number] = 2;
+        }
+    }
+    free(isVertexVisited);
+    return shortestWays;
+}
+
+void conquerNearestCity(Graph graph, const int state, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL || state > graph->verticesAmount) {
+        *errorCode = true;
+        return;
+    }
+    Vertex **cities = graph->vertices;
+    if (!cities[state]->isCapital) {
+        return;
+    }
+    int newCity = -1;
+    int newCityDistance = -1;
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        if (cities[i]->state != state) {
+            continue;
+        }
+
+        int *shortestWays = findShortestWay(graph, i, errorCode);
+        if (shortestWays == NULL || *errorCode) {
+            *errorCode = true;
+            return;
+        }
+
+        int nearestCity = -1;
+        int nearestCityDistance = -1;
+        for (int j = 0; j < graph->verticesAmount; ++j) {
+            if (cities[j]->state != -1 || shortestWays[j] == 0) {
+                continue;
+            }
+            if (nearestCity == -1 || shortestWays[j] < nearestCityDistance) {
+                nearestCity = cities[j]->number;
+                nearestCityDistance = shortestWays[j];
+            }
+        }
+
+        if (newCity == -1 || nearestCityDistance < newCityDistance) {
+            newCity = nearestCity;
+            newCityDistance = nearestCityDistance;
+        }
+
+        free(shortestWays);
+    }
+    cities[newCity]->state = state;
 }
 
 void printCapitals(Graph graph) {
@@ -203,118 +295,6 @@ void printAdjacencyLists(Graph graph) {
         printf("\n");
     }
 }
-// Dijkstra's algorithm
-int* dijkstra(Graph graph, const int startingVertex, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
-    int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
-    int **adjacencyMatrix = graph->adjacencyMatrix;
-    Queue queue = createQueue();
-
-    enqueue(queue, graph->vertices[startingVertex]);
-    isVertexVisited[startingVertex] = 2;
-    while (!isQueueEmpty(queue)) {
-        Vertex *currentVertex = dequeue(queue);
-        if (isVertexVisited[currentVertex->number] != 2) {
-            isVertexVisited[currentVertex->number] = 1;
-        }
-        Node *linkedVertices = currentVertex->linkedVertices;
-        bool isAll = true;
-        while (linkedVertices != NULL) {
-            const int number = linkedVertices->vertex->number;
-            if (isVertexVisited[number] == 0) {
-                isAll = false;
-            }
-            if (isVertexVisited[number] != 2) {
-                enqueue(queue, linkedVertices->vertex);
-                if (shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number] < shortestWays[number] || shortestWays[number] == 0) {
-                    shortestWays[number] = shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number];
-                }
-            }
-            linkedVertices = linkedVertices->previous;
-        }
-        if (isAll) {
-            isVertexVisited[currentVertex->number] = 2;
-        }
-    }
-    free(isVertexVisited);
-    return shortestWays;
-    printf("start: %d\n", startingVertex);
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        printf("%d - %d\n", i, shortestWays[i]);
-    }
-}
-
-void conquerNearestCity(Graph graph, const int state, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || state > graph->verticesAmount) {
-        *errorCode = true;
-        return;
-    }
-    Vertex **cities = graph->vertices;
-    if (!cities[state]->isCapital) { // no capital == no state
-        return;
-    }
-    int newCity = -1;
-    int newCityDistance = -1;
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        if (cities[i]->state != state) {
-            continue;
-        }
-
-        int *shortestWays = dijkstra(graph, i, errorCode);
-        if (shortestWays == NULL) {
-            *errorCode = true;
-            return;
-        }
-
-        int nearestCity = -1;
-        int nearestCityDistance = -1;
-        for (int j = 0; j < graph->verticesAmount; ++j) {
-            if (cities[j]->state != -1 || shortestWays[j] == 0) {
-                continue;
-            }
-            if (nearestCity == -1 || shortestWays[j] < nearestCityDistance) {
-                nearestCity = cities[j]->number;
-                nearestCityDistance = shortestWays[j];
-            }
-        }
-
-        if (newCity == -1 || nearestCityDistance < newCityDistance) {
-            newCity = nearestCity;
-            newCityDistance = nearestCityDistance;
-        }
-
-        free(shortestWays);
-    }
-    cities[newCity]->state = state;
-}
-
-void doWidthTraversal(Graph graph, Vertex *startingVertex, bool *errorCode) {
-    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
-    Queue queue = createQueue();
-    if (isVertexVisited == NULL || queue == NULL) {
-        *errorCode = true;
-        return;
-    }
-    enqueue(queue, startingVertex);
-    while (!isQueueEmpty(queue)) {
-        Vertex *currentVertex = dequeue(queue);
-        printf("%d ", currentVertex->number);
-        isVertexVisited[currentVertex->number] = true;
-        Node *linkedVertices = currentVertex->linkedVertices;
-        while(linkedVertices != NULL) {
-            if (isVertexVisited[linkedVertices->vertex->number] == false) {
-                enqueue(queue, linkedVertices->vertex);
-            }
-            linkedVertices = linkedVertices->previous;
-        }
-    }
-}
-
-
 
 void printStateAffiliation(Graph graph) {
     Vertex **cities = graph->vertices;
@@ -338,27 +318,3 @@ void printStateAffiliation(Graph graph) {
     }
     printf("\n");
 }
-/*
-void test(Graph graph, bool *errorCode) {
-    //doWidthTraversal(graph, graph->vertices[1], errorCode);
-    dijkstra(graph, graph->vertices[5], errorCode);
-}
-*/
-/*
-typedef struct Edge {
-    Vertex * vertex1;
-    Vertex * vertex2;
-    Value value;
-} Edge;
-
-Edge * createEdge(Vertex * vertex1, Vertex * vertex2, Value value, bool * errorCode) {
-    Edge * edge = calloc(1, sizeof(Edge));
-    if (edge == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    edge->value = value;
-    edge->vertex1 = vertex1;
-    edge->vertex2 = vertex2;
-    return edge;
-}*/
