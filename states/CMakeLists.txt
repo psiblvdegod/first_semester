@@ -3,4 +3,4 @@ project(states C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(states main.c graph.c queue.c)
+add_executable(states main.c graph.c queue.c tests.c)

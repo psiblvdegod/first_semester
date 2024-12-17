@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/Users/psiblvdegod/Desktop/homework/states/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/cc   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -o CMakeFiles/states.dir/main.c.o -c /Users/psiblvdegod/Desktop/homework/states/main.c",
+  "file": "/Users/psiblvdegod/Desktop/homework/states/main.c",
+  "output": "CMakeFiles/states.dir/main.c.o"
+},
+{
+  "directory": "/Users/psiblvdegod/Desktop/homework/states/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/cc   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -o CMakeFiles/states.dir/graph.c.o -c /Users/psiblvdegod/Desktop/homework/states/graph.c",
+  "file": "/Users/psiblvdegod/Desktop/homework/states/graph.c",
+  "output": "CMakeFiles/states.dir/graph.c.o"
+},
+{
+  "directory": "/Users/psiblvdegod/Desktop/homework/states/build",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/cc   -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -o CMakeFiles/states.dir/queue.c.o -c /Users/psiblvdegod/Desktop/homework/states/queue.c",
+  "file": "/Users/psiblvdegod/Desktop/homework/states/queue.c",
+  "output": "CMakeFiles/states.dir/queue.c.o"
+}
+]

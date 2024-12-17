@@ -80,6 +80,26 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
     return graph;
 }
 
+void setEdge(Graph graph, const int vertex1, const int vertex2, const int edgeLength, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
+        *errorCode = true;
+        return;
+    }
+    graph->vertices[vertex1]->linkedVertices = addNode(graph->vertices[vertex1]->linkedVertices, graph->vertices[vertex2]);
+    graph->vertices[vertex2]->linkedVertices = addNode(graph->vertices[vertex2]->linkedVertices, graph->vertices[vertex1]);
+    graph->adjacencyMatrix[vertex1][vertex2] = edgeLength;
+    graph->adjacencyMatrix[vertex2][vertex1] = edgeLength;
+}
+
+void setCapital(Graph graph, const int city, bool *errorCode) {
+    if (graph == NULL || graph->vertices == NULL) {
+        *errorCode = true;
+        return;
+    }
+    graph->vertices[city]->isCapital = true;
+    graph->vertices[city]->state = city;
+}
+
 Graph buildGraph(const char *filePath, bool *errorCode) {
     FILE * file = fopen(filePath, "r");
     if (file == NULL) {
@@ -87,25 +107,18 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
         return NULL;
     }
 
-    int citiesAmount;
-    int roadsAmount;
-    fscanf(file, "%d%d", &citiesAmount, &roadsAmount);
-    Graph graph = createGraph(citiesAmount, errorCode);
+    int verticesAmount;
+    int edgesAmount;
+    fscanf(file, "%d%d", &verticesAmount, &edgesAmount);
+    Graph graph = createGraph(verticesAmount, errorCode);
     if (*errorCode) {
         return NULL;
     }
 
-    if (*errorCode) {
-        return NULL;
-    }
-    for (int l = 0; l < roadsAmount; ++l) {
-        int i, j, length;
-        fscanf(file, "%d%d%d", &i, &j, &length);
-        graph->adjacencyMatrix[i][j] = length;
-        graph->adjacencyMatrix[j][i] = length;
-        graph->vertices[i]->linkedVertices = addNode(graph->vertices[i]->linkedVertices, graph->vertices[j]);
-        graph->vertices[j]->linkedVertices = addNode(graph->vertices[j]->linkedVertices, graph->vertices[i]);
-
+    for (int i = 0; i < edgesAmount; ++i) {
+        int vertex1, vertex2, length;
+        fscanf(file, "%d%d%d", &vertex1, &vertex2, &length);
+        setEdge(graph, vertex1, vertex2, length, errorCode);
     }
 
     int capitalsAmount = 0;
@@ -113,8 +126,7 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
     for (int k = 0; k < capitalsAmount; ++k) {
         int capital = 0;
         fscanf(file, "%d", &capital);
-        graph->vertices[capital]->isCapital = true;
-        graph->vertices[capital]->state = capital;
+        setCapital(graph, capital, errorCode);
     }
     fclose(file);
     return graph;

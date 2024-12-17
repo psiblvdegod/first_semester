@@ -3,7 +3,6 @@
 #include "graph.h"
 
 void query_processing(const int user_query, Graph graph, bool *errorCode) {
-    printf("1 - capitals. 2 - adj matrix. 3 - adj lists\n4 - conquer 5 - state affiliation\n");
     switch(user_query) {
         case 1:
             printCapitals(graph);
@@ -28,6 +27,7 @@ int main(void) {
     Graph graph = buildGraph("../text.txt", &errorCode);
     int user_query = -1;
     while(user_query) {
+        printf("1 - capitals. 2 - adj matrix. 3 - adj lists\n4 - conquer 5 - state affiliation\n");
         scanf("%d", &user_query);
         while(getchar() != '\n');
         query_processing(user_query, graph, &errorCode);

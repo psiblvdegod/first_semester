@@ -25,3 +25,7 @@ void test(Graph graph, bool *errorCode);
 void conquerNearestCity(Graph graph, int state, bool *errorCode);
 
 void printStateAffiliation(Graph graph);
+
+Graph createGraph(int verticesAmount, bool *errorCode);
+
+void setEdge(Graph graph, int city1, int city2, int edgeLength, bool *errorCode);
