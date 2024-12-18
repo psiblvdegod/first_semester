@@ -16,7 +16,7 @@ Graph buildGraph(const char *filePath, bool *errorCode);
 Graph createGraph(int verticesAmount, bool *errorCode);
 
 // prints all vertices doing width traversal from each vertex
-void printAllVertices(Graph graph, bool *errorCode);
+bool *printAllVertices(Graph graph, bool *errorCode);
 
 // frees all allocated memory
 void destroyGraph(Graph *graph);

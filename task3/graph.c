@@ -126,17 +126,18 @@ void doWidthTraversal(Graph graph, bool *isVertexVisited, const int startingVert
     }
 }
 
-void printAllVertices(Graph graph, bool *errorCode) {
+bool *printAllVertices(Graph graph, bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
     if (isVertexVisited == NULL) {
         *errorCode = true;
-        return;
+        return NULL;
     }
     for (int i = 0; i < graph->verticesAmount; ++i) {
         if (!isVertexVisited[i]) {
             doWidthTraversal(graph, isVertexVisited, i, errorCode);
         }
     }
+    return isVertexVisited;
 }
 
 void destroyGraph(Graph *graph) {

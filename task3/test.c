@@ -4,9 +4,17 @@
 
 bool graphTest() {
     bool errorCode = false;
-    Graph graph = createGraph(3, &errorCode);
+    const int verticesAmount = 3;
+    Graph graph = createGraph(verticesAmount, &errorCode);
     if (graph == NULL) {
         return false;
     }
+    bool *isAllVisited = printAllVertices(graph, &errorCode);
+    for (int i = 0; i < verticesAmount; ++i) {
+        if (isAllVisited[i] != true) {
+            return false;
+        }
+    }
     destroyGraph(&graph);
+    return true;
 }
