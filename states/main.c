@@ -11,4 +11,8 @@ int main(void) {
     }
     Graph graph = buildGraph("../text.txt", &errorCode);
     printStateAffiliation(graph);
+    printf("\n");
+    printAdjacencyLists(graph);
+    printf("\n");
+    printMatrix(graph);
 }
