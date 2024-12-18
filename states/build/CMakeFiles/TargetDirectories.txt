@@ -1,3 +1,0 @@
-/Users/psiblvdegod/Desktop/homework/states/build/CMakeFiles/states.dir
-/Users/psiblvdegod/Desktop/homework/states/build/CMakeFiles/edit_cache.dir
-/Users/psiblvdegod/Desktop/homework/states/build/CMakeFiles/rebuild_cache.dir
