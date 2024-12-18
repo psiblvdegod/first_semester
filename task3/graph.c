@@ -104,13 +104,14 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
     return graph;
 }
 
-void doWidthTraversal(Graph graph, const int startingVertex, bool *errorCode) {
+void doWidthTraversal(Graph graph, const int startingVertex, ,bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
     Queue queue = createQueue();
     if (isVertexVisited == NULL || queue == NULL) {
         *errorCode = true;
         return;
     }
+
     enqueue(queue, graph->vertices[startingVertex]);
     while (!isQueueEmpty(queue)) {
         Vertex *currentVertex = dequeue(queue);
@@ -126,14 +127,7 @@ void doWidthTraversal(Graph graph, const int startingVertex, bool *errorCode) {
     }
 }
 
-void setEdge(Graph graph, const int vertex1, const int vertex2, const int edgeLength, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
-        *errorCode = true;
-        return;
-    }
-    graph->vertices[vertex1]->linkedVertices = addNode(graph->vertices[vertex1]->linkedVertices, graph->vertices[vertex2], errorCode);
-    graph->vertices[vertex2]->linkedVertices = addNode(graph->vertices[vertex2]->linkedVertices, graph->vertices[vertex1], errorCode);
-    graph->adjacencyMatrix[vertex1][vertex2] = edgeLength;
-    graph->adjacencyMatrix[vertex2][vertex1] = edgeLength;
+void printAllVertices(Graph graph, bool *errorCode) {
+    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
+    for (i)
 }
-
