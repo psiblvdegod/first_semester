@@ -3,4 +3,4 @@ project(task1 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(task1 main.c binaryConvertion.c)
+add_executable(task1 main.c binaryConversion.c test.c)
