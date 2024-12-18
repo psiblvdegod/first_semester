@@ -104,10 +104,9 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
     return graph;
 }
 
-void doWidthTraversal(Graph graph, const int startingVertex, ,bool *errorCode) {
-    bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
+void doWidthTraversal(Graph graph, bool *isVertexVisited, const int startingVertex, bool *errorCode) {
     Queue queue = createQueue();
-    if (isVertexVisited == NULL || queue == NULL) {
+    if (queue == NULL) {
         *errorCode = true;
         return;
     }
@@ -129,5 +128,13 @@ void doWidthTraversal(Graph graph, const int startingVertex, ,bool *errorCode) {
 
 void printAllVertices(Graph graph, bool *errorCode) {
     bool *isVertexVisited = calloc(graph->verticesAmount, sizeof(bool));
-    for (i)
+    if (isVertexVisited == NULL) {
+        *errorCode = true;
+        return;
+    }
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        if (!isVertexVisited[i]) {
+            doWidthTraversal(graph, isVertexVisited, i, errorCode);
+        }
+    }
 }

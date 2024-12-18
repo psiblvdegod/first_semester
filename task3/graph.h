@@ -20,4 +20,4 @@ Graph createGraph(int verticesAmount, bool *errorCode);
 // links two vertices and puts edgeWeight to adjacency matrix.
 void setEdge(Graph graph, Value vertex1, Value vertex2, Value edgeWeight, bool *errorCode);
 
-void doWidthTraversal(Graph graph, int startingVertex, bool *errorCode);
+void printAllVertices(Graph graph, bool *errorCode);
