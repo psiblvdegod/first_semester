@@ -19,4 +19,6 @@ const char *convertToDecimal(const char *string, bool *errorCode) {
             sum += (int)pow(2, exp);
         }
     }
+    char result[64] = {0};
+    
 }

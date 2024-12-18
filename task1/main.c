@@ -10,7 +10,7 @@ int main(void) {
     }
     bool errorCode = false;
     const char *string = "10011011";
-    const long decimal = convertToDecimal(string, &errorCode);
+    const char *decimal = convertToDecimal(string, &errorCode);
     if (errorCode) {
         printf("Something went wrong.\n");
         return -1;
