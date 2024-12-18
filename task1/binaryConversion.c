@@ -3,15 +3,15 @@
 #include <math.h>
 #include <stdio.h>
 
-const char *convertToDecimal(const char *string, bool *errorCode) {
+long convertToDecimal(const char *string, bool *errorCode) {
     if (string == NULL) {
         *errorCode = true;
-        return NULL;
+        return -1;
     }
     const int length = (int)strlen(string);
     if (length == 0) {
         *errorCode = true;
-        return NULL;
+        return -1;
     }
     long sum = 0;
     for (long i = 0, exp = length - 1; i < length; ++i, --exp) {
@@ -19,6 +19,5 @@ const char *convertToDecimal(const char *string, bool *errorCode) {
             sum += (int)pow(2, exp);
         }
     }
-    char result[64] = {0};
-    
+    return sum;
 }
