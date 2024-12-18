@@ -138,3 +138,24 @@ void printAllVertices(Graph graph, bool *errorCode) {
         }
     }
 }
+
+void destroyGraph(Graph graph) {
+    if (graph == NULL) {
+        return;
+    }
+    if (graph->adjacencyMatrix != NULL) {
+        for (int i = 0; i < graph->verticesAmount; ++i) {
+            free(graph->adjacencyMatrix[i]);
+        }
+        free(graph->adjacencyMatrix);
+    }
+    if (graph->vertices != NULL) {
+        for (int i = 0; i < graph->verticesAmount; ++i) {
+            if (graph->vertices[i] != NULL) {
+                free(graph->vertices[i]->linkedVertices);
+                free(graph->vertices[i]);
+            }
+        }
+    }
+    free(graph);
+}

@@ -6,10 +6,8 @@ typedef int Value;
 typedef struct Graph* Graph;
 
 // opens file in filePath for read,
-// reads vertices amount and creates graph,
-// reads and sets edges,
-// reads and sets capitals,
-// distributes cities.
+// reads amount of vertices,
+// reads adjacency matrix
 Graph buildGraph(const char *filePath, bool *errorCode);
 
 // creates an empty graph with fixed size = verticesAmount,
@@ -17,7 +15,8 @@ Graph buildGraph(const char *filePath, bool *errorCode);
 // initialises vertices with natural numbers [1 : verticesAmount].
 Graph createGraph(int verticesAmount, bool *errorCode);
 
-// links two vertices and puts edgeWeight to adjacency matrix.
-void setEdge(Graph graph, Value vertex1, Value vertex2, Value edgeWeight, bool *errorCode);
-
+// prints all vertices doing width traversal from each vertex
 void printAllVertices(Graph graph, bool *errorCode);
+
+// frees all allocated memory
+void destroyGraph(Graph graph);
