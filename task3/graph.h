@@ -19,4 +19,4 @@ Graph createGraph(int verticesAmount, bool *errorCode);
 void printAllVertices(Graph graph, bool *errorCode);
 
 // frees all allocated memory
-void destroyGraph(Graph graph);
+void destroyGraph(Graph *graph);
