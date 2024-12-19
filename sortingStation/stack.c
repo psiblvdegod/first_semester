@@ -1,37 +1,46 @@
 #include "stack.h"
+#include <stdlib.h>
 
 typedef struct StackElement {
-    char value;
-    struct StackElement * previous;
+    Value value;
+    struct StackElement *previous;
 } StackElement;
 
 struct Stack {
-    StackElement * head;
+    StackElement *head;
 };
 
-Stack * createStack() {
-    return (Stack *) calloc(1, sizeof(Stack));
+Stack *createStack(bool *errorCode) {
+    Stack *stack = calloc(1, sizeof(struct Stack));
+    if (stack == NULL) {
+        *errorCode = true;
+    }
+    return stack;
 }
 
-void push(Stack * stack, char pushValue, int * errorCode) {
-    StackElement * element = (StackElement *) malloc(sizeof(StackElement));
-    if (element == NULL) {
-        *errorCode = 1;
+void push(Stack *stack, Value value, bool *errorCode) {
+    StackElement *newElement = calloc(1, sizeof(StackElement));
+    if (newElement == NULL) {
+        *errorCode = true;
         return;
     }
-    element->value = pushValue;
-    element->previous = stack->head;
-    stack->head = element;
+    newElement->value = value;
+    newElement->previous = stack->head;
+    stack->head = newElement;
 }
 
-char pop(Stack * stack) {
-    char value = stack->head->value;
-    StackElement * temp = stack->head;
+Value pop(Stack *stack, bool *errorCode) {
+    if (isEmptyStack(stack)) {
+        *errorCode = true;
+        return '1';
+    }
+    Value value = stack->head->value;
+    StackElement *temp = stack->head;
     stack->head = stack->head->previous;
     free(temp);
     return value;
 }
 
-bool isEmptyStack(Stack * stack) {
-    return stack->head == NULL;
+bool isEmptyStack(Stack *stack) {
+    return stack == NULL || stack->head == NULL;
 }

@@ -1,67 +1,59 @@
 #include "queue.h"
+#include <stdlib.h>
 
 typedef struct QueueElement {
-    char value;
-    struct QueueElement* next;
+    Value value;
+    struct QueueElement* previous;
 } QueueElement;
 
 struct Queue {
-    QueueElement* front; 
-    QueueElement* back;  
+    QueueElement *front;
+    QueueElement *back;
 };
 
-Queue* createQueue() {
-    Queue* queue = (Queue*)malloc(sizeof(Queue));
+Queue *createQueue(bool *errorCode) {
+    Queue *queue = (Queue*)calloc(1, sizeof(struct Queue));
     if (queue == NULL) {
-        return NULL;
+        *errorCode = true;
     }
-    queue->front = NULL;
-    queue->back = NULL;
     return queue;
 }
 
-void enqueue(Queue* queue, char value, int * errorCode) {
-    QueueElement* element = (QueueElement*)malloc(sizeof(QueueElement));
-    if (element == NULL) {
-        *errorCode = 1;
+void enqueue(Queue *queue, Value value, bool *errorCode) {
+    QueueElement* newElement = (QueueElement*)calloc(1, sizeof(QueueElement));
+    if (newElement == NULL) {
+        *errorCode = true;
         return;
     }
-    element->value = value;
-    element->next = NULL;
+    newElement->value = value;
     if (queue->front == NULL) {
-        queue->front = element; 
-        queue->back = element;
+        queue->front = newElement;
     }
     else {
-        queue->back->next = element;
-        queue->back = element;
+        queue->back->previous = newElement;
     }
+    queue->back = newElement;
 }
 
-char dequeue(Queue* queue) {
-    char value = queue->front->value;
-    QueueElement* tmp = queue->front;
-    queue->front = queue->front->next;
-    if (queue->front == NULL) {
+Value dequeue(Queue *queue, bool *errorCode) {
+    if (isEmptyQueue(queue)) {
+        *errorCode = true;
+        return 0;
+    }
+    Value value = queue->front->value;
+    if (queue->front == queue->back) {
+        free(queue->front);
+        queue->front = NULL;
         queue->back = NULL;
     }
-    free(tmp);
+    else {
+        QueueElement *temp = queue->front;
+        queue->front = queue->front->previous;
+        free(temp);
+    }
     return value;
 }
 
-int queueSize(Queue * queue) {
-    if (queue->front == NULL) {
-        return 0;
-    }
-    QueueElement * fromFrontToBack = queue->front;
-    int result = 1;
-    while (fromFrontToBack != queue->back) {
-        ++result;
-        fromFrontToBack = fromFrontToBack->next;
-    }
-    return result;
-}
-
 bool isEmptyQueue(Queue *queue) {
-    return (queue->front == NULL);
+    return (queue == NULL || queue->front == NULL);
 }

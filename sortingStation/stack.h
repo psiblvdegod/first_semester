@@ -1,13 +1,19 @@
 #pragma once
-#include <stdlib.h>
 #include <stdbool.h>
+
+typedef char Value;
 
 typedef struct Stack Stack;
 
-void push(Stack * stack, char value, int * errorCode);
+Stack *createStack(bool *errorCode);
 
-char pop(Stack * stack);
+// puts value to stack.
+// reports an error if memory allocation is failed.
+void push(Stack *stack, Value value, bool *errorCode);
 
-Stack* createStack();
+// deletes element from top of stack and returns it.
+// report an error if stack is empty.
+Value pop(Stack *stack, bool *errorCode);
 
-bool isEmptyStack(Stack * stack);
+// returns true if stack == NULL or stack is empty.
+bool isEmptyStack(Stack *stack);

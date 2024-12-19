@@ -3,12 +3,10 @@
 
 typedef struct Queue Queue;
 
-void enqueue(Queue * queue, char value, int * errorCode);
+Queue *createQueue(bool *errorCode);
 
-char dequeue(Queue* queue);
+void enqueue(Queue *queue, Value value, bool *errorCode);
 
-Queue* createQueue();
+Value dequeue(Queue *queue, bool *errorCode);
 
-int queueSize(Queue * queue);
-
-bool isEmptyQueue(Queue * queue);
+bool isEmptyQueue(Queue *queue);
