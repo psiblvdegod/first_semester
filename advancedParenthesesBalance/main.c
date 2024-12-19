@@ -9,7 +9,7 @@ int main(void) {
     const char *string = "{([{}])[()]}";
     bool result = parenthesesBalance(string, &errorCode);
     if (errorCode) {
-        printf("Error.\n");
+        printf("Something went wrong.\n");
         return -1;
     }
     printf("string: %s\nresult: %s\n", string, result ? "true" : "false");
