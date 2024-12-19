@@ -1,21 +1,21 @@
 #include "tests.h"
 
 bool stackTest() {
-    Stack * testStack = createStack();
-    if (testStack == NULL) {
+    bool errorCode = false;
+    Stack *stack = createStack(&errorCode);
+    if (errorCode) {
         return false;
     }
-    int errorCode = 0;
-    push(testStack, 200, &errorCode);
-    return pop(testStack) == 200 && !errorCode;
+    push(stack, 1, &errorCode);
+    const bool test = pop(stack, &errorCode) == 1;
+    deleteStack(&stack, &errorCode);
+    return test && !errorCode;
 }
 
 bool calculatorTest() {
-    Stack * testStack = createStack();
-    if (testStack == NULL) {
-        return false;
-    }
-    int errorCode = 0;
-    calculator(testStack, "1 2 3 - + 7 *", &errorCode);
-    return !pop(testStack);
+    bool errorCode = false;
+    const bool test1 = calculator("1 2 3 - + 7 *", &errorCode) == 0;
+    const bool test2 = calculator("7 2 1 - *", &errorCode) == 7;
+    const bool test3 = calculator("8 4 3 - / 7 -", &errorCode) == 1;
+    return test1 && test2 && test3 && !errorCode;
 }

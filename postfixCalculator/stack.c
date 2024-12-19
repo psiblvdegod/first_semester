@@ -1,33 +1,56 @@
 #include "stack.h"
+#include <stdlib.h>
 
 typedef struct StackElement {
-    int value;
-    struct StackElement * previous;
+    Value value;
+    struct StackElement *previous;
 } StackElement;
 
 struct Stack {
-    StackElement * head;
+    StackElement *head;
 };
 
-Stack * createStack() {
-    return (Stack *) calloc(1, sizeof(Stack));
+Stack *createStack(bool *errorCode) {
+    Stack *stack = calloc(1, sizeof(Stack));
+    if (stack == NULL) {
+        *errorCode = true;
+    }
+    return stack;
 }
 
-void push(Stack * stack, int pushValue, int * errorCode) {
-    StackElement * element = malloc(sizeof(StackElement));
-    if (element == NULL) {
-        *errorCode = 1;
+void push(Stack *stack, Value value, bool *errorCode) {
+    StackElement *newElement = calloc(1, sizeof(StackElement));
+    if (newElement == NULL) {
+        *errorCode = true;
         return;
     }
-    element->value = pushValue;
-    element->previous = stack->head;
-    stack->head = element;
+    newElement->value = value;
+    newElement->previous = stack->head;
+    stack->head = newElement;
 }
 
-int pop(Stack * stack) {
-    int value = stack->head->value;
-    StackElement * temp = stack->head;
+bool isEmpty(Stack *stack) {
+    return stack == NULL || stack->head == NULL;
+}
+
+Value pop(Stack *stack, bool *errorCode) {
+    if (isEmpty(stack)) {
+        *errorCode = true;
+        return 0;
+    }
+    Value value = stack->head->value;
+    StackElement *temp = stack->head;
     stack->head = stack->head->previous;
     free(temp);
     return value;
+}
+
+void deleteStack(Stack **stack, bool *errorCode) {
+    if (stack == NULL || *stack == NULL) {
+        return;
+    }
+    while (!isEmpty(*stack)) {
+        pop(*stack, errorCode);
+    }
+    free(*stack);
 }
