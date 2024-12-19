@@ -17,7 +17,7 @@ bool inputValidation(const char *postfixNotation) {
     return true;
 }
 
-int calculator(const char *postfixNotation, bool *errorCode) {
+int calculate(const char *postfixNotation, bool *errorCode) {
     if (!inputValidation(postfixNotation)) {
         *errorCode = true;
         return -1;
