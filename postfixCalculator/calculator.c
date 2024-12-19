@@ -54,6 +54,9 @@ int calculator(const char *postfixNotation, bool *errorCode) {
         }
     }
     const int result = pop(stack, errorCode);
+    if (!isEmpty(stack)) {
+        *errorCode = true;
+    }
     deleteStack(&stack, errorCode);
     return result;
 }

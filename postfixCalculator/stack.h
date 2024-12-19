@@ -19,3 +19,6 @@ Value pop(Stack *stack, bool *errorCode);
 
 // deletes stack.
 void deleteStack(Stack **stack, bool *errorCode);
+
+// returns false if stack is empty, else returns true.
+bool isEmpty(Stack *stack);

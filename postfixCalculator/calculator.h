@@ -3,5 +3,5 @@
 #include "stack.h"
 
 // calculates an expression in postfix notation.
-// reports an error if input is incorrect.
+// reports an error if expression is incorrect.
 int calculator(const char *string, bool *errorCode);
