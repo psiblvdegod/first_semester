@@ -45,6 +45,22 @@ Vertex *createVertex(Value number, bool *errorCode) {
     return vertex;
 }
 
+Value **createMatrix(const int size, bool *errorCode) {
+    Value **matrix = calloc(size, sizeof(Value*));
+    if (matrix == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    for (int i = 0; i < size; ++i) {
+        matrix[i] = calloc(size, sizeof(Value));
+        if (matrix[i] == NULL) {
+            *errorCode = true;
+            return NULL;
+        }
+    }
+    return matrix;
+}
+
 Graph createGraph(const int verticesAmount, bool *errorCode) {
     Graph graph = calloc(1, sizeof(struct Graph));
     if (graph == NULL) {
@@ -53,17 +69,9 @@ Graph createGraph(const int verticesAmount, bool *errorCode) {
     }
     graph->verticesAmount = verticesAmount;
 
-    graph->adjacencyMatrix = calloc(verticesAmount, sizeof(int*));
-    if (graph->adjacencyMatrix == NULL) {
-        *errorCode = true;
+    graph->adjacencyMatrix = createMatrix(verticesAmount, errorCode);
+    if (*errorCode) {
         return NULL;
-    }
-    for (int i = 0; i < verticesAmount; ++i) {
-        graph->adjacencyMatrix[i] = calloc(verticesAmount, sizeof(int));
-        if (graph->adjacencyMatrix[i] == NULL) {
-            *errorCode = true;
-            return NULL;
-        }
     }
 
     graph->vertices = calloc(verticesAmount, sizeof(Vertex));
@@ -156,11 +164,6 @@ Graph buildGraph(const char *filePath, bool *errorCode) {
         return NULL;
     }
 
-    Node *capitals = calloc(1, sizeof(Node));
-    if (capitals == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
     int capitalsAmount = 0;
     fscanf(file, "%d", &capitalsAmount);
     for (int k = 0; k < capitalsAmount; ++k) {
@@ -273,6 +276,23 @@ void printCapitals(Graph graph) {
     printf("\n");
 }
 
+Value **getAdjacencyMatrix(Graph graph, int *size, bool *errorCode) {
+    if (graph == NULL || graph->adjacencyMatrix == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    Value **matrix = createMatrix(graph->verticesAmount, errorCode);
+    if (*errorCode) {
+        return NULL;
+    }
+    for (int i = 0; i < graph->verticesAmount; ++i) {
+        for (int j = 0; j < graph->verticesAmount; ++j) {
+            matrix[i][j] = graph->adjacencyMatrix[i][j];
+        }
+    }
+    return matrix;
+}
+
 void printMatrix(Graph graph) {
     int **matrix = graph->adjacencyMatrix;
     for (int i = 0; i < graph->verticesAmount; ++i) {
@@ -298,22 +318,27 @@ void printAdjacencyLists(Graph graph) {
 
 void printStateAffiliation(Graph graph) {
     Vertex **cities = graph->vertices;
+    int freeCitiesAmount = graph->verticesAmount;
     for (int i = 0; i < graph->verticesAmount; ++i) {
         if (!cities[i]->isCapital) {
             continue;
         }
         printf("%d : ", cities[i]->number);
+        --freeCitiesAmount;
         for (int j = 0; j < graph->verticesAmount; ++j) {
             if (cities[j]->state == cities[i]->state) {
                 printf("%d ", cities[j]->number);
+                --freeCitiesAmount;
             }
         }
         printf("\n");
     }
-    printf("free cities: ");
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        if (cities[i]->state == -1) {
-            printf("%d ", cities[i]->number);
+    if (freeCitiesAmount > 0) {
+        printf("free cities: ");
+        for (int i = 0; i < graph->verticesAmount; ++i) {
+            if (cities[i]->state == -1) {
+                printf("%d ", cities[i]->number);
+            }
         }
     }
     printf("\n");

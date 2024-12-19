@@ -5,7 +5,7 @@ typedef int Value;
 
 typedef struct Graph* Graph;
 
-// opens file in filePath for read,
+// opens file from filePath for read,
 // reads vertices amount and creates graph,
 // reads and sets edges,
 // reads and sets capitals,
@@ -32,8 +32,13 @@ void printCapitals(Graph graph);
 // prints adjacency matrix.
 void printMatrix(Graph graph);
 
-// prints adjacency lists for every vertex in the graph.
+// prints adjacency list for every vertex in the graph.
 void printAdjacencyLists(Graph graph);
 
 // prints capitals and cities belong to them and free cities.
 void printStateAffiliation(Graph graph);
+
+// for tests.
+// returns two-dimensional square array representing adjacency matrix of graph.
+// puts matrix's size to variable "size".
+Value **getAdjacencyMatrix(Graph graph, int *size, bool *errorCode);
