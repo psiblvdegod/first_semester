@@ -1,15 +1,17 @@
 #pragma once
-
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
 
-typedef struct Stack Stack;
+typedef char Value;
 
-void push(Stack * stack, char value, bool * errorCode);
+typedef struct StackElement *Stack;
 
-char pop(Stack * stack);
+// puts value to stack.
+void push(Stack *stack, Value value, bool *errorCode);
 
-Stack* createStack();
+// deletes element from top of stack and returns it.
+Value pop(Stack *stack, bool *errorCode);
 
-bool isEmptyStack(Stack * stack);
+// returns true if stack == NULL or stack is empty.
+bool isEmptyStack(Stack *stack);

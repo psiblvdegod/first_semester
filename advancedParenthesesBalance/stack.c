@@ -1,37 +1,33 @@
 #include "stack.h"
 
 typedef struct StackElement {
-    char value;
-    struct StackElement * previous;
+    Value value;
+    struct StackElement *previous;
 } StackElement;
 
-struct Stack {
-    StackElement * head;
-};
-
-Stack * createStack() {
-    return (Stack *) calloc(1, sizeof(Stack));
-}
-
-void push(Stack * stack, char pushValue, bool * errorCode) {
-    StackElement * element = malloc(sizeof(StackElement));
-    if (element == NULL) {
-        *errorCode = 1;
+void push(Stack *stack, Value value, bool *errorCode) {
+    StackElement *newElement = calloc(1, sizeof(StackElement));
+    if (newElement == NULL) {
+        *errorCode = true;
         return;
     }
-    element->value = pushValue;
-    element->previous = stack->head;
-    stack->head = element;
+    newElement->value = value;
+    newElement->previous = *stack;
+    *stack = newElement;
 }
 
-char pop(Stack * stack) {
-    char value = stack->head->value;
-    StackElement * temp = stack->head;
-    stack->head = stack->head->previous;
+Value pop(Stack *stack, bool *errorCode) {
+    if (isEmptyStack(stack)) {
+        *errorCode = true;
+        return '1';
+    }
+    Value value = (*stack)->value;
+    StackElement *temp = *stack;
+    *stack = (*stack)->previous;
     free(temp);
     return value;
 }
 
-bool isEmptyStack(Stack * stack) {
-    return stack->head == NULL;
+bool isEmptyStack(Stack *stack) {
+    return stack == NULL || *stack == NULL;
 }
