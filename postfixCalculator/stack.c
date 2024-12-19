@@ -53,4 +53,5 @@ void deleteStack(Stack **stack, bool *errorCode) {
         pop(*stack, errorCode);
     }
     free(*stack);
+    *stack = NULL;
 }
