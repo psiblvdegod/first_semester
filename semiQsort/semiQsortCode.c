@@ -50,19 +50,8 @@ bool semiQsortTest() {
 }
 
 int main(void) {
-    bool test = semiQsortTest() & swapTest();
-    if (!test) {
+    if (!semiQsortTest() || !swapTest()) {
         printf("Error. Tests failed.\n");
-    }
-    else {
-        int randomArray[ARRAY_SIZE];
-        for (int i = 0; i < ARRAY_SIZE; ++i) {
-            randomArray[i] = rand() % 101;
-        }
-        printf("First element: %d\nArray: ", randomArray[0]);
-        int* result = semiQsort(randomArray, ARRAY_SIZE);
-        for (int i = 0; i < ARRAY_SIZE; ++i) {
-            printf("%d ", *(result + i));
-        }
+        return -1;
     }
 }
