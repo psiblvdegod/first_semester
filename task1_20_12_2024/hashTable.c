@@ -9,7 +9,7 @@ struct HashTable {
 };
 
 HashTable createHashTable(const int size, bool *errorCode) {
-    if (size <= 0) {
+    if (size < 1) {
         *errorCode = true;
         return NULL;
     }
@@ -36,7 +36,7 @@ int hashFunction(HashTable hashTable, Value key) {
 }
 
 void insert(HashTable hashTable, Value key, bool *errorCode) {
-    if (hashTable == NULL || hashTable->size == hashTable->elementsAmount) {
+    if (hashTable == NULL || key == NULL ||hashTable->size == hashTable->elementsAmount) {
         *errorCode = true;
         return;
     }
