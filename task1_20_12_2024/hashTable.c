@@ -8,7 +8,7 @@ struct HashTable {
     int elementsAmount;
 };
 
-HashTable createHashTable(const int size, bool * errorCode) {
+HashTable createHashTable(const int size, bool *errorCode) {
     if (size <= 0) {
         *errorCode = true;
         return NULL;
@@ -56,6 +56,9 @@ bool search(HashTable hashTable, Value key, bool *errorCode) {
     }
     const int hash = hashFunction(hashTable, key);
     for (int i = hash; i < hashTable->size; ++i) {
+        if (hashTable->table[i] == NULL) {
+            continue;
+        }
         if (strcmp(hashTable->table[i], key) == 0) {
             return true;
         }
