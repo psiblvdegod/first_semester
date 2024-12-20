@@ -1,6 +1,9 @@
 #include <stdio.h>
-#include "list.h"
+#include "tests.h"
 
 int main(void) {
-
+    if (!hashTableTests()) {
+        printf("Error. Tests failed.\n");
+        return -1;
+    }
 }

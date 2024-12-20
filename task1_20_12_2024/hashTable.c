@@ -1,5 +1,4 @@
 #include "hashTable.h"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -9,17 +8,22 @@ struct HashTable {
     int elementsAmount;
 };
 
-HashTable createHashTable(const int hashTableSize, bool * errorCode) {
-    if (hashTableSize <= 0) {
+HashTable createHashTable(const int size, bool * errorCode) {
+    if (size <= 0) {
         *errorCode = true;
         return NULL;
     }
-    HashTable hashTable = calloc(hashTableSize, sizeof(const char*));
+    HashTable hashTable = calloc(1, sizeof(struct HashTable));
     if (hashTable == NULL) {
         *errorCode = true;
         return NULL;
     }
-    hashTable->size = hashTableSize;
+    hashTable->table = calloc(size, sizeof(Value));
+    if (hashTable->table == NULL) {
+        *errorCode = true;
+        return NULL;
+    }
+    hashTable->size = size;
     return hashTable;
 }
 
@@ -57,44 +61,4 @@ bool search(HashTable hashTable, Value key, bool *errorCode) {
         }
     }
     return false;
-}
-
-HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * errorCode) {
-    if (hashTable == NULL || *hashTableSize < 0) {
-        *errorCode = true;
-        return hashTable;
-    }
-    const double fillFactor = calculateFillFactor(hashTable, *hashTableSize, errorCode);
-    if (fillFactor < 2) {
-        return hashTable;
-    }
-    const int newSize = (int)(fillFactor * (*hashTableSize) * 2);
-    HashTable newHashTable = createHashTable(newSize, errorCode);
-    if (*errorCode) {
-        return hashTable;
-    }
-    for (int i = 0; i < *hashTableSize; ++i) {
-        while (hashTable[i] != NULL) {
-            const int hash = hashFunction(newSize, getKey(hashTable[i], errorCode));
-            newHashTable[hash] = updateList(newHashTable[hash], getKey(hashTable[i], errorCode), getFrequency(hashTable[i], errorCode), errorCode);
-            hashTable[i] = getPrevious(hashTable[i]);
-        }
-    }
-    free(hashTable);
-    *hashTableSize = newSize;
-    return newHashTable;
-}
-
-void printFrequencies(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL) {
-        *errorCode = true;
-        return;
-    }
-    for (int i = 0; i < hashTableSize; ++i) {
-        List tableElement = hashTable[i];
-        while (tableElement != NULL) {
-            printf("%s - %d\n", getKey(tableElement, errorCode), getFrequency(tableElement, errorCode));
-            tableElement = getPrevious(tableElement);
-        }
-    }
 }
