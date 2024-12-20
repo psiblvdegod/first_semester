@@ -5,10 +5,10 @@ cd ..
 
 # builds all project which have CMakeLists.txt 
 for dir in */; do
-    if [ -f "${dir%/}/CMakeLists.txt" ]; then
+    if [ -f "$dir/CMakeLists.txt" ]; then
         mkdir ./consoleBuild/build/$dir
         cd ./consoleBuild/build/$dir
-        cmake ../../../${dir%/}
+        cmake ../../../$dir
         make
         cd ../../../
     fi
@@ -27,4 +27,6 @@ for dir in */; do
     fi
     cd ..
 done
-pwd
+
+# deletes generated files
+rm -rf ../build
