@@ -35,10 +35,6 @@ bool parenthesesBalanceTest() {
 
 int main(void) {
     if (!parenthesesBalanceTest()) {
-        printf("Error. Test failed.\n");
         return -1;
     }
-    const char * string = "(string)(string(string))string()";
-    bool result = parenthesesBalance(string);
-    printf("String: %s\nResult: %s\n", string, result ? "true" : "false");
 }
