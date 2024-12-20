@@ -23,46 +23,40 @@ HashTable createHashTable(const int hashTableSize, bool * errorCode) {
     return hashTable;
 }
 
-int hashFunction(HashTable hashTable, Key key) {
-    if (hashTable->size < 1 || key == NULL) {
-        return 0;
-    }
+int hashFunction(HashTable hashTable, Value key) {
     int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
         result = (result + ((unsigned char) key[i]) * (i + 1)) % hashTable->size;
     }
-    if (hashTable->table[result] == NULL) {
-        return result;
-    }
-    for (int i = result; ; i == hashTable->size ? i = 0 : ++i) {
-        if (hashTable->table[i] == NULL) {
-            return i;
-        }
-    }
+    return result;
 }
 
-void insert(HashTable hashTable, Key key, bool *errorCode) {
+void insert(HashTable hashTable, Value key, bool *errorCode) {
     if (hashTable == NULL || hashTable->size == hashTable->elementsAmount) {
         *errorCode = true;
         return;
     }
-    const int hash = hashFunction(hashTableSize, key);
+    const int hash = hashFunction(hashTable, key);
+    for (int i = hash; ; i == hashTable->size ? i = 0 : ++i) {
+        if (hashTable->table[i] == NULL) {
+            hashTable->table[i] = key;
+            return;
+        }
+    }
 }
 
-int findFrequencyByKey(HashTable hashTable, const int hashTableSize, Key key, bool * errorCode) {
-    if (hashTable == NULL) {
+bool search(HashTable hashTable, Value key, bool *errorCode) {
+    if (hashTable == NULL || key == NULL) {
         *errorCode = true;
-        return -1;
+        return false;
     }
-    const int hash = hashFunction(hashTableSize, key);
-    List list = hashTable[hash];
-    while (list != NULL) {
-        if (strcmp(key, getKey(list, errorCode)) == 0) {
-            return getFrequency(list, errorCode);
+    const int hash = hashFunction(hashTable, key);
+    for (int i = hash; i < hashTable->size; ++i) {
+        if (strcmp(hashTable->table[i], key) == 0) {
+            return true;
         }
-        list = getPrevious(list);
     }
-    return 0;
+    return false;
 }
 
 HashTable expandHashTable(HashTable hashTable, int * hashTableSize, bool * errorCode) {

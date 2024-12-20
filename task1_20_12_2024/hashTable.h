@@ -2,7 +2,6 @@
 #include <stdbool.h>
 
 typedef const char* Value;
-typedef const char* Key;
 typedef struct HashTable *HashTable;
 
 
