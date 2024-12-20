@@ -1,8 +1,6 @@
-#include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <locale.h>
 #define REGISTER_WIDTH 16
 
 int *bin(int decimal) {
@@ -64,33 +62,7 @@ bool decTest() {
 }
 
 int main(void) {
-    setlocale(LC_ALL, "Rus");
     if (!decTest() || !binTest()) {
-        printf("Ошибка. Тесты провалены.\n");
-        return 0;
+        return -1;
     }
-    printf("Введите два числа в десятичной системе счисления.\n");
-    int decimal1 = 0, decimal2 = 0;
-    const int errorCode = scanf("%d%d", &decimal1, &decimal2);
-    if (errorCode != 2) {
-        printf("Ошибка. Недопустимое значение.\n");
-        return 1;
-    }
-    int *binary1 = bin(decimal1);
-    int *binary2 = bin(decimal2);
-    printf("Первое число: ");
-    for (int i = 0; i < REGISTER_WIDTH; ++i) {
-        printf("%d", binary1[i]);
-    }
-    printf("\nВторое число: ");
-    for (int k = 0; k < REGISTER_WIDTH; ++k) {
-        printf("%d", binary2[k]);
-    }
-    int *binary12 = binSum(binary1, binary2);
-    printf("\nСумма в двоичной системе: ");
-    for (int j = 0; j < REGISTER_WIDTH; ++j) {
-        printf("%d", binary12[j]);
-    }
-    int decSum = dec(binary12);
-    printf("\nСумма в десятичной системе = %d", decSum);
 }
