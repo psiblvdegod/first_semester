@@ -6,8 +6,8 @@ cd ..
 # builds all project which have CMakeLists.txt 
 for dir in */; do
     if [ -f "${dir%/}/CMakeLists.txt" ]; then
-        mkdir ./consoleBuild/build/${dir%/}
-        cd ./consoleBuild/build/${dir%/}
+        mkdir ./consoleBuild/build/$dir
+        cd ./consoleBuild/build/$dir
         cmake ../../../${dir%/}
         make
         cd ../../../
@@ -18,7 +18,7 @@ cd ./consoleBuild/build
 
 # runs executables and reports the result
 for dir in */; do
-    cd $dir
+    cd $dir 
     ./"${dir%/}"
     if [ $? -eq 0 ]; then
         echo "${dir%/} works"
@@ -27,3 +27,4 @@ for dir in */; do
     fi
     cd ..
 done
+pwd
