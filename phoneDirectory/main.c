@@ -5,43 +5,49 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool errorMessage(const int errorCode) {
-    if (errorCode == 0) {
+bool errorMessage(int *errorCode) {
+    if (*errorCode == 0) {
         return false;
     }
-    if (errorCode == 1) {
+    else if (*errorCode == 100) {
+        printf("Directory is overflowed.\n");
+        *errorCode = 0;
+        return false;
+    }
+    else if (*errorCode == 9) {
+        printf("Invalid value.\n");
+        *errorCode = 0;
+        return false;
+    }
+
+    else if (*errorCode == 1) {
         printf("Incorrect arguments passed to function.\n");
     }
-    else if (errorCode == 44) {
+    else if (*errorCode == 44) {
         printf("Memory allocation error.\n");
     }
-    else if (errorCode == 15) {
+    else if (*errorCode == 15) {
         printf("File opening error.\n");
-    }
-    else if (errorCode == 100) {
-        printf("Directory is overflowed.\n");
-    }
-    else if (errorCode == 9) {
-        printf("Invalid value.\n");
     }
     return true;
 }
 
-bool queryProcessing(Directory directory, const char *filePath, int *errorCode) {
-    char userQuery = 0;
+void queryProcessing(Directory directory, const char *filePath, int *errorCode) {
+    int userQuery = 0;
     printf("0 - save // 1 - add // 2 - print all // 3 - search by name // 4 - search by number\n");
-    const int inputValidation = scanf("%c", &userQuery);
+    const int inputValidation = scanf("%d", &userQuery);
+    while (getchar() != '\n');
     if (inputValidation != 1) {
         *errorCode = 9;
-        return true;
+        return;
     }
-    else if (userQuery == '1') {
+    if (userQuery == 1) {
         printf("Enter name and phone number.\nDo not separate name and surname with a space.\n");
         char *newName = calloc(50, sizeof(char));
         char *newNumber = calloc(30, sizeof(char));
         if (newName == NULL || newNumber == NULL) {
             *errorCode = 44;
-            return false;
+            return;
         }
         const int inputValidation = scanf("%s %s", newName, newNumber);
         while (getchar() != '\n');
@@ -49,24 +55,24 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             *errorCode = 9;
             free(newName);
             free(newNumber);
-            return true;
+            return;
         }
         addContact(directory, newName, newNumber, errorCode);
         if (*errorCode == 0) {
             printf("Contact added.\n");
         }
     }
-    else if (userQuery == '2') {
+    else if (userQuery == 2) {
         printAllContacts(directory);
     }
-    else if (userQuery == '3') {
+    else if (userQuery == 3) {
         printf("Enter name you want to find:\n");
         char name[50] = {0};
         const int inputValidation = scanf("%s", name);
         while (getchar() != '\n');
         if (inputValidation != 1) {
             *errorCode = 9;
-            return true;
+            return;
         }
         const char *number = searchByName(directory, name, errorCode);
         if (*errorCode == 0) {
@@ -78,14 +84,14 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             }
         }
     }
-    else if (userQuery == '4') {
+    else if (userQuery == 4) {
         printf("Enter number you want to find:\n");
         char number[30] = {0};
         const int inputValidation = scanf("%s", number);
         while (getchar() != '\n');
         if (inputValidation != 1) {
             *errorCode = 9;
-            return true;
+            return;
         }
         const char *name = searchByNumber(directory, number, errorCode);
         if (*errorCode == 0) {
@@ -99,11 +105,7 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
     }
     else if (userQuery == 0) {
         saveContactsToFile(directory, filePath, errorCode);
-        if (*errorCode) {
-            return false;
-        }
     }
-    return true;
 }
 
 int main(void) {
@@ -115,15 +117,15 @@ int main(void) {
     const char * filePath = "../text.txt";
 
     Directory directory = createDirectory(100, &errorCode);
-    if (errorMessage(errorCode)) {
+    if (errorMessage(&errorCode)) {
         return errorCode;
     }
     fillDirectoryFromFile(directory, filePath, &errorCode);
-    if (errorMessage(errorCode)) {
+    if (errorMessage(&errorCode)) {
         return errorCode;
     }
-    while (queryProcessing(directory, filePath, &errorCode)) {
-        errorMessage(errorCode);
+    while (!errorMessage(&errorCode)) {
+        queryProcessing(directory, filePath, &errorCode);
     }
     return errorCode;
 }
