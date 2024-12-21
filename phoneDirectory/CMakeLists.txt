@@ -4,4 +4,4 @@ project(phoneDirectory C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(phoneDirectory
-        main.c tests.c phoneDirectory.c)
+        main.c tests.c phoneDirectory.c queryProcessing.c)
