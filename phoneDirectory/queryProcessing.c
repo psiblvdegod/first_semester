@@ -4,15 +4,15 @@
 
 bool errorMessage(const int errorCode) {
     if (errorCode == 0) {
-        return false;
+        return true;
     }
     else if (errorCode == 100) {
         printf("Directory is overflowed.\n");
-        return false;
+        return true;
     }
     else if (errorCode == 9) {
         printf("Invalid value.\n");
-        return false;
+        return true;
     }
 
     else if (errorCode == 1) {
@@ -24,12 +24,12 @@ bool errorMessage(const int errorCode) {
     else if (errorCode == 15) {
         printf("File opening error.\n");
     }
-    return true;
+    return false;
 }
 
 bool queryProcessing(Directory directory, const char *filePath, int *errorCode) {
     char userQuery = '0';
-    printf("0 - save // 1 - add // 2 - print all // 3 - search by name // 4 - search by number\n");
+    printf("0 - quit // 1 - add // 2 - print all // 3 - search by name // 4 - search by number // 5 - save\n");
     int inputValidation = scanf("%c", &userQuery);
     while (getchar() != '\n');
     if (inputValidation != 1) {
@@ -56,9 +56,6 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
                 break;
             }
             addContact(directory, newName, newNumber, errorCode);
-            if (*errorCode == 0) {
-                printf("Contact added.\n");
-            }
             break;
         case '2':
             printAllContacts(directory);
@@ -84,9 +81,9 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             }
             break;
         case '4':
-            printf("Enter name you want to find:\n");
+            printf("Enter number you want to find:\n");
             char number[50] = {0};
-            inputValidation = scanf("%s", name);
+            inputValidation = scanf("%s", number);
             while (getchar() != '\n');
             if (inputValidation != 1) {
                 *errorCode = 9;
@@ -100,7 +97,7 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
                 printf("No such contact.\n");
             }
             else {
-                printf("%s - %s\n", name, number);
+                printf("%s - %s\n", foundName, number);
             }
             break;
         case '5':
