@@ -4,60 +4,86 @@
 #include "phoneDirectory.h"
 
 typedef struct Contact {
-    const char * name;
-    const char * number;
+    const char *name;
+    const char *number;
 } Contact;
 
 typedef struct Contacts {
-    Contact ** contacts;
+    Contact **contacts;
+    int size;
     int amountOfContacts;
 } Contacts;
 
-Directory createDirectory(const int size, bool * errorCode) {
-    Directory directory = calloc(1, sizeof(Contacts));
-    Contact ** contacts = calloc(size, sizeof(Contact));
-    if (directory == NULL || contacts == NULL || size < 1) {
-        *errorCode = true;
+Directory createDirectory(const int size, int *errorCode) {
+    if (size < 1) {
+        *errorCode = 1;
         return NULL;
     }
+    Directory directory = calloc(1, sizeof(Contacts));
+    Contact **contacts = calloc(size, sizeof(Contact*));
+    if (directory == NULL || contacts == NULL) {
+        *errorCode = 44;
+        return NULL;
+    }
+    for (int i = 0; i < size; ++i) {
+        contacts[i] = calloc(1, sizeof(Contact));
+        if (contacts[i] == NULL) {
+            *errorCode = 44;
+            return NULL;
+        }
+    }
     directory->contacts = contacts;
+    directory->size = size;
     return directory;
 }
 
-void addContact(Directory directory, const char * newName, const char * newNumber, bool * errorCode) {
-    Contact * newContact = calloc(1, sizeof(Contact));
-    if (directory == NULL || newContact == NULL) {
-        *errorCode = true;
+void addContact(Directory directory, const char *newName, const char *newNumber, int *errorCode) {
+    if (directory == NULL || directory->contacts == NULL || newName == NULL || newNumber == NULL) {
+        *errorCode = 1;
         return;
     }
-    newContact->name = newName;
-    newContact->number = newNumber;
-    directory->contacts[directory->amountOfContacts] = newContact;
+    if (directory->amountOfContacts == directory->size) {
+        *errorCode = 100;
+        return;
+    }
+    directory->contacts[directory->amountOfContacts]->name = newName;
+    directory->contacts[directory->amountOfContacts]->number = newNumber;
     ++directory->amountOfContacts;
 }
 
-void fillDirectoryFromFile(Directory directory, FILE * file, bool * errorCode) {
-    if (directory == NULL || file == NULL) {
-        *errorCode = true;
+void fillDirectoryFromFile(Directory directory, const char *filePath, int *errorCode) {
+    if (directory == NULL || filePath == NULL) {
+        *errorCode = 1;
+        return;
+    }
+    FILE *file = fopen(filePath, "r");
+    if (file == NULL) {
+        *errorCode = 15;
         return;
     }
     while (true) {
-        char * newName = calloc(50, sizeof(char));
-        char * newNumber = calloc(30, sizeof(char));
+        char *newName = calloc(50, sizeof(char));
+        char *newNumber = calloc(30, sizeof(char));
         if (newName == NULL || newNumber == NULL) {
-            *errorCode = true;
+            *errorCode = 44;
+            fclose(file);
             return;
         }
         if (fscanf(file, "%s%s", newName, newNumber) != 2) {
+            fclose(file);
             return;
         }
         addContact(directory, newName, newNumber, errorCode);
+        if (*errorCode) {
+            fclose(file);
+            return;
+        }
     }
 }
 
 void printAllContacts(Directory directory) {
-    if (directory == NULL || directory->amountOfContacts == 0) {
-        printf("Directory is empty.\n");
+    if (directory == NULL || directory->contacts == NULL ||directory->amountOfContacts == 0) {
+        printf("Directory is empty or NULL.\n");
         return;
     }
     printf("Your contacts:\n");
@@ -67,36 +93,42 @@ void printAllContacts(Directory directory) {
     }
 }
 
-void searchByName(Directory directory, const char * key) {
+const char *searchByName(Directory directory, const char *key, int *errorCode) {
+    if (directory == NULL || directory->contacts == NULL || key == NULL) {
+        *errorCode = 1;
+        return NULL;
+    }
     for (int i = 0; i < directory->amountOfContacts; ++i){
-        Contact * currentContact = directory->contacts[i];
+        Contact *currentContact = directory->contacts[i];
         if (strcmp(currentContact->name, key) == 0) {
-            printf("%s - %s\n", currentContact->name, currentContact->number);
-            return;
+            return currentContact->number;
         }
     }
-    printf("There is no such contact.\n");
+    return NULL;
 }
 
-void searchByNumber(Directory directory, const char * key) {
+const char *searchByNumber(Directory directory, const char *key, int *errorCode) {
+    if (directory == NULL || directory->contacts == NULL ||key == NULL) {
+        *errorCode = 1;
+        return NULL;
+    }
     for (int i = 0; i < directory->amountOfContacts; ++i){
-        Contact * currentContact = directory->contacts[i];
+        Contact *currentContact = directory->contacts[i];
         if (strcmp(currentContact->number, key) == 0) {
-            printf("%s - %s\n", currentContact->name, currentContact->number);
-            return;
+            return currentContact->name;
         }
     }
-    printf("There is no such contact.\n");
+    return NULL;
 }
 
-void saveContactsToFile(Directory directory, const char * filePath, bool * errorCode) {
-    if (filePath == NULL) {
-        *errorCode = true;
+void saveContactsToFile(Directory directory, const char *filePath, int *errorCode) {
+    if (filePath == NULL || directory == NULL || directory->contacts == NULL) {
+        *errorCode = 1;
         return;
     }
     FILE * file = fopen(filePath, "w");
     if (file == NULL) {
-        *errorCode = true;
+        *errorCode = 15;
         return;
     }
     for (int i = 0; i < directory->amountOfContacts; ++i) {
