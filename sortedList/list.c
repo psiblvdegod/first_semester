@@ -31,7 +31,7 @@ ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
     return current;
 }
 
-bool insertElement(List list, Value value, int *errorCode) {
+bool insertInList(List list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
         *errorCode = 1;
         return false;
@@ -65,7 +65,7 @@ ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChan
     return current;
 }
 
-bool deleteElement(List list, Value value, int *errorCode) {
+bool deleteFromList(List list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
         *errorCode = 1;
         return false;
@@ -96,6 +96,23 @@ void printList(List list, int *errorCode) {
     printf("\n");
 }
 
+bool searchInList(List list, Value value, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = 1;
+        return false;
+    }
+    ListElement *currentElement = list->head;
+    while (currentElement != NULL) {
+        if (strcmp(value, currentElement->value) == 0) {
+            return true;
+        }
+        else if (strcmp(value, currentElement->value) > 0) {
+            return false;
+        }
+        currentElement = currentElement->next;
+    }
+    return false;
+}
 
 void deleteList(List *list, int *errorCode) {
     if (list == NULL || *list == NULL) {

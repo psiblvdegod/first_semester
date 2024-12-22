@@ -32,7 +32,7 @@ bool queryProcessing(List list, int *errorCode) {
                 free(newValue);
                 break;
             }
-            const bool wasAdded = insertElement(list, newValue, errorCode);
+            const bool wasAdded = insertInList(list, newValue, errorCode);
             if (*errorCode) {
                 free(newValue);
             }
@@ -54,7 +54,7 @@ bool queryProcessing(List list, int *errorCode) {
                 free(deletingValue);
                 break;
             }
-            const bool wasDeleted = deleteElement(list, deletingValue, errorCode);
+            const bool wasDeleted = deleteFromList(list, deletingValue, errorCode);
             printf("Element was%sdeleted.\n", wasDeleted ? " " : " not ");
             free(deletingValue);
             break;
@@ -66,5 +66,9 @@ bool queryProcessing(List list, int *errorCode) {
         default:
             printf("Invalid value.\n");
     }
-    return *errorCode == 0 && userQuery != '0';
+    if (*errorCode != 0) {
+        printf("Something went wrong.\n");
+        return false;
+    }
+    return userQuery != '0';
 }

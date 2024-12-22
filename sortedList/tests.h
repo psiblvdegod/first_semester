@@ -1,4 +1,4 @@
-#include "list.h"
+#pragma once
 #include <stdbool.h>
 
-bool listTests(int *errorCode);
+void listTests(int *errorCode);
