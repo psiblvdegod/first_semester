@@ -48,6 +48,8 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             char *newNumber = calloc(30, sizeof(char));
             if (newName == NULL || newNumber == NULL) {
                 *errorCode = 44;
+                free(newName);
+                free(newNumber);
                 break;
             }
             inputValidation = scanf("%s %s", newName, newNumber);
@@ -59,6 +61,10 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
                 break;
             }
             addContact(directory, newName, newNumber, errorCode);
+            if (*errorCode) {
+                free(newName);
+                free(newNumber);
+            }
             break;
         case '2':
             printAllContacts(directory, errorCode);

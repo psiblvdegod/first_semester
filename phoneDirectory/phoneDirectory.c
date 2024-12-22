@@ -68,6 +68,10 @@ void fillDirectoryFromFile(Directory directory, const char *filePath, int *error
         return;
     }
     while (true) {
+        if (directory->amountOfContacts == directory->size) {
+            *errorCode = 100;
+            break;
+        }
         char *newName = calloc(50, sizeof(char));
         char *newNumber = calloc(30, sizeof(char));
         if (newName == NULL || newNumber == NULL) {
