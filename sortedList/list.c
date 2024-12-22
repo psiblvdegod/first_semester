@@ -23,11 +23,12 @@ List createList(int *errorCode) {
 }
 
 ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
-    if (strcmp(newElement->value, current->value) >= 0) {
+    if (current == NULL || strcmp(newElement->value, current->value) <= 0) {
         newElement->next = current;
         return newElement;
     }
     current->next = insertRecursive(current->next, newElement);
+    return current;
 }
 
 bool insertElement(List list, Value value, int *errorCode) {
@@ -51,16 +52,17 @@ bool insertElement(List list, Value value, int *errorCode) {
 }
 
 ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChanged) {
+    if (current == NULL || strcmp(value, current->value) < 0) {
+        return current;
+    }
     if (strcmp(value, current->value) == 0) {
         ListElement *next = current->next;
         free(current);
         *isSizeChanged = true;
         return next;
     }
-    if (strcmp(value, current->value) > 0) {
-        return current;
-    }
     current->next = deleteRecursive(current->next, value, isSizeChanged);
+    return current;
 }
 
 bool deleteElement(List list, Value value, int *errorCode) {
