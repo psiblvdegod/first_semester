@@ -24,6 +24,9 @@ bool reportError(const int errorCode) {
     else if (errorCode == 15) {
         printf("File opening error.\n");
     }
+    else if (errorCode == 139) {
+        printf("Dereference NULL pointer.\n");
+    }
     return true;
 }
 

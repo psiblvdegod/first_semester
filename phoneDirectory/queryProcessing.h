@@ -2,8 +2,8 @@
 #include <stdbool.h>
 
 // if errorCode != 0 prints type of error happened.
-// returns false if program can not continue working,
-// else return true.
+// returns true if program can not continue working,
+// else returns false.
 bool reportError(int errorCode);
 
 // processes user query.

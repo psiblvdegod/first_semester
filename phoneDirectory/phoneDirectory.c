@@ -23,12 +23,17 @@ Directory createDirectory(const int size, int *errorCode) {
     Contact **contacts = calloc(size, sizeof(Contact*));
     if (directory == NULL || contacts == NULL) {
         *errorCode = 44;
+        free(directory);
+        free(contacts);
         return NULL;
     }
     for (int i = 0; i < size; ++i) {
         contacts[i] = calloc(1, sizeof(Contact));
         if (contacts[i] == NULL) {
             *errorCode = 44;
+            for (int k = i; k >= 0; --k) {
+                free(contacts[k]);
+            }
             return NULL;
         }
     }
@@ -59,6 +64,7 @@ void fillDirectoryFromFile(Directory directory, const char *filePath, int *error
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
         *errorCode = 15;
+        fclose(file);
         return;
     }
     while (true) {
@@ -66,29 +72,37 @@ void fillDirectoryFromFile(Directory directory, const char *filePath, int *error
         char *newNumber = calloc(30, sizeof(char));
         if (newName == NULL || newNumber == NULL) {
             *errorCode = 44;
-            fclose(file);
-            return;
+            free(newName);
+            free(newNumber);
+            break;
         }
         if (fscanf(file, "%s%s", newName, newNumber) != 2) {
-            fclose(file);
-            return;
+            break;
         }
         addContact(directory, newName, newNumber, errorCode);
         if (*errorCode) {
-            fclose(file);
-            return;
+            break;
         }
     }
+    fclose(file);
 }
 
-void printAllContacts(Directory directory) {
-    if (directory == NULL || directory->contacts == NULL ||directory->amountOfContacts == 0) {
-        printf("Directory is empty or NULL.\n");
+void printAllContacts(Directory directory, int *errorCode) {
+    if (directory == NULL || directory->contacts == NULL) {
+        *errorCode = 1;
+        return;
+    }
+    if (directory->amountOfContacts == 0) {
+        printf("Directory is empty.\n");
         return;
     }
     printf("Your contacts:\n");
     for (int i = 0; i < directory->amountOfContacts; ++i){
-        Contact * currentContact = directory->contacts[i];
+        Contact *currentContact = directory->contacts[i];
+        if (currentContact == NULL) {
+            *errorCode = 139;
+            return;
+        }
         printf("%s - %s\n", currentContact->name, currentContact->number);
     }
 }
@@ -100,6 +114,10 @@ const char *searchByName(Directory directory, const char *key, int *errorCode) {
     }
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact *currentContact = directory->contacts[i];
+        if (currentContact == NULL || currentContact->name == NULL) {
+            *errorCode = 139;
+            return NULL;
+        }
         if (strcmp(currentContact->name, key) == 0) {
             return currentContact->number;
         }
@@ -114,6 +132,10 @@ const char *searchByNumber(Directory directory, const char *key, int *errorCode)
     }
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact *currentContact = directory->contacts[i];
+        if (currentContact == NULL || currentContact->number == NULL) {
+            *errorCode = 139;
+            return NULL;
+        }
         if (strcmp(currentContact->number, key) == 0) {
             return currentContact->name;
         }
@@ -126,13 +148,18 @@ void saveContactsToFile(Directory directory, const char *filePath, int *errorCod
         *errorCode = 1;
         return;
     }
-    FILE * file = fopen(filePath, "w");
+    FILE *file = fopen(filePath, "w");
     if (file == NULL) {
         *errorCode = 15;
+        fclose(file);
         return;
     }
     for (int i = 0; i < directory->amountOfContacts; ++i) {
-        Contact * currentContact = directory->contacts[i];
+        Contact *currentContact = directory->contacts[i];
+        if (currentContact == NULL) {
+            *errorCode = 139;
+            return;
+        }
         fprintf(file, "%s %s\n", currentContact->name, currentContact->number);
     }
     fclose(file);

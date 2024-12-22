@@ -2,19 +2,19 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-typedef struct Contacts * Directory;
+typedef struct Contacts *Directory;
 
-// creates Directory which stores contacts as "name - number".
+// creates Directory with fixed size which stores contacts as "name - number".
 Directory createDirectory(int size, int *errorCode);
 
-// adds new contact to directory.
+// adds new contact to the directory.
 void addContact(Directory directory, const char *newName, const char *newNumber, int *errorCode);
 
-// adds contacts from file to directory using addContact().
+// adds contacts from file to directory.
 // contact must be stored as "name number\n"
 void fillDirectoryFromFile(Directory directory, const char *filePath, int *errorCode);
 
-void printAllContacts(Directory directory);
+void printAllContacts(Directory directory, int *errorCode);
 
 // prints contact or reports that it doesn't exist
 const char *searchByName(Directory directory, const char *key, int *errorCode);
