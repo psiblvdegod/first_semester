@@ -4,7 +4,7 @@
 // if errorCode != 0 prints type of error happened.
 // returns false if program can not continue working,
 // else return true.
-bool errorMessage(int errorCode);
+bool reportError(int errorCode);
 
 // processes user query.
 // returns false if program should stop working,

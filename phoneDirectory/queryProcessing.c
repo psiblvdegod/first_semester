@@ -2,17 +2,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool errorMessage(const int errorCode) {
+bool reportError(const int errorCode) {
     if (errorCode == 0) {
-        return true;
+        return false;
     }
     else if (errorCode == 100) {
         printf("Directory is overflowed.\n");
-        return true;
+        return false;
     }
     else if (errorCode == 9) {
         printf("Invalid value.\n");
-        return true;
+        return false;
     }
 
     else if (errorCode == 1) {
@@ -24,7 +24,7 @@ bool errorMessage(const int errorCode) {
     else if (errorCode == 15) {
         printf("File opening error.\n");
     }
-    return false;
+    return true;
 }
 
 bool queryProcessing(Directory directory, const char *filePath, int *errorCode) {
@@ -34,7 +34,7 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
     while (getchar() != '\n');
     if (inputValidation != 1) {
         *errorCode = 9;
-        return errorMessage(*errorCode);
+        return !reportError(*errorCode);
     }
     switch (userQuery) {
         case '0':
@@ -107,5 +107,5 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             *errorCode = 9;
             break;
     }
-    return errorMessage(*errorCode) && userQuery != '0';
+    return !reportError(*errorCode) && userQuery != '0';
 }
