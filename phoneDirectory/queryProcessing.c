@@ -61,7 +61,7 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             addContact(directory, newName, newNumber, errorCode);
             break;
         case '2':
-            printAllContacts(directory);
+            printAllContacts(directory, errorCode);
             break;
         case '3':
             printf("Enter name you want to find:\n");
