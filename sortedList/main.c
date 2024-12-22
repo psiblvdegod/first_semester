@@ -12,7 +12,6 @@ int main(void) {
     if (errorCode != 0) {
         return errorCode;
     }
-
     while(queryProcessing(list, &errorCode));
 
     deleteList(&list, &errorCode);
