@@ -1,29 +1,17 @@
 #pragma once
-
 #include <stdbool.h>
-#include <stdlib.h>
 
-typedef int Value;
+typedef struct List *List;
 
-typedef struct ListElement * Position;
+typedef char *Value;
 
-typedef struct List List;
+List createList(int *errorCode);
 
-List * createList(bool * errorCode);
+bool insertElement(List list, Value value, int *errorCode);
 
-//after adding moves position on new element
-void addElement(List * list, Position position, Value value, bool * errorCode);
+bool deleteElement(List list, Value value, int *errorCode);
 
-void deleteElement(List * list, Position position, bool * errorCode);
+void printList(List list, int *errorCode);
 
-int listSize(List * list);
 
-void deleteList(List ** list, bool * errorCode);
-
-Value getValue(Position position, bool * errorCode);
-
-//if there is only one element in the list, these functions return a pointer to it
-Position getGuardian(List * list, bool * errorCode);
-Position getLast(List * list, bool * errorCode);
-Position getNext(Position position, bool * errorCode);
-Position getPrevious(List * list, Position position, bool * errorCode);
+void deleteList(List *list, int *errorCode);

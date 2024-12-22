@@ -1,127 +1,112 @@
 #include "list.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct ListElement {
     Value value;
-    struct ListElement * next;
-    struct ListElement * previous;
+    struct ListElement *next;
 } ListElement;
 
 struct List {
-    ListElement * head;
-    int listSize;
+    ListElement *head;
 };
 
-List * createList(bool * errorCode) {
-    List * list = calloc(1, sizeof(List));
-    ListElement * guardian = calloc(1 , sizeof(ListElement));
-    if (list == NULL || guardian == NULL) {
-        *errorCode = true;
+List createList(int *errorCode) {
+    List list = calloc(1, sizeof(struct List));
+    if (list == NULL) {
+        free(list);
+        *errorCode = 44;
         return NULL;
     }
-    guardian->value = 0;
-    list->head = guardian;
-    guardian->next = guardian;
-    guardian->previous = guardian;
-    list->listSize = 1;
     return list;
 }
 
-int listSize(List * list) {
-    return list->listSize;
+ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
+    if (strcmp(newElement->value, current->value) >= 0) {
+        newElement->next = current;
+        return newElement;
+    }
+    current->next = insertRecursive(current->next, newElement);
 }
 
-Value getValue(Position position, bool * errorCode) {
-    if (position == NULL) {
-        *errorCode = true;
-        return 0;
+bool insertElement(List list, Value value, int *errorCode) {
+    if (list == NULL || value == NULL) {
+        *errorCode = 1;
+        return false;
     }
-    return ((ListElement *)position)->value;
-}
-
-
-Position getNext(Position position, bool * errorCode) {
-    if (position == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    return (Position) ((ListElement *) position)->next;
-}
-
-Position getPrevious(List * list, Position position, bool * errorCode) {
-    if (position == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    return (Position) ((ListElement *) position)->previous;
-}
-
-Position getGuardian(List * list, bool * errorCode) {
-    if (list == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    return (Position) (list->head);
-}
-
-Position getLast(List * list, bool * errorCode) {
-    if (list == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    return (Position) (getGuardian(list, errorCode))->previous;
-}
-
-void addElement(List * list, Position position, Value value, bool * errorCode) {
-    if (position == NULL) {
-        *errorCode = true;
-        return;
-    }
-    position = (ListElement *) position;
-    ListElement * newElement = calloc(1, sizeof(ListElement));
+    ListElement *newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
-        *errorCode = true;
-        return;
+        *errorCode = 44;
+        free(newElement);
+        return false;
     }
     newElement->value = value;
-    if (listSize(list) == 0) {
-        newElement->next = newElement;
-        newElement->previous = newElement;
+    if (list->head == NULL) {
         list->head = newElement;
+        return true;
     }
-    else {
-        newElement->previous = position;
-        newElement->next = position->next;
-        position->next->previous = newElement;
-        position->next = newElement;
-    }
-    ++list->listSize;
+    list->head = insertRecursive(list->head, newElement);
+    return true;
 }
 
-void deleteElement(List * list, Position position, bool * errorCode) {
-    position = (ListElement *) position;
-    if (position == NULL) {
-        *errorCode = true;
-        return;
+ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChanged) {
+    if (strcmp(value, current->value) == 0) {
+        ListElement *next = current->next;
+        free(current);
+        *isSizeChanged = true;
+        return next;
     }
-    if (position == getGuardian(list, errorCode)) {
-        return;
+    if (strcmp(value, current->value) > 0) {
+        return current;
     }
-    position->previous->next = position->next;
-    position->next->previous = position->previous;
-    free(position);
-    --list->listSize;
-    if (listSize(list) == 0) {
-        list->head = NULL;
-    }
+    current->next = deleteRecursive(current->next, value, isSizeChanged);
 }
 
-void deleteList(List ** list, bool * errorCode) {
-    ListElement * cleaner = getGuardian(*list, errorCode);
-    while (listSize(*list)) {
-        Position temp = cleaner;
-        cleaner = cleaner->next;
-        deleteElement(*list, temp, errorCode);
+bool deleteElement(List list, Value value, int *errorCode) {
+    if (list == NULL || value == NULL) {
+        *errorCode = 1;
+        return false;
     }
-    *list == NULL;
+    if (list->head == NULL) {
+        return false;
+    }
+    bool isSizeChanged = false;
+    list->head = deleteRecursive(list->head, value, &isSizeChanged);
+    return isSizeChanged;
+}
+
+void printList(List list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = 1;
+        return;
+    }
+    if (list->head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    ListElement *current = list->head;
+    printf("List:\n");
+    while (current != NULL) {
+        printf("%s ", current->value);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+
+void deleteList(List *list, int *errorCode) {
+    if (list == NULL || *list == NULL) {
+        *errorCode = 1;
+        return;
+    }
+    ListElement *currentElement = (*list)->head;
+    while (currentElement != NULL) {
+        ListElement *temp = currentElement;
+        currentElement = currentElement->next;
+        free(temp);
+    }
+    free(*list);
+    *list = NULL;
 }
 

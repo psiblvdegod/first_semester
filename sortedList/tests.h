@@ -1,4 +1,4 @@
 #include "list.h"
 #include <stdbool.h>
 
-bool listTests();
+bool listTests(int *errorCode);
