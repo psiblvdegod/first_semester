@@ -1,9 +1,11 @@
 #include "queue.h"
 #include "commentsScan.h"
+#include "test.h"
 
 int main(void) {
     int errorCode = 0;
+
     Queue *queue = scanCommentsFromFile("../text.txt", &errorCode);
-    printQueue(queue, &errorCode);
+    releaseQueue(queue, &errorCode);
     deleteQueue(&queue, &errorCode);
 }
