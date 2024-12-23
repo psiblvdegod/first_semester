@@ -3,4 +3,4 @@ project(23_12_2024_test1_task3 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(23_12_2024_test1_task3 main.c queue.c test.c)
+add_executable(23_12_2024_test1_task3 main.c queue.c test.c commentsScan.c)
