@@ -15,7 +15,6 @@ Queue *createQueue(int *errorCode) {
     Queue *queue = (Queue*)calloc(1, sizeof(struct Queue));
     if (queue == NULL) {
         *errorCode = 1;
-        free(queue);
         return NULL;
     }
     return queue;
@@ -28,7 +27,7 @@ void enqueue(Queue *queue, Value value, int *errorCode) {
     }
     QueueElement* newElement = (QueueElement*)calloc(1, sizeof(QueueElement));
     if (newElement == NULL) {
-        *errorCode = 1;
+        *errorCode = 2;
         free(newElement);
         return;
     }
@@ -62,7 +61,7 @@ Value dequeue(Queue *queue, int *errorCode) {
 }
 
 bool isEmptyQueue(Queue *queue) {
-    return (queue == NULL || queue->front == NULL);
+    return queue == NULL || queue->front == NULL;
 }
 
 void deleteQueue(Queue **queue, int *errorCode) {

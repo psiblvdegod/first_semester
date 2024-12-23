@@ -24,18 +24,17 @@ Queue *scanCommentsFromFile(const char *filePath, int *errorCode) {
         if (symbol == EOF) {
             break;
         }
-        if (readingStatus) {
-            enqueue(queue, symbol, errorCode);
-        }
         if (symbol == ';') {
             readingStatus = true;
+        }
+        if (readingStatus) {
+            enqueue(queue, symbol, errorCode);
         }
         if (symbol == '\n') {
             readingStatus = false;
         }
     }
     fclose(file);
-    deleteQueue(&queue, errorCode);
     return queue;
 }
 
