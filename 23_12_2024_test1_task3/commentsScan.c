@@ -2,6 +2,10 @@
 #include <stdio.h>
 
 Queue *scanCommentsFromFile(const char *filePath, int *errorCode) {
+    if (filePath == NULL) {
+        *errorCode = 1;
+        return NULL;
+    }
     Queue *queue = createQueue(errorCode);
     if (*errorCode) {
         deleteQueue(&queue, errorCode);

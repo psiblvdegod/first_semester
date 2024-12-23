@@ -67,7 +67,6 @@ bool isEmptyQueue(Queue *queue) {
 
 void deleteQueue(Queue **queue, int *errorCode) {
     if (queue == NULL || *queue == NULL) {
-        *errorCode = 1;
         return;
     }
     while ((*queue)->front != NULL) {
