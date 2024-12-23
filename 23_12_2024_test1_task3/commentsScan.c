@@ -35,12 +35,13 @@ Queue *scanCommentsFromFile(const char *filePath, int *errorCode) {
     return queue;
 }
 
-void releaseQueue(Queue *queue, int *errorCode) {
-    if (queue == NULL) {
+void releaseQueue(Queue **queue, int *errorCode) {
+    if (queue == NULL || *queue == NULL) {
         *errorCode = 1;
         return;
     }
-    while (!isEmptyQueue(queue)) {
-        printf("%c", dequeue(queue, errorCode));
+    while (!isEmptyQueue(*queue)) {
+        printf("%c", dequeue(*queue, errorCode));
     }
+    deleteQueue(queue, errorCode);
 }

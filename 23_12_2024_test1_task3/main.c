@@ -13,6 +13,6 @@ int main(void) {
         return errorCode;
     }
     Queue *queue = scanCommentsFromFile("../text.txt", &errorCode);
-    releaseQueue(queue, &errorCode);
+    releaseQueue(&queue, &errorCode);
     deleteQueue(&queue, &errorCode);
 }

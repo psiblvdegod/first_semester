@@ -7,4 +7,4 @@
 Queue *scanCommentsFromFile(const char *filePath, int *errorCode);
 
 // deletes all queue elements and prints em.
-void releaseQueue(Queue *queue, int *errorCode);
+void releaseQueue(Queue **queue, int *errorCode);

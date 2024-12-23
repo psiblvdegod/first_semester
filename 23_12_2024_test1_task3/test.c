@@ -32,4 +32,5 @@ void commentsScanTest(int *errorCode) {
             return;
         }
     }
+    deleteQueue(&queue, errorCode);
 }
