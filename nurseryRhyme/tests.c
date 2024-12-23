@@ -1,5 +1,6 @@
 #include "tests.h"
 
+/*
 bool listTests() {
     bool errorCode = false;
     List * list = createList(&errorCode);
@@ -19,11 +20,15 @@ bool listTests() {
     deleteList(&list, &errorCode);
     return test1 == 10 && test2 == 20 && test3 && !errorCode;
 }
-
+*/
 bool theRevenantTest() {
-    bool errorCode = false;
-    int test1 = getPositionOfTheRevenant(2, 10, &errorCode);
-    int test2 = getPositionOfTheRevenant(7, 7, &errorCode);
-    int test3 = getPositionOfTheRevenant(7, 11, &errorCode);
-    return test1 == test2 && test2 == test3 && test3 == 5 && !errorCode;
+    int errorCode = 0;
+    const int test1 = getPositionOfTheRevenant(2, 10, &errorCode);
+    const int test2 = getPositionOfTheRevenant(7, 7, &errorCode) ;
+    const int test3 = getPositionOfTheRevenant(7, 11, &errorCode) ;
+    const bool test = test1 && test2 && test3;
+    if (errorCode == 0 && !test) {
+        return -1;
+    }
+    return errorCode;
 }

@@ -3,6 +3,13 @@
 #include "theRevenant.h"
 #include <stdio.h>
 
+
+int main(void) {
+    int errorCode = 1;
+    return theRevenantTest();
+}
+/*
+
 int main(void) {
     if (!listTests() || !theRevenantTest()) {
         printf("Error. Tests failed.\n");
@@ -23,3 +30,4 @@ int main(void) {
     }
     printf("You will survive if pick %d number.\n", result);
 }
+*/

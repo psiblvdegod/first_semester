@@ -1,4 +1,3 @@
-#include "list.h"
+#pragma once
 
-//k = positionOfTheRevenant, n = victimsAmount, m = mortality
-int getPositionOfTheRevenant (int mortality, int victimsAmount, bool * errorCode);
+int getPositionOfTheRevenant(int mortality, int numberOfVictims, int *errorCode);

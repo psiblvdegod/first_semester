@@ -5,25 +5,14 @@
 
 typedef int Value;
 
-typedef struct ListElement * Position;
+typedef struct Node Node;
 
-typedef struct List List;
+Node *createNode(Value value, int *errorCode);
 
-List * createList(bool * errorCode);
+Node *create(int size, int *errorCode);
 
-//after adding moves position on new element
-void addElement(List * list, Position * position, Value value, bool * errorCode);
+Node *getNext(Node *node, int *errorCode);
 
-void deleteElement(List * list, Position position, bool * errorCode);
+Node *delete(Node *node, int *errorCode);
 
-int listSize(List * list);
-
-void deleteList(List ** list, bool * errorCode);
-
-Value getValue(Position position, bool * errorCode);
-
-//if there is only one element in the list, these functions return a pointer to it
-Position getFirst(List * list, bool * errorCode);
-Position getLast(List * list, bool * errorCode);
-Position getNext(Position position, bool * errorCode);
-Position getPrevious(List * list, Position position, bool * errorCode);
+Value getValue(Node *node, int *errorCode);

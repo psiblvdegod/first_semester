@@ -1,101 +1,55 @@
 #include "list.h"
 
-typedef struct ListElement {
+struct Node {
     Value value;
-    struct ListElement * next;
-    struct ListElement * previous;
-} ListElement;
-
-struct List {
-    ListElement * head;
-    int listSize;
+    struct Node *next;
+    struct Node *previous;
 };
 
-List * createList(bool * errorCode) {
-    List * list = calloc(1, sizeof(List));
-    if (list == NULL) {
-        *errorCode = true;
+Node *createNode(Value value, int *errorCode) {
+    Node *node = calloc(1, sizeof(Node));
+    if (node == NULL) {
+        *errorCode = 44;
+        free(node);
         return NULL;
     }
-    list->head = NULL;
-    list->listSize = 0;
-    return list;
+    node->value = value;
+    return node;
 }
 
-int listSize(List * list) {
-    return list->listSize;
-}
-
-Position getNext(Position position, bool * errorCode) {
-    return (Position) ((ListElement *) position)->next;
-}
-
-Position getPrevious(List * list, Position position, bool * errorCode) {
-    return (Position) ((ListElement *) position)->previous;
-}
-
-Position getFirst(List * list, bool * errorCode) {
-    return (Position) (list->head);
-}
-
-Position getLast(List * list, bool * errorCode) {
-    return (Position) (getFirst(list, errorCode))->previous;
-}
-
-void addElement(List * list, Position * mainPosition, Value value, bool * errorCode) {
-    ListElement * position = *mainPosition;
-    ListElement * newElement = calloc(1, sizeof(ListElement));
-    if (newElement == NULL) {
-        *errorCode = true;
-        return;
+Node *create(const int size, int *errorCode) {
+    Node *head = createNode(0, errorCode);
+    head->next = head;
+    head->previous = head;
+    head->value = 0;
+    Node *current = head;
+    for (int i = 1; i < size; ++i) {
+        Node *new = createNode(i, errorCode);
+        new->previous = current;
+        new->next = current->next;
+        current->next->previous = new;
+        current->next = new;
+        current = new;
     }
-    newElement->value = value;
-    if (!listSize(list)) {
-        newElement->next = newElement;
-        newElement->previous = newElement;
-        list->head = newElement;
-    }
-    else {
-        newElement->value = value;
-        newElement->previous = position;
-        newElement->next = position->next;
-        position->next->previous = newElement;
-        position->next = newElement;
-    }
-    ++list->listSize;
-    *mainPosition = newElement;
+    return head;
 }
 
-void deleteElement(List * list, Position position, bool * errorCode) {
-    position = (ListElement *) position;
-    if (position == NULL) {
-        *errorCode = true;
-        return;
-    }
-    position->previous->next = position->next;
-    position->next->previous = position->previous;
-   if (position == getFirst(list, errorCode)) {
-       list->head = position->next;
-   }
-    free(position);
-    --list->listSize;
+Node *getNext(Node *node, int *errorCode) {
+    return node->next;
 }
 
-void deleteList(List ** list, bool * errorCode) {
-    ListElement * cleaner = getFirst(*list, errorCode);
-    while (listSize(*list)) {
-        Position temp = cleaner;
-        cleaner = cleaner->next;
-        deleteElement(*list, temp, errorCode);
+Node *delete(Node *node, int *errorCode) {
+    if (node == node->next) {
+        free(node);
+        return NULL;
     }
-    *list == NULL;
+    node->next->previous = node->previous;
+    node->previous->next = node->next;
+    Node *next = node->next;
+    free(node);
+    return next;
 }
 
-Value getValue(Position position, bool * errorCode) {
-    if (position == NULL) {
-        *errorCode = true;
-        return 0;
-    }
-    return ((ListElement *)position)->value;
+Value getValue(Node *node, int *errorCode) {
+    return node->value;
 }
-

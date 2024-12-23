@@ -7,9 +7,6 @@ include_directories(.)
 
 add_executable(nurseryRhyme
         list.c
-        list.h
         main.c
-        tests.c
-        tests.h
         theRevenant.c
-        theRevenant.h)
+        tests.c)
