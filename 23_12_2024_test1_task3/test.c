@@ -21,7 +21,7 @@ void queueTest(int *errorCode) {
 }
 
 void commentsScanTest(int *errorCode) {
-    const char *string = ";s1\n;s3";
+    const char *string = ";s1\n;s3\n;s3";
     Queue *queue = scanCommentsFromFile("../text.txt", errorCode);
     for (int i = 0; !isEmptyQueue(queue); ++i) {
         if (string[i] != dequeue(queue, errorCode)) {
