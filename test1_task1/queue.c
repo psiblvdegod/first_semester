@@ -31,7 +31,6 @@ void enqueue(Queue *queue, Value value, int *errorCode) {
     QueueElement* newElement = (QueueElement*)calloc(1, sizeof(QueueElement));
     if (newElement == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        free(newElement);
         return;
     }
     newElement->value = value;
