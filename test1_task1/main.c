@@ -1,13 +1,21 @@
-#include "queue.h"
 #include "test.h"
-#include "maxDigitSum.h"
+
+#define NO_ERRORS 0
+#define MEMORY_ALLOCATION_ERROR 44
+#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
 
 int main(void) {
-    int errorCode = 0;
+    int errorCode = NO_ERRORS;
     queueTest(&errorCode);
-    if (errorCode != 0) {
+    if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    maxDigitSumTest(&errorCode);
-
+    ordinaryMaxSumTest(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    unordinaryMaxSumTest(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
 }

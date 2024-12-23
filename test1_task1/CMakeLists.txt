@@ -3,4 +3,4 @@ project(test1_task1 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(test1_task1 main.c queue.c test.c maxDigitSum.c)
+add_executable(test1_task1 main.c queue.c test.c maxDigitSum.c errorCode.h)
