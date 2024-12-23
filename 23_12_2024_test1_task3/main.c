@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include "queue.h"
 
-Queue *giveComments(const char *filePath, int *errorCode) {
+Queue *scanCommentsFromFile(const char *filePath, int *errorCode) {
     Queue *queue = createQueue(errorCode);
     if (*errorCode) {
         return NULL;
@@ -44,6 +43,7 @@ void printQueue(Queue *queue, int *errorCode) {
 
 int main(void) {
     int errorCode = 0;
-    Queue *queue = giveComments("../text.txt", &errorCode);
+    Queue *queue = scanCommentsFromFile("../text.txt", &errorCode);
     printQueue(queue, &errorCode);
+    deleteQueue(&queue, &errorCode);
 }

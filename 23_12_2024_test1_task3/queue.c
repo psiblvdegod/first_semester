@@ -22,6 +22,10 @@ Queue *createQueue(int *errorCode) {
 }
 
 void enqueue(Queue *queue, Value value, int *errorCode) {
+    if (queue == NULL) {
+        *errorCode = 1;
+        return;
+    }
     QueueElement* newElement = (QueueElement*)calloc(1, sizeof(QueueElement));
     if (newElement == NULL) {
         *errorCode = 1;
@@ -41,7 +45,7 @@ void enqueue(Queue *queue, Value value, int *errorCode) {
 Value dequeue(Queue *queue, int *errorCode) {
     if (isEmptyQueue(queue)) {
         *errorCode = 1;
-        return 0;
+        return -1;
     }
     Value value = queue->front->value;
     if (queue->front == queue->back) {
@@ -59,4 +63,16 @@ Value dequeue(Queue *queue, int *errorCode) {
 
 bool isEmptyQueue(Queue *queue) {
     return (queue == NULL || queue->front == NULL);
+}
+
+void deleteQueue(Queue **queue, int *errorCode) {
+    if (queue == NULL || *queue == NULL) {
+        *errorCode = 1;
+        return;
+    }
+    while (*queue != NULL) {
+        dequeue(*queue, errorCode);
+    }
+    free(*queue);
+    *queue = NULL;
 }
