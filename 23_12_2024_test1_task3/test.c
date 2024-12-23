@@ -13,11 +13,11 @@ void queueTest(int *errorCode) {
     const bool test1 = dequeue(queue, errorCode) == '1';
     const bool test2 = dequeue(queue, errorCode) == '2';
     const bool test3 = dequeue(queue, errorCode) == '3';
+    deleteQueue(&queue, errorCode);
     const bool test = test1 && test2 && test3;
     if (*errorCode == 0 && !test) {
         *errorCode = -1;
     }
-
 }
 
 void commentsScanTest(int *errorCode) {
@@ -28,6 +28,7 @@ void commentsScanTest(int *errorCode) {
             if (*errorCode == 0) {
                 *errorCode = -1;
             }
+            deleteQueue(&queue, errorCode);
             return;
         }
     }

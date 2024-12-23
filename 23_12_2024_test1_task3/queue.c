@@ -70,7 +70,7 @@ void deleteQueue(Queue **queue, int *errorCode) {
         *errorCode = 1;
         return;
     }
-    while (*queue != NULL) {
+    while ((*queue)->front != NULL) {
         dequeue(*queue, errorCode);
     }
     free(*queue);
