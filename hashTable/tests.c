@@ -1,6 +1,12 @@
 #include "tests.h"
 #include <string.h>
 
+#define NO_ERRORS 0
+#define MEMORY_ALLOCATION_ERROR 44
+#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
+#define FILE_OPENING_ERROR 15
+#define TESTS_FAILED_ERROR (-1)
+
 bool listTests() {
     bool errorCode = false;
     List list = createListElement(NULL, "123", 5, &errorCode);
@@ -31,4 +37,28 @@ bool hashTableTests() {
     const bool test2 = fillFactor == 2.5;
     const bool test3 = averageListLength <= maxListLength;
     return test1 && test2 && test3 && !errorCode;
+}
+
+void hashTableFileTest(int *errorCode) {
+    const int hashTableSize = 100;
+    HashTable hashTable = createHashTable(hashTableSize, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteHashTable(hashTable, errorCode);
+        return;
+    }
+    const char *path = "../text.txt";
+    fillHashTable(hashTable, hashTableSize, path, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteHashTable(hashTable, errorCode);
+        return;
+    }
+    hashTable = expandHashTable(hashTable, &hashTableSize, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteHashTable(hashTable, errorCode);
+        return;
+    }
+    const bool test = findFrequencyByKey(hashTable, hashTableSize, key, errorCode);
+    const bool test = calculateFillFactor(hashTable, hashTableSize, errorCode);
+    const bool test = calculateAverageListLength(hashTable, hashTableSize, errorCode);
+    const bool test = calculateMaxListLength(hashTable, hashTableSize, errorCode);
 }

@@ -3,6 +3,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define NO_ERRORS 0
+#define MEMORY_ALLOCATION_ERROR 44
+#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
+#define FILE_OPENING_ERROR 15
+#define TESTS_FAILED_ERROR (-1)
+
+
+
 int hashFunction(const int hashTableSize, Key key) {
     if (hashTableSize < 1 || key == NULL) {
         return 0;
@@ -14,14 +22,15 @@ int hashFunction(const int hashTableSize, Key key) {
     return result;
 }
 
-HashTable createHashTable(const int hashTableSize, bool * errorCode) {
+HashTable createHashTable(const int hashTableSize, int *errorCode) {
     if (hashTableSize <= 0) {
-        *errorCode = true;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
     HashTable hashTable = calloc(hashTableSize, sizeof(List));
     if (hashTable == NULL) {
-        *errorCode = true;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return NULL;
     }
     return hashTable;
 }
