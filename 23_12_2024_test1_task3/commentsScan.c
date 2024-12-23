@@ -14,17 +14,17 @@ Queue *scanCommentsFromFile(const char *filePath, int *errorCode) {
     }
     bool readingStatus = false;
     while (true) {
-        const char symbol = (char) fgetc(file);
-        if (readingStatus) {
-            enqueue(queue, symbol, errorCode);
-        }
+        const char symbol = (char)fgetc(file);
         if (symbol == ';') {
             readingStatus = true;
         }
-        else if (symbol == '\n') {
+        if (readingStatus) {
+            enqueue(queue, symbol, errorCode);
+        }
+        if (symbol == '\n') {
             readingStatus = false;
         }
-        else if (symbol == EOF) {
+        if (symbol == EOF) {
             break;
         }
     }
