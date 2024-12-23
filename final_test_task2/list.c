@@ -46,16 +46,21 @@ void addToList(List *list, Value value, int *errorCode) {
     list->tail = newElement;
 }
 
-void addAElements(List *list, const char symbol, int *errorCode) {
+void copyListElementsByFirstSymbol(List *list, const char symbol, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     ListElement *currentElement = list->head;
-    while (currentElement != NULL) {
+    ListElement *tail = list->tail;
+    while (true) {
         if (currentElement->value[0] == symbol) {
-            addElement(list, currentElement->value, errorCode);
+            addToList(list, currentElement->value, errorCode);
         }
+        if (currentElement == tail) {
+            break;
+        }
+        currentElement = currentElement->next;
     }
 }
 
@@ -72,6 +77,14 @@ Value popFromList(List *list, int *errorCode) {
     }
     list->head = list->head->next;
     return result;
+}
+
+bool isEmpty(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return true;
+    }
+    return list->head == NULL;
 }
 
 void deleteList(List **list, int *errorCode) {
