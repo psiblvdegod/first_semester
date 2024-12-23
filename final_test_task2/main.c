@@ -8,6 +8,9 @@
 int main(void) {
     int errorCode = NO_ERRORS;
     listTests(&errorCode);
+    if (errorCode != 0) {
+        return errorCode;
+    }
     copyListElements(&errorCode);
     return errorCode;
 }
