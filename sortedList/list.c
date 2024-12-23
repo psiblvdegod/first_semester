@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
+#define MEMORY_ALLOCATION_ERROR 44
+#define TESTS_FAILED_ERROR (-1)
+#define NO_ERRORS 0
+
 typedef struct ListElement {
     Value value;
     struct ListElement *next;
@@ -16,7 +21,7 @@ List createList(int *errorCode) {
     List list = calloc(1, sizeof(struct List));
     if (list == NULL) {
         free(list);
-        *errorCode = 44;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
     return list;
@@ -33,12 +38,12 @@ ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
 
 bool insertInList(List list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
     ListElement *newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
-        *errorCode = 44;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         free(newElement);
         return false;
     }
@@ -67,7 +72,7 @@ ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChan
 
 bool deleteFromList(List list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
     if (list->head == NULL) {
@@ -80,7 +85,7 @@ bool deleteFromList(List list, Value value, int *errorCode) {
 
 void printList(List list, int *errorCode) {
     if (list == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     if (list->head == NULL) {
@@ -98,7 +103,7 @@ void printList(List list, int *errorCode) {
 
 bool searchInList(List list, Value value, int *errorCode) {
     if (list == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
     ListElement *currentElement = list->head;
@@ -116,7 +121,7 @@ bool searchInList(List list, Value value, int *errorCode) {
 
 void deleteList(List *list, int *errorCode) {
     if (list == NULL || *list == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     ListElement *currentElement = (*list)->head;
