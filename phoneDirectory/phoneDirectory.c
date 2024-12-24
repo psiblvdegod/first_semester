@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "phoneDirectory.h"
+#include "errorCode.h"
 
 typedef struct Contact {
     const char *name;
@@ -16,13 +17,13 @@ typedef struct Contacts {
 
 Directory createDirectory(const int size, int *errorCode) {
     if (size < 1) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
     Directory directory = calloc(1, sizeof(Contacts));
     Contact **contacts = calloc(size, sizeof(Contact*));
     if (directory == NULL || contacts == NULL) {
-        *errorCode = 44;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         free(directory);
         free(contacts);
         return NULL;
@@ -30,7 +31,7 @@ Directory createDirectory(const int size, int *errorCode) {
     for (int i = 0; i < size; ++i) {
         contacts[i] = calloc(1, sizeof(Contact));
         if (contacts[i] == NULL) {
-            *errorCode = 44;
+            *errorCode = MEMORY_ALLOCATION_ERROR;
             for (int k = i; k >= 0; --k) {
                 free(contacts[k]);
             }
@@ -44,11 +45,11 @@ Directory createDirectory(const int size, int *errorCode) {
 
 void addContact(Directory directory, const char *newName, const char *newNumber, int *errorCode) {
     if (directory == NULL || directory->contacts == NULL || newName == NULL || newNumber == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     if (directory->amountOfContacts == directory->size) {
-        *errorCode = 100;
+        *errorCode = DIRECTORY_IS_OVERFLOWED;
         return;
     }
     directory->contacts[directory->amountOfContacts]->name = newName;
@@ -58,24 +59,23 @@ void addContact(Directory directory, const char *newName, const char *newNumber,
 
 void fillDirectoryFromFile(Directory directory, const char *filePath, int *errorCode) {
     if (directory == NULL || filePath == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
-        *errorCode = 15;
-        fclose(file);
+        *errorCode = FILE_OPENING_ERROR;
         return;
     }
     while (true) {
         if (directory->amountOfContacts == directory->size) {
-            *errorCode = 100;
+            *errorCode = DIRECTORY_IS_OVERFLOWED;
             break;
         }
         char *newName = calloc(50, sizeof(char));
         char *newNumber = calloc(30, sizeof(char));
         if (newName == NULL || newNumber == NULL) {
-            *errorCode = 44;
+            *errorCode = MEMORY_ALLOCATION_ERROR;
             free(newName);
             free(newNumber);
             break;
@@ -84,7 +84,7 @@ void fillDirectoryFromFile(Directory directory, const char *filePath, int *error
             break;
         }
         addContact(directory, newName, newNumber, errorCode);
-        if (*errorCode) {
+        if (*errorCode != NO_ERRORS) {
             break;
         }
     }
@@ -93,7 +93,7 @@ void fillDirectoryFromFile(Directory directory, const char *filePath, int *error
 
 void printAllContacts(Directory directory, int *errorCode) {
     if (directory == NULL || directory->contacts == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     if (directory->amountOfContacts == 0) {
@@ -104,7 +104,7 @@ void printAllContacts(Directory directory, int *errorCode) {
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact *currentContact = directory->contacts[i];
         if (currentContact == NULL) {
-            *errorCode = 139;
+            *errorCode = DEREFERENCE_NULL_POINTER;
             return;
         }
         printf("%s - %s\n", currentContact->name, currentContact->number);
@@ -113,13 +113,13 @@ void printAllContacts(Directory directory, int *errorCode) {
 
 const char *searchByName(Directory directory, const char *key, int *errorCode) {
     if (directory == NULL || directory->contacts == NULL || key == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact *currentContact = directory->contacts[i];
         if (currentContact == NULL || currentContact->name == NULL) {
-            *errorCode = 139;
+            *errorCode = DIRECTORY_IS_OVERFLOWED;
             return NULL;
         }
         if (strcmp(currentContact->name, key) == 0) {
@@ -131,13 +131,13 @@ const char *searchByName(Directory directory, const char *key, int *errorCode) {
 
 const char *searchByNumber(Directory directory, const char *key, int *errorCode) {
     if (directory == NULL || directory->contacts == NULL ||key == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
     for (int i = 0; i < directory->amountOfContacts; ++i){
         Contact *currentContact = directory->contacts[i];
         if (currentContact == NULL || currentContact->number == NULL) {
-            *errorCode = 139;
+            *errorCode = DEREFERENCE_NULL_POINTER;
             return NULL;
         }
         if (strcmp(currentContact->number, key) == 0) {
@@ -149,19 +149,19 @@ const char *searchByNumber(Directory directory, const char *key, int *errorCode)
 
 void saveContactsToFile(Directory directory, const char *filePath, int *errorCode) {
     if (filePath == NULL || directory == NULL || directory->contacts == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     FILE *file = fopen(filePath, "w");
     if (file == NULL) {
-        *errorCode = 15;
-        fclose(file);
+        *errorCode = FILE_OPENING_ERROR;
         return;
     }
     for (int i = 0; i < directory->amountOfContacts; ++i) {
         Contact *currentContact = directory->contacts[i];
         if (currentContact == NULL) {
-            *errorCode = 139;
+            *errorCode = DEREFERENCE_NULL_POINTER;
+            fclose(file);
             return;
         }
         fprintf(file, "%s %s\n", currentContact->name, currentContact->number);

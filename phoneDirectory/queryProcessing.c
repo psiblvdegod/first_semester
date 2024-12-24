@@ -1,34 +1,7 @@
 #include "queryProcessing.h"
+#include "errorCode.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-bool reportError(const int errorCode) {
-    if (errorCode == 0) {
-        return false;
-    }
-    else if (errorCode == 100) {
-        printf("Directory is overflowed.\n");
-        return false;
-    }
-    else if (errorCode == 9) {
-        printf("Invalid value.\n");
-        return false;
-    }
-
-    else if (errorCode == 1) {
-        printf("Incorrect arguments passed to function.\n");
-    }
-    else if (errorCode == 44) {
-        printf("Memory allocation error.\n");
-    }
-    else if (errorCode == 15) {
-        printf("File opening error.\n");
-    }
-    else if (errorCode == 139) {
-        printf("Dereference NULL pointer.\n");
-    }
-    return true;
-}
 
 bool queryProcessing(Directory directory, const char *filePath, int *errorCode) {
     char userQuery = '0';
@@ -36,8 +9,8 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
     int inputValidation = scanf("%c", &userQuery);
     while (getchar() != '\n');
     if (inputValidation != 1) {
-        *errorCode = 9;
-        return !reportError(*errorCode);
+        printf("Invalid value.\n");
+        return true;
     }
     switch (userQuery) {
         case '0':
@@ -47,15 +20,13 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             char *newName = calloc(50, sizeof(char));
             char *newNumber = calloc(30, sizeof(char));
             if (newName == NULL || newNumber == NULL) {
-                *errorCode = 44;
-                free(newName);
-                free(newNumber);
-                break;
+                *errorCode = MEMORY_ALLOCATION_ERROR;
+                return false;
             }
             inputValidation = scanf("%s %s", newName, newNumber);
             while (getchar() != '\n');
             if (inputValidation != 2) {
-                *errorCode = 9;
+                printf("Invalid value.\n");
                 free(newName);
                 free(newNumber);
                 break;
@@ -64,6 +35,10 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             if (*errorCode) {
                 free(newName);
                 free(newNumber);
+                if (*errorCode == DIRECTORY_IS_OVERFLOWED) {
+                    printf("Directory is overflowed.\n");
+                    *errorCode = NO_ERRORS;
+                }
             }
             break;
         case '2':
@@ -75,11 +50,11 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             inputValidation = scanf("%s", name);
             while (getchar() != '\n');
             if (inputValidation != 1) {
-                *errorCode = 9;
+                printf("Invalid value.\n");
                 break;
             }
             const char *foundNumber = searchByName(directory, name, errorCode);
-            if (*errorCode != 0) {
+            if (*errorCode != NO_ERRORS) {
                 break;
             }
             if (foundNumber == NULL) {
@@ -95,11 +70,11 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             inputValidation = scanf("%s", number);
             while (getchar() != '\n');
             if (inputValidation != 1) {
-                *errorCode = 9;
+                printf("Invalid value.\n");
                 break;
             }
             const char *foundName = searchByNumber(directory, number, errorCode);
-            if (*errorCode != 0) {
+            if (*errorCode != NO_ERRORS) {
                 break;
             }
             if (foundName == NULL) {
@@ -113,8 +88,8 @@ bool queryProcessing(Directory directory, const char *filePath, int *errorCode) 
             saveContactsToFile(directory, filePath, errorCode);
             break;
         default:
-            *errorCode = 9;
+            printf("Invalid value.\n");
             break;
     }
-    return !reportError(*errorCode) && userQuery != '0';
+    return *errorCode == NO_ERRORS && userQuery != '0';
 }
