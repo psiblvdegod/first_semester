@@ -11,6 +11,7 @@ void phoneDirectoryTest(int *errorCode) {
     const bool test2 = strcmp(searchByNumber(directory, "4th", errorCode), "3rd") == 0;
     const bool test3 = searchByName(directory, "5th", errorCode) == NULL;
     const bool test = test1 && test2 && test3;
+    deleteDirectory(&directory, errorCode);
     if (*errorCode == NO_ERRORS && !test) {
         *errorCode = TESTS_FAILED_ERROR;
     }

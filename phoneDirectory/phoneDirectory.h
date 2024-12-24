@@ -24,3 +24,5 @@ const char *searchByNumber(Directory directory, const char *key, int *errorCode)
 
 // opens file from filePath to write and saves contacts in directory to it.
 void saveContactsToFile(Directory directory, const char *filePath, int *errorCode);
+
+void deleteDirectory(Directory *directory, int *errorCode);

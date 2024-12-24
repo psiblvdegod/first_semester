@@ -19,5 +19,7 @@ int main(void) {
         return errorCode;
     }
     while (queryProcessing(directory, filePath, &errorCode));
+
+    deleteDirectory(&directory, &errorCode);
     return errorCode;
 }

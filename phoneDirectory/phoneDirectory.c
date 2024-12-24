@@ -168,3 +168,18 @@ void saveContactsToFile(Directory directory, const char *filePath, int *errorCod
     }
     fclose(file);
 }
+
+void deleteDirectory(Directory *directory, int *errorCode) {
+    if (directory == NULL || *directory == NULL || (*directory)->contacts == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    Contact *currentContact = (*directory)->contacts[0];
+    for (int i = 1; currentContact != NULL; ++i) {
+        Contact *temp = currentContact;
+        currentContact = (*directory)->contacts[i];
+        free(temp);
+    }
+    free(*directory);
+    *directory = NULL;
+}
