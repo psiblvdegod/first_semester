@@ -79,14 +79,6 @@ Node *getHead(List *list, int *errorCode) {
     return list->head;
 }
 
-Node *getTail(List *list, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
-    }
-    return list->tail;
-}
-
 Node *getNext(Node *node, int *errorCode) {
     if (node == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
