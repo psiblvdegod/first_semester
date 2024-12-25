@@ -7,12 +7,7 @@ include_directories(.)
 
 add_executable(mergeSort
         list.c
-        list.h
         main.c
         mergeSort.c
-        mergeSort.h
-        contact.h
-        contact.c
         tests.c
-        tests.h
         contacts.txt)

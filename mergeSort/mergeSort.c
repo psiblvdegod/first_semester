@@ -1,73 +1,50 @@
 #include "mergeSort.h"
+#include <string.h>
 
-Node merge(Node firstNode, Node secondNode, bool * errorCode) {
-    Node mergedList = NULL;
+#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
+#define MEMORY_ALLOCATION_ERROR 44
+#define TESTS_FAILED_ERROR -1
+#define NO_ERRORS 0
+
+Node *merge(Node *firstNode, Node *secondNode, int *errorCode) {
+    List *mergedList = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
     while(firstNode != NULL && secondNode != NULL) {
-        char * firstNodeKey = getValue(firstNode, errorCode).key;
-        char * secondNodeKey = getValue(secondNode, errorCode).key;
-        bool comparisonResult = strcmp(firstNodeKey, secondNodeKey) > 0;
-        if (comparisonResult) {
-            mergedList = addElement(mergedList, getValue(firstNode, errorCode), errorCode);
-            firstNode = getNext(firstNode, errorCode);
+        if (strcmp(getKey(firstNode, errorCode), getKey(secondNode, errorCode)) < 0) {
+            addToList(mergedList, getKey(firstNode, errorCode), errorCode);
+            firstNode = getNext(firstNode, errorCode)
         }
         else {
-            mergedList = addElement(mergedList, getValue(secondNode, errorCode), errorCode);
+            addToList(mergedList, getKey(secondNode, errorCode), errorCode);
             secondNode = getNext(secondNode, errorCode);
+        }
+        if (*errorCode != NO_ERRORS) {
+            return NULL;
         }
     }
     while (firstNode != NULL) {
-        mergedList = addElement(mergedList, getValue(firstNode, errorCode), errorCode);
+        addToList(mergedList, getKey(firstNode, errorCode), errorCode);
         firstNode = getNext(firstNode, errorCode);
     }
     while (secondNode != NULL) {
-        mergedList = addElement(mergedList, getValue(secondNode, errorCode), errorCode);
+        addToList(mergedList, getKey(secondNode, errorCode), errorCode);
         secondNode = getNext(secondNode, errorCode);
     }
     return mergedList;
 }
 
-Node getMiddle(Node node, bool * errorCode) {
-    Node middle = node;
-    int listLen = 0;
-    while (node != NULL) {
-        listLen += 1;
-        node = getNext(node, errorCode);
+Node *mergeSortInternals(Node *left, int *errorCode) {
+    if (getNext(left, errorCode) == NULL) {
+        return left;
     }
-    for (listLen; listLen > 0; listLen -= 2) {
-        middle = getNext(middle, errorCode);
-    }
-    return middle;
+    Node *right = splitList(left, errorCode);
+    left = mergeSortInternals(left, errorCode);
+    right = mergeSortInternals(right, errorCode);
+
 }
 
-Node reverseList(Node node, bool * errorCode) {
-    Node reversedNode = NULL;
-    Node temp = node;
-    while (node != NULL) {
-        reversedNode = addElement(reversedNode, getValue(node, errorCode), errorCode);
-        node = getNext(node, errorCode);
-    }
-    disposeNode(temp, errorCode);
-    return reversedNode;
+List *mergeSort(List *list, int *errorCode) {
+    mergeSortInternals(getHead(list, errorCode), errorCode);
 }
-
-Node mergeSort(Node head, bool * errorCode) {
-    if (getNext(head, errorCode) == NULL) {
-        return head;
-    }
-    Node firstNode = NULL;
-    Node secondNode = NULL;
-    Node middle = getMiddle(head, errorCode);
-    Node tempNode = head;
-    while (tempNode != middle) {
-        firstNode = addElement(firstNode, getValue(tempNode, errorCode), errorCode);
-        tempNode = getNext(tempNode, errorCode);
-    }
-    while (tempNode != NULL) {
-        secondNode = addElement(secondNode, getValue(tempNode, errorCode), errorCode);
-        tempNode = getNext(tempNode, errorCode);
-    }
-    firstNode =  reverseList(mergeSort(firstNode, errorCode), errorCode);
-    secondNode = reverseList(mergeSort(secondNode, errorCode), errorCode);
-    return merge(firstNode, secondNode, errorCode);
-}
-
