@@ -1,7 +1,32 @@
 #include "tests.h"
+#include "list.h"
+#include "mergeSort.h"
 #include "errorCode.h"
 #include "contactsSorting.h"
 #include <string.h>
+
+void listTests(int *errorCode) {
+    List *list = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    addToList(list, "1", "A", errorCode);
+    addToList(list, "2", "B", errorCode);
+    addToList(list, "3", "C", errorCode);
+    addToList(list, "4", "D", errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    Node *node = getHead(list, errorCode);
+    const bool test1 = strcmp(getValue(node, errorCode), "1") == 0;
+    node = getNext(node, errorCode);
+    const bool test2 = strcmp(getKey(node, errorCode), "B") == 0;
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    List *separatedPart = splitList(list, errorCode);
+    int a = 0;
+}
 
 void mergeTest(int *errorCode) {
     List *firstList = createList(errorCode);

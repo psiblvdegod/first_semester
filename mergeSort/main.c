@@ -3,6 +3,7 @@
 
 int main(void) {
     int errorCode = NO_ERRORS;
+    listTests(&errorCode);
     mergeTest(&errorCode);
     if (errorCode != NO_ERRORS) {
         return errorCode;
