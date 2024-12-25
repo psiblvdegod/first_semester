@@ -1,8 +1,22 @@
 #include "tests.h"
+#include "errorCode.h"
 #include <stdio.h>
 
-bool mergeTest() {
-
+void mergeTest(int *errorCode) {
+    List *list1 = createList(errorCode);
+    List *list2 = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    addToList(list1, "100", "100", errorCode);
+    addToList(list1, "110", "110", errorCode);
+    addToList(list2, "200", "200", errorCode);
+    addToList(list2, "220", "220", errorCode);
+    addToList(list2, "222", "222", errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    merge(getHead(list1, errorCode), getHead(list2, errorCode), errorCode);
 }
 
 bool mergeSortTest() {

@@ -1,10 +1,6 @@
 #include "mergeSort.h"
+#include "errorCode.h"
 #include <string.h>
-
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define MEMORY_ALLOCATION_ERROR 44
-#define TESTS_FAILED_ERROR -1
-#define NO_ERRORS 0
 
 void addNode(List *list, Node *node, int *errorCode) {
     if (list == NULL || node == NULL) {
@@ -15,10 +11,6 @@ void addNode(List *list, Node *node, int *errorCode) {
 }
 
 void mergeTwo(List *list, Node *first, Node *second, int *errorCode) {
-    if (list == NULL || first == NULL || second == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
     while (first != NULL && second != NULL) {
         if (strcmp(getKey(first, errorCode), getKey(second, errorCode)) < 0) {
             addNode(list, first, errorCode);
@@ -34,9 +26,6 @@ void mergeTwo(List *list, Node *first, Node *second, int *errorCode) {
 }
 
 void mergeOne(List *list, Node *node, int *errorCode) {
-    if (list == NULL || node == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-    }
     while (node != NULL) {
         addNode(list, node, errorCode);
         node = getNext(node, errorCode);

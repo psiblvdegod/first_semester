@@ -1,12 +1,7 @@
 #include "list.h"
+#include "errorCode.h"
 #include <string.h>
 #include <stdlib.h>
-
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define MEMORY_ALLOCATION_ERROR 44
-#define TESTS_FAILED_ERROR -1
-#define NO_ERRORS 0
-#define FILE_OPENING_ERROR 15
 
 typedef struct Node {
     Value value;
