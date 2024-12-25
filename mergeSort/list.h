@@ -22,6 +22,8 @@ bool isEmpty(List *list, int *errorCode);
 
 Node *getHead(List *list, int *errorCode);
 
+Node *getTail(List *list, int *errorCode);
+
 Node *getNext(Node *node, int *errorCode);
 
 Value getKey(Node *node, int *errorCode);
@@ -29,3 +31,4 @@ Value getKey(Node *node, int *errorCode);
 List *splitList(List *list, int *errorCode);
 
 Value getValue(Node *node, int *errorCode);
+

@@ -14,6 +14,7 @@ void listTests(int *errorCode) {
     addToList(list, "2", "B", errorCode);
     addToList(list, "3", "C", errorCode);
     addToList(list, "4", "D", errorCode);
+    addToList(list, "5", "E", errorCode);
     if (*errorCode != NO_ERRORS) {
         return;
     }
@@ -24,8 +25,35 @@ void listTests(int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return;
     }
+    if (!test1 || !test2) {
+        *errorCode = TESTS_FAILED_ERROR;
+        return;
+    }
     List *separatedPart = splitList(list, errorCode);
-    int a = 0;
+    const char *expectedResult[] = {"A", "B", "C", "D", "E"};
+    Node *current = getHead(list, errorCode);
+    int i = 0;
+    while (current != NULL) {
+        if (strcmp(getKey(current, errorCode), expectedResult[i]) != 0) {
+            if (*errorCode == NO_ERRORS) {
+                *errorCode = TESTS_FAILED_ERROR;
+            }
+        }
+        current = getNext(current, errorCode);
+        ++i;
+    }
+    current = getHead(separatedPart, errorCode);
+    while (current != NULL) {
+        if (strcmp(getKey(current, errorCode), expectedResult[i]) != 0) {
+            if (*errorCode == NO_ERRORS) {
+                *errorCode = TESTS_FAILED_ERROR;
+            }
+        }
+        current = getNext(current, errorCode);
+        ++i;
+    }
+    deleteList(&list, errorCode);
+    deleteList(&separatedPart, errorCode);
 }
 
 void mergeTest(int *errorCode) {

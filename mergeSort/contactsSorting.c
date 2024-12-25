@@ -39,5 +39,9 @@ List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         }
     }
     fclose(file);
-    return mergeSort(list, errorCode);
+    if (*errorCode == NO_ERRORS) {
+        return mergeSort(list, errorCode);
+    }
+    deleteList(&list, errorCode);
+    return NULL;
 }
