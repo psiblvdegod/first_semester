@@ -44,16 +44,17 @@ void addToList(List *list, Value value, Value key, int *errorCode) {
     list->tail = newElement;
 }
 
-Node *splitList(Node *node, int *errorCode) {
-    if (node == NULL) {
+List *splitList(List *list, int *errorCode) {
+    if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
-    Node *middle = node;
+    Node *middle = getHead(list, errorCode);
+    Node *current = getHead(list, errorCode);
     int listLength = 0;
-    while(node != NULL) {
+    while(current != NULL) {
         ++listLength;
-        node = node->next;
+        current = current->next;
     }
     for (int i = 2; i < listLength / 2; ++i) {
         middle = middle->next;
@@ -61,7 +62,10 @@ Node *splitList(Node *node, int *errorCode) {
     Node *temp = middle;
     middle = middle->next;
     temp->next = NULL;
-    return middle;
+    List *otherHalf = createList(errorCode);
+    otherHalf->head = middle;
+    otherHalf->tail = list->tail;
+    return otherHalf;
 }
 
 Node *getHead(List *list, int *errorCode) {

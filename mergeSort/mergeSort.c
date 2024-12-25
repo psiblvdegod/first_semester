@@ -35,8 +35,10 @@ void mergeOne(List *list, Node **node, int *errorCode) {
     }
 }
 
-Node *merge(Node *firstNode, Node *secondNode, int *errorCode) {
+List *merge(List *firstList, List *secondList, int *errorCode) {
     List *mergedList = createList(errorCode);
+    Node *firstNode = getHead(firstList, errorCode);
+    Node *secondNode = getHead(secondList, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
@@ -52,14 +54,14 @@ Node *merge(Node *firstNode, Node *secondNode, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    return getHead(mergedList, errorCode);
+    return mergedList;
 }
 
-Node *mergeSort(Node *left, int *errorCode) {
-    if (left == NULL || getNext(left, errorCode) == NULL) {
+List *mergeSort(List *left, int *errorCode) {
+    if (getHead(left, errorCode) == NULL || getNext(getHead(left, errorCode), errorCode) == NULL) {
         return left;
     }
-    Node *right = splitList(left, errorCode);
+    List *right = splitList(left, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }

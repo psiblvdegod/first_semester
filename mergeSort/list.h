@@ -26,6 +26,6 @@ Node *getNext(Node *node, int *errorCode);
 
 Value getKey(Node *node, int *errorCode);
 
-Node *splitList(Node *node, int *errorCode);
+List *splitList(List *list, int *errorCode);
 
 Value getValue(Node *node, int *errorCode);
