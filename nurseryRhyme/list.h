@@ -13,7 +13,7 @@ List *createList(int *errorCode);
 void addToList(List *list, Value value, int *errorCode);
 
 // deletes the node following the current one
-void deleteNext(Node *node, int *errorCode);
+void deleteNext(List *list, Node *node, int *errorCode);
 
 // frees allocated memory and turns pointer NULL
 void deleteList(List **list, int *errorCode);

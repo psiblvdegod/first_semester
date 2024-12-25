@@ -1,6 +1,6 @@
 #include "list.h"
-#include <stdlib.h>
 #include "errorCode.h"
+#include <stdlib.h>
 
 struct Node {
     struct Node *next;
@@ -31,6 +31,7 @@ void addToList(List *list, Value value, int *errorCode) {
         return;
     }
     node->value = value;
+
     if (list->head == NULL) {
         list->head = node;
         list->tail = node;
@@ -42,10 +43,19 @@ void addToList(List *list, Value value, int *errorCode) {
     node->next = list->head;
 }
 
-void deleteNext(Node *node, int *errorCode) {
-    if (node == NULL) {
+void deleteNext(List *list, Node *node, int *errorCode) {
+    if (list == NULL || node == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
+    }
+    if (node == node->next) {
+        list->head = NULL;
+        list->tail = NULL;
+        free(node);
+        return;
+    }
+    if (list->head == node->next) {
+        list->head = node->next->next;
     }
     Node *temp = node->next;
     node->next = node->next->next;
@@ -58,10 +68,15 @@ void deleteList(List **list, int *errorCode) {
         return;
     }
     Node *current = (*list)->head;
+    if (current == current->next) {
+        Node *temp = current;
+        free(temp);
+        current = NULL;
+    }
     while (current != NULL) {
         Node *temp = current;
-        current = current->next;
         free(temp);
+        current = current->next;
     }
     free(*list);
     *list = NULL;

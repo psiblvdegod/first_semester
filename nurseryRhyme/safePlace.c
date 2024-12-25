@@ -1,6 +1,6 @@
 #include "safePlace.h"
-#include "list.h"
 #include "errorCode.h"
+#include "list.h"
 
 int findSafePlace(const int mortality, const int numberOfVictims, int *errorCode) {
     if (mortality < 1 || numberOfVictims < 1) {
@@ -14,13 +14,14 @@ int findSafePlace(const int mortality, const int numberOfVictims, int *errorCode
     for (int i = 0; i < numberOfVictims; ++i) {
         addToList(list, i, errorCode);
         if (*errorCode != NO_ERRORS) {
+            deleteList(&list, errorCode);
             return -1;
         }
     }
     Node *node = getHead(list, errorCode);
     for (int i = 0, k = 0; i < numberOfVictims - 1; ++k) {
         if (k == mortality - 1) {
-            deleteNext(node, errorCode);
+            deleteNext(list, node, errorCode);
             ++i;
             k = 0;
         }
@@ -29,6 +30,7 @@ int findSafePlace(const int mortality, const int numberOfVictims, int *errorCode
             break;
         }
     }
-
-    return getValue(node, errorCode);
+    Value result = getValue(node, errorCode);
+    deleteList(&list, errorCode);
+    return result;
 }
