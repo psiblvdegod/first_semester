@@ -1,6 +1,6 @@
 #include "mergeSort.h"
 #include "list.h"
 
-bool mergeTest();
+void mergeTest(int *errorCode);
 
-bool mergeSortTest();
+void mergeSortTest(int *errorCode);

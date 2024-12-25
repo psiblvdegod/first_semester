@@ -55,7 +55,7 @@ Node *splitList(Node *node, int *errorCode) {
         ++listLength;
         node = node->next;
     }
-    for (int i = 0; i < listLength / 2; ++i) {
+    for (int i = 2; i < listLength / 2; ++i) {
         middle = middle->next;
     }
     Node *temp = middle;
