@@ -6,6 +6,7 @@
 #define MEMORY_ALLOCATION_ERROR 44
 #define TESTS_FAILED_ERROR -1
 #define NO_ERRORS 0
+#define FILE_OPENING_ERROR 15
 
 typedef struct Node {
     Value value;
@@ -27,7 +28,7 @@ List *createList(int *errorCode) {
     return list;
 }
 
-void addToList(List *list, Value value, int *errorCode) {
+void addToList(List *list, Value value, Value key, int *errorCode) {
     if (list == NULL || value == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -38,6 +39,7 @@ void addToList(List *list, Value value, int *errorCode) {
         return;
     }
     newElement->value = value;
+    newElement->key = key;
     if (list->head == NULL) {
         list->head = newElement;
         list->tail = newElement;
@@ -89,6 +91,14 @@ Value getKey(Node *node, int *errorCode) {
         return NULL;
     }
     return node->key;
+}
+
+Value getValue(Node *node, int *errorCode) {
+    if (node == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    return node->value;
 }
 
 bool isEmpty(List *list, int *errorCode) {
