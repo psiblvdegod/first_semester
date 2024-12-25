@@ -20,7 +20,6 @@ struct List {
 List createList(int *errorCode) {
     List list = calloc(1, sizeof(struct List));
     if (list == NULL) {
-        free(list);
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
@@ -44,7 +43,6 @@ bool insertInList(List list, Value value, int *errorCode) {
     ListElement *newElement = calloc(1, sizeof(ListElement));
     if (newElement == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        free(newElement);
         return false;
     }
     newElement->value = value;

@@ -25,8 +25,7 @@ bool queryProcessing(List list, int *errorCode) {
         case '1': {
             Value newValue = calloc(50, sizeof(char));
             if (newValue == NULL) {
-                *errorCode = 44;
-                free(newValue);
+                *errorCode = MEMORY_ALLOCATION_ERROR;
                 return false;
             }
             printf("Enter value you want to add. No more 50 symbols\n");
@@ -37,18 +36,17 @@ bool queryProcessing(List list, int *errorCode) {
                 free(newValue);
                 break;
             }
-            const bool wasAdded = insertInList(list, newValue, errorCode);
-            if (*errorCode) {
+            const bool wasInsertSuccessful = insertInList(list, newValue, errorCode);
+            if (*errorCode != NO_ERRORS) {
                 free(newValue);
             }
-            printf("Element was%sadded.\n", wasAdded ? " " : " not ");
+            printf("Element was%s added.\n", wasInsertSuccessful ? "" : " not");
             break;
         }
         case '2': {
             Value deletingValue = calloc(50, sizeof(char));
             if (deletingValue == NULL) {
-                *errorCode = 44;
-                free(deletingValue);
+                *errorCode = MEMORY_ALLOCATION_ERROR;
                 return false;
             }
             printf("Enter value you want to delete. No more 50 symbols\n");
@@ -59,8 +57,8 @@ bool queryProcessing(List list, int *errorCode) {
                 free(deletingValue);
                 break;
             }
-            const bool wasDeleted = deleteFromList(list, deletingValue, errorCode);
-            printf("Element was%sdeleted.\n", wasDeleted ? " " : " not ");
+            const bool wasDeletionSuccessful = deleteFromList(list, deletingValue, errorCode);
+            printf("Element was%s deleted.\n", wasDeletionSuccessful ? "" : " not");
             free(deletingValue);
             break;
         }
@@ -71,7 +69,7 @@ bool queryProcessing(List list, int *errorCode) {
         default:
             printf("Invalid value.\n");
     }
-    if (*errorCode != 0) {
+    if (*errorCode != NO_ERRORS) {
         printf("Something went wrong.\n");
         return false;
     }
