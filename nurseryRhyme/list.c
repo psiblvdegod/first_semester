@@ -1,55 +1,111 @@
 #include "list.h"
+#include "errorCode.h"
+#include <string.h>
+#include <stdlib.h>
 
-struct Node {
+typedef struct Node {
     Value value;
     struct Node *next;
     struct Node *previous;
+} Node;
+
+struct List {
+    Node *head;
+    Node *current;
 };
 
-Node *createNode(Value value, int *errorCode) {
-    Node *node = calloc(1, sizeof(Node));
-    if (node == NULL) {
-        *errorCode = 44;
-        free(node);
+List *createList(int *errorCode) {
+    List *list = calloc(1, sizeof(struct List));
+    if (list == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
-    node->value = value;
-    return node;
+    return list;
 }
 
-Node *create(const int size, int *errorCode) {
-    Node *head = createNode(0, errorCode);
-    head->next = head;
-    head->previous = head;
-    head->value = 0;
-    Node *current = head;
-    for (int i = 1; i < size; ++i) {
-        Node *new = createNode(i, errorCode);
-        new->previous = current;
-        new->next = current->next;
-        current->next->previous = new;
-        current->next = new;
-        current = new;
+void addToList(List *list, Value value, int *errorCode) {
+    if (list == NULL || value == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
     }
-    return head;
+    Node *newElement = calloc(1, sizeof(Node));
+    if (newElement == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return;
+    }
+    newElement->value = value;
+    if (list->head == NULL) {
+        list->head = newElement;
+        list->current = newElement;
+        newElement->next = newElement;
+        newElement->previous = newElement;
+        return;
+    }
+    newElement->previous = list->current;
+    newElement->next -
+    list->current->next = newElement;
+    list->current = newElement;
+}
+
+void deleteCurrent(List *list, int *errorCode) {
+    if (list == NULL || list->current == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    Node *temp = list->current;
+    if (list->current->next == list->current) {
+        list->current = NULL;
+        free(temp);
+        return;
+    }
+    list->current->next->previous = list->current->previous;
+    list->current->previous->next = list->current->next;
+    free(temp);
+}
+
+Node *getHead(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    return list->head;
+}
+
+Node *getCurrent(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    return list->current;
 }
 
 Node *getNext(Node *node, int *errorCode) {
+    if (node == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
     return node->next;
 }
 
-Node *delete(Node *node, int *errorCode) {
-    if (node == node->next) {
-        free(node);
-        return NULL;
+Value getValue(Node *node, int *errorCode) {
+    if (node == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
     }
-    node->next->previous = node->previous;
-    node->previous->next = node->next;
-    Node *next = node->next;
-    free(node);
-    return next;
+    return node->value;
 }
 
-Value getValue(Node *node, int *errorCode) {
-    return node->value;
+void deleteList(List **list, int *errorCode) {
+    if (list == NULL || *list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    Node *currentElement = (*list)->head;
+    while (currentElement != NULL) {
+        Node *temp = currentElement;
+        currentElement = currentElement->next;
+        free(temp);
+    }
+    free(*list);
+    *list = NULL;
 }

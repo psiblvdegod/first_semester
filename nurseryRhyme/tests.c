@@ -1,26 +1,27 @@
 #include "tests.h"
+#include "errorCode.h"
+#include <stdlib.h>
+
+void listTests(int *errorCode) {
+    List *list = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    addToList(list, 1, errorCode);
+    addToList(list, 2, errorCode);
+    addToList(list, 3, errorCode);
+    addToList(list, 4, errorCode);
+    addToList(list, 5, errorCode);
+    addToList(list, 6, errorCode);
+    addToList(list, 7, errorCode);
+    addToList(list, 8, errorCode);
+    addToList(list, 9, errorCode);
+
+    int a = 0;
+}
+
 
 /*
-bool listTests() {
-    bool errorCode = false;
-    List * list = createList(&errorCode);
-    Position mainPointer = NULL;
-    if (list == NULL) {
-        return false;
-    }
-    addElement(list, &mainPointer, 10, &errorCode);
-    addElement(list, &mainPointer, 20, &errorCode);
-    Value test1 = getValue(getNext(getLast(list, &errorCode), &errorCode), &errorCode);
-    Value test2 = getValue(getPrevious(list, getFirst(list, &errorCode), &errorCode), &errorCode);
-    bool test3 = listSize(list) == 2;
-    Position pos1 = getFirst(list, &errorCode);
-    Position pos2 = getLast(list, &errorCode);
-    deleteElement(list, pos2, &errorCode);
-    deleteElement(list, pos1, &errorCode);
-    deleteList(&list, &errorCode);
-    return test1 == 10 && test2 == 20 && test3 && !errorCode;
-}
-*/
 bool theRevenantTest() {
     int errorCode = 0;
     const int test1 = getPositionOfTheRevenant(2, 10, &errorCode);
@@ -32,3 +33,4 @@ bool theRevenantTest() {
     }
     return errorCode;
 }
+*/

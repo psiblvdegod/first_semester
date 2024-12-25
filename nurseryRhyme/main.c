@@ -1,12 +1,13 @@
 #include "list.h"
 #include "tests.h"
 #include "theRevenant.h"
+#include "errorCode.h"
 #include <stdio.h>
 
 
 int main(void) {
-    int errorCode = 1;
-    return theRevenantTest();
+    int errorCode = NO_ERRORS;
+    listTests(&errorCode);
 }
 /*
 
