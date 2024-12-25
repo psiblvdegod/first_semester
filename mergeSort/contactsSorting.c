@@ -9,7 +9,7 @@
 #define NO_ERRORS 0
 #define FILE_OPENING_ERROR 15
 
-Node *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *errorCode) {
+List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *errorCode) {
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
         *errorCode = FILE_OPENING_ERROR;
@@ -17,6 +17,7 @@ Node *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
     }
     List *list = createList(errorCode);
     if (*errorCode != NO_ERRORS) {
+        fclose(file);
         return NULL;
     }
     while (!feof(file)) {
@@ -24,8 +25,7 @@ Node *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         char *number = calloc(30, sizeof(char));
         if (name == NULL || number == NULL) {
             *errorCode = MEMORY_ALLOCATION_ERROR;
-            deleteList(&list, errorCode);
-            return NULL;
+            break;
         }
         fscanf(file, "%s%s", name, number);
         if (sortingCriteria == byName) {
@@ -34,6 +34,10 @@ Node *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         else {
             addToList(list, name, number, errorCode);
         }
+        if (*errorCode != NO_ERRORS) {
+            break;
+        }
     }
-    return mergeSort(getHead(list, errorCode), errorCode);
+    fclose(file);
+    return mergeSort(list, errorCode);
 }

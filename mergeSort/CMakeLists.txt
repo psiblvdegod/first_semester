@@ -11,4 +11,4 @@ add_executable(mergeSort
         mergeSort.c
         tests.c
         contactsSorting.c
-        contacts.txt)
+        text.txt)

@@ -6,4 +6,4 @@ typedef enum {
     byNumber = 1
 } SortingCriteria;
 
-Node *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *errorCode);
+List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *errorCode);

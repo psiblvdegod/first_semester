@@ -10,12 +10,13 @@ void addNode(List *list, Node *node, int *errorCode) {
     addToList(list, getValue(node, errorCode), getKey(node, errorCode), errorCode);
 }
 
-void mergeTwo(List *list, Node **first, Node **second, int *errorCode) {
+void mergeTwoNodes(List *list, Node **first, Node **second, int *errorCode) {
     while (*first != NULL && *second != NULL) {
         if (strcmp(getKey(*first, errorCode), getKey(*second, errorCode)) < 0) {
             addNode(list, *first, errorCode);
             *first = getNext(*first, errorCode);
-        } else {
+        }
+        else {
             addNode(list, *second, errorCode);
             *second = getNext(*second, errorCode);
         }
@@ -25,7 +26,7 @@ void mergeTwo(List *list, Node **first, Node **second, int *errorCode) {
     }
 }
 
-void mergeOne(List *list, Node **node, int *errorCode) {
+void mergeOneNode(List *list, Node **node, int *errorCode) {
     while (*node != NULL) {
         addNode(list, *node, errorCode);
         *node = getNext(*node, errorCode);
@@ -42,15 +43,15 @@ List *merge(List *firstList, List *secondList, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    mergeTwo(mergedList, &firstNode, &secondNode, errorCode);
+    mergeTwoNodes(mergedList, &firstNode, &secondNode, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    mergeOne(mergedList, &firstNode, errorCode);
+    mergeOneNode(mergedList, &firstNode, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    mergeOne(mergedList, &secondNode, errorCode);
+    mergeOneNode(mergedList, &secondNode, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }

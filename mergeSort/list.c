@@ -49,23 +49,23 @@ List *splitList(List *list, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
-    Node *middle = getHead(list, errorCode);
     Node *current = getHead(list, errorCode);
     int listLength = 0;
     while(current != NULL) {
         ++listLength;
         current = current->next;
     }
+    Node *middle = getHead(list, errorCode);
     for (int i = 2; i < listLength / 2; ++i) {
         middle = middle->next;
     }
     Node *temp = middle;
     middle = middle->next;
     temp->next = NULL;
-    List *otherHalf = createList(errorCode);
-    otherHalf->head = middle;
-    otherHalf->tail = list->tail;
-    return otherHalf;
+    List *separatedPart = createList(errorCode);
+    separatedPart->head = middle;
+    separatedPart->tail = list->tail;
+    return separatedPart;
 }
 
 Node *getHead(List *list, int *errorCode) {
@@ -100,17 +100,9 @@ Value getValue(Node *node, int *errorCode) {
     return node->value;
 }
 
-bool isEmpty(List *list, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return true;
-    }
-    return list->head == NULL;
-}
-
 void deleteList(List **list, int *errorCode) {
     if (list == NULL || *list == NULL) {
-        *errorCode = 1;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     Node *currentElement = (*list)->head;

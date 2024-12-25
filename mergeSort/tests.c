@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "errorCode.h"
+#include "contactsSorting.h"
 #include <string.h>
 
 void mergeTest(int *errorCode) {
@@ -66,4 +67,22 @@ void mergeSortTest(int *errorCode) {
         current = getNext(current, errorCode);
     }
     deleteList(&list, errorCode);
+}
+
+void contactsSortingTest(int *errorCode) {
+    List *result = sortContacts("../text.txt", byName, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    const char *expectedResult[] = {"001", "002", "003", "004", "005"};
+    Node *current = getHead(result, errorCode);
+    for (int i = 0; current != NULL; ++i) {
+        if (strcmp(getValue(current, errorCode), expectedResult[i]) != 0) {
+            if (*errorCode == NO_ERRORS) {
+                *errorCode = TESTS_FAILED_ERROR;
+            }
+        }
+        current = getNext(current, errorCode);
+    }
+    deleteList(&result, errorCode);
 }

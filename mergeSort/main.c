@@ -8,5 +8,9 @@ int main(void) {
         return errorCode;
     }
     mergeSortTest(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    contactsSortingTest(&errorCode);
     return errorCode;
 }
