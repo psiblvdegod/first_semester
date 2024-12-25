@@ -8,5 +8,5 @@ include_directories(.)
 add_executable(nurseryRhyme
         list.c
         main.c
-        theRevenant.c
+        safePlace.c
         tests.c)

@@ -1,36 +1,28 @@
 #pragma once
-#include <stdbool.h>
-
-typedef struct List List;
-
-// list element
-typedef struct Node Node;
 
 typedef int Value;
+
+typedef struct Node Node;
+
+typedef struct List List;
 
 // creates empty list
 List *createList(int *errorCode);
 
-// adds element to the end of the list
+// adds value to the list
 void addToList(List *list, Value value, int *errorCode);
 
-void deleteCurrent(List *list, int *errorCode);
+// deletes the node following the current one
+void deleteNext(Node *node, int *errorCode);
 
-// frees allocated memory and turns pointer to NULL
+// frees allocated memory and turns pointer NULL
 void deleteList(List **list, int *errorCode);
 
-// returns first element of the list
+// returns first node of the list
 Node *getHead(List *list, int *errorCode);
 
-// returns next element of the node (NULL if node is the last one)
+// return the node following the current one
 Node *getNext(Node *node, int *errorCode);
 
-// returns key
-Value getKey(Node *node, int *errorCode);
-
-// returns value
+// returns the value from the node
 Value getValue(Node *node, int *errorCode);
-
-// divides the list into two, returns head of the separated part.
-List *splitList(List *list, int *errorCode);
-
