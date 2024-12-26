@@ -1,31 +1,45 @@
 #include "tests.h"
 #include "parse.h"
+#include "errorCode.h"
 
-bool treeTests() {
-    bool errorCode = false;
-    Node * node1 = createNode('*', &errorCode);
-    Node * node2 = createNode(6, &errorCode);
-    Node * node3 = createNode('+', &errorCode);
-    Node * node4 = createNode(11, &errorCode);
-    Node * node5 = createNode(100, &errorCode);
+void stackTests(int *errorCode) {
+    Stack stack = NULL;
+    push(&stack, createNode('1', errorCode), errorCode);
+    push(&stack, createNode('2', errorCode), errorCode);
+    push(&stack, createNode('3', errorCode), errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
 
-    Tree * tree = createTree(node1, &errorCode);
-    addChild(node1, node2, left, &errorCode);
-    addChild(node1, node3, right, &errorCode);
-    addChild(node3, node4, left, &errorCode);
-    addChild(node3, node5, right, &errorCode);
+}
 
-    if (calculateTree(getRoot(tree), &errorCode) != 666) {
-        return false;
+void treeTests(int *errorCode) {
+    Node *root = createNode('*', errorCode);;
+    Node *node1 = createNode('+', errorCode);
+    Node *node2 = createNode('-', errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
     }
-    if (getChild(node5, left) != NULL || getChild(node1, right) != node3) {
-        return false;
+    addChild(root, node1, left, errorCode);
+    addChild(root, node2, right, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteTree(&root, errorCode);
+        return;
     }
-    if (getValue(node1, &errorCode) != '*' || getValue(node3, &errorCode) != '+') {
-        return false;
+    const bool getChildTest = getChild(root, left, errorCode) == node1;
+    const bool getValueTest = getValue(root, errorCode) == '*';
+    const bool test = getChildTest && getValueTest;
+    deleteTree(&root, errorCode);
+    if (*errorCode == NO_ERRORS && !test) {
+        *errorCode = TESTS_FAILED_ERROR;
     }
-    if (getRoot(tree) != node1) {
-        return false;
+}
+
+void parseTreeTests(int *errorCode) {
+    Node *root = buildTree("../text.txt", errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
     }
-    return !errorCode;
+    const int calculateTreeTest = calculateTree(root, errorCode);
+    int a = 0;
 }

@@ -5,23 +5,18 @@ typedef struct Node Node;
 
 typedef int Value;
 
-typedef struct Tree Tree;
-
 //child's position for addChild() and getChild()
 typedef enum {
     left,
     right
 } Position;
 
-Node * createNode(Value value, bool * errorCode);
+Node *createNode(Value value, int *errorCode);
 
-void addChild(Node * parent, Node * child, Position position, bool * errorCode);
+void addChild(Node *parent, Node *child, Position position, int *errorCode);
 
-Node * getChild(Node * parent, Position position);
+Node *getChild(Node *parent, Position position, int *errorCode);
 
-Value getValue(Node * node, bool * errorCode);
+Value getValue(Node *node, int *errorCode);
 
-//stores root. first create node, witch will be the root, then createTree(<root>)
-Tree * createTree(Node * root, bool * errorCode);
-
-Node * getRoot(Tree * tree);
+void deleteTree(Node **root, int *errorCode);

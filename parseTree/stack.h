@@ -2,14 +2,16 @@
 #include <stdbool.h>
 #include "tree.h"
 
-typedef struct Stack Stack;
+typedef struct StackElement *Stack;
 
-typedef Node * StackElementValue;
+typedef Node *StackElementValue;
 
-Stack * createStack(bool * errorCode);
+void push(Stack *stack, Node *value, int *errorCode);
 
-void push(Stack * stack, Node * value, bool * errorCode);
+Node *getHead(Stack stack, int *errorCode);
 
-Node * getHead(Stack * stack, bool * errorCode);
+void pop(Stack *stack, int *errorCode);
 
-void pop(Stack * stack, bool * errorCode);
+bool isEmptyStack(Stack stack);
+
+void deleteStack(Stack *stack, int *errorCode);

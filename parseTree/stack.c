@@ -1,48 +1,47 @@
 #include "stack.h"
+#include "errorCode.h"
 #include <stdlib.h>
 
 typedef struct StackElement {
     StackElementValue value;
-    struct StackElement * previous;
+    struct StackElement *previous;
 } StackElement;
 
-typedef struct Stack {
-    StackElement * head;
-} Stack;
-
-Stack * createStack(bool * errorCode) {
-    Stack * stack = calloc(1, sizeof(Stack));
-    if (stack == NULL) {
-        *errorCode = true;
-    }
-    return stack;
-}
-
-void push(Stack * stack, StackElementValue value, bool * errorCode) {
-    StackElement * newElement = calloc(1, sizeof(StackElement));
+void push(Stack *stack, StackElementValue value, int *errorCode) {
+    StackElement *newElement = calloc(1, sizeof(StackElement));
     if (newElement == NULL) {
-        *errorCode = true;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return;
     }
     newElement->value = value;
-    newElement->previous = stack->head;
-    stack->head = newElement;
+    newElement->previous = *stack;
+    *stack = newElement;
 }
 
-Node * getHead(Stack * stack, bool * errorCode) {
-    if (stack == NULL || stack->head == NULL) {
-        *errorCode = true;
+Node *getHead(Stack stack, int *errorCode) {
+    if (stack == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
-    return stack->head->value;
+    return stack->value;
 }
 
-void pop(Stack * stack, bool * errorCode) {
-    if (stack == NULL) {
-        *errorCode = true;
+void pop(Stack *stack, int *errorCode) {
+    if (stack == NULL || *stack == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    StackElement * temp = stack->head;
-    stack->head = stack->head->previous;
+    StackElement *temp = *stack;
+    *stack = (*stack)->previous;
     free(temp);
+}
+
+void deleteStack(Stack *stack, int *errorCode) {
+    if (stack == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    while (*stack != NULL) {
+        pop(stack, errorCode);
+    }
 }

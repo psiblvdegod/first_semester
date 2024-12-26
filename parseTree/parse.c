@@ -1,53 +1,79 @@
 #include "parse.h"
+#include "errorCode.h"
+#include <errno.h>
 #include <stdlib.h>
 
-Tree * buildTree(FILE * stream, bool * errorCode) {
-    Tree * tree = NULL;
-    Stack * stack = createStack(errorCode);
+Node *buildTree(const char *filePath, int *errorCode) {
+    FILE *file = fopen(filePath, "r");
+    if (file == NULL) {
+        *errorCode = FILE_OPENING_ERROR;
+        return NULL;
+    }
+    Node *root = NULL;
+    Stack stack = NULL;
 
-    while (!feof(stream)) {
-        Node * node = NULL;
-        int valueFromStream = getc(stream);
+    while (!feof(file)) {
+        int token = getc(file);
         bool isDigit = false;
-        if (valueFromStream == ' ' || valueFromStream == '(' || valueFromStream == ')') {
+        if (token == ' ' || token == '(' || token == ')') {
             continue;
         }
-        if ('0' <= valueFromStream && valueFromStream <= '9') {
-            ungetc(valueFromStream, stream);
-            fscanf(stream, "%d", &valueFromStream);
+        if ('0' <= token && token <= '9') {
+            ungetc(token, file);
+            fscanf(file, "%d", &token);
+            /*
+            if (errno != 0) {
+                *errorCode = ERROR_INCORRECT_EXPRESSION_IN_FILE;
+                break;
+            }
+             */
             isDigit = true;
         }
-        node = createNode(valueFromStream, errorCode);
-        if (tree == NULL) {
-            tree = createTree(node, errorCode);
-            push(stack, node, errorCode);
+        Node *node = createNode(token, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            break;
+        }
+        if (root == NULL) {
+            root = node;
+            push(&stack, node, errorCode);
+            if (*errorCode != NO_ERRORS) {
+                break;
+            }
             continue;
         }
 
-        Node * operation = getHead(stack, errorCode);
-        Node * leftChild = getChild(operation, left);
-        Node * rightChild = getChild(operation, right);
+        Node *operation = getHead(stack, errorCode);
+        Node *leftChild = getChild(operation, left, errorCode);
+        Node *rightChild = getChild(operation, right, errorCode);
 
         if (leftChild == NULL) {
             addChild(operation, node, left, errorCode);
         }
         else if (rightChild == NULL) {
             addChild(operation, node, right, errorCode);
-            pop(stack, errorCode);
+            pop(&stack, errorCode);
         }
         if (!isDigit) {
-            push(stack, node, errorCode);
+            push(&stack, node, errorCode);
+        }
+        if (*errorCode != NO_ERRORS) {
+            break;
         }
     }
-    return tree;
+    fclose(file);
+    if (*errorCode != NO_ERRORS) {
+        deleteTree(&root, errorCode);
+        deleteStack(&stack, errorCode);
+    }
+    return root;
 }
 
-int calculateTree(Node * node, bool * errorCode) {
-    if (getChild(node, left) == NULL) {
+int calculateTree(Node *node, int *errorCode) {
+    if (getChild(node, left, errorCode) == NULL) {
         return getValue(node, errorCode);
     }
-    Node * leftChild = getChild(node, left);
-    Node * rightChild = getChild(node, right);
+    Node *leftChild = getChild(node, left, errorCode);
+    Node *rightChild = getChild(node, right, errorCode);
     switch(getValue(node, errorCode)) {
         case '+':
             return calculateTree(rightChild, errorCode) + calculateTree(leftChild, errorCode);
@@ -60,16 +86,16 @@ int calculateTree(Node * node, bool * errorCode) {
     }
 }
 
-void printAllNodes(Node * node, bool * errorCode) {
+void printTree(Node *node, int *errorCode) {
     if (node == NULL) {
         return;
     }
-    if (getChild(node, left) != NULL) {
-        printf("%c ", getValue(node, errorCode));
+    if (getChild(node, left, errorCode) == NULL) {
+        printf("%d ", getValue(node, errorCode));
     }
     else {
-        printf("%d ", getValue(node ,errorCode));
+        printf("%c ", getValue(node, errorCode));
     }
-    printAllNodes(getChild(node, left), errorCode);
-    printAllNodes(getChild(node, right), errorCode);
+    printTree(getChild(node, left, errorCode), errorCode);
+    printTree(getChild(node, right, errorCode), errorCode);
 }

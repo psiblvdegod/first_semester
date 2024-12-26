@@ -1,21 +1,16 @@
-#include <stdio.h>
-#include "tree.h"
-#include "parse.h"
 #include "tests.h"
+#include "errorCode.h"
 
 int main(void) {
-    if (!treeTests()) {
-        printf("Error. Tests failed.\n");
-        return -1;
+   int errorCode = NO_ERRORS;
+    stackTests(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
     }
-    bool errorCode = false;
-    FILE * file = fopen("/Users/psiblvdegod/Desktop/homework/parseTree/text.txt", "r");
-    if (file == NULL) {
-        printf("Error. File not found.\n");
-        return -1;
+    treeTests(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
     }
-    Tree * tree = buildTree(file, &errorCode);
-    printf("Prefix tree notation:\n");
-    printAllNodes(getRoot(tree), &errorCode);
-    printf("\nCalculating result: %d ", calculateTree(getRoot(tree), &errorCode));
+    parseTreeTests(&errorCode);
+    return errorCode;
 }

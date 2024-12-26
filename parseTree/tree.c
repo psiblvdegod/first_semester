@@ -1,20 +1,17 @@
 #include "tree.h"
+#include "errorCode.h"
 #include <stdlib.h>
 
 typedef struct Node {
     Value value;
-    struct Node * leftChild;
-    struct Node * rightChild;
+    struct Node *leftChild;
+    struct Node *rightChild;
 } Node;
 
-typedef struct Tree {
-    Node * root;
-} Tree;
-
-Node * createNode(Value value, bool * errorCode) {
+Node * createNode(Value value, int *errorCode) {
     Node * node = calloc(1, sizeof(Node));
     if (node == NULL) {
-        *errorCode = true;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
     node->value = value;
@@ -23,52 +20,54 @@ Node * createNode(Value value, bool * errorCode) {
     return node;
 }
 
-void addChild(Node * parent, Node * child, Position position, bool * errorCode) {
+void addChild(Node *parent, Node *child, Position position, int *errorCode) {
     if (parent == NULL || child == NULL) {
-        *errorCode = true;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     if (position == left) {
         parent->leftChild = child;
     }
-    else {
+    else if (position == right){
         parent->rightChild = child;
     }
 }
 
-Node * getRoot(Tree * tree) {
-    if (tree == NULL) {
-        return NULL;
-    }
-    return tree->root;
-}
-
-Node * getChild(Node * parent, Position position) {
+Node *getChild(Node *parent, Position position, int *errorCode) {
     if (parent == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
     if (position == left) {
         return parent->leftChild;
     }
-    else {
+    else if (position == right) {
         return parent->rightChild;
     }
 }
 
-Tree * createTree(Node * root, bool * errorCode) {
-    Tree * tree = calloc(1, sizeof(Tree));
-    if (tree == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    tree->root = root;
-    return tree;
-}
-
-Value getValue(Node * node, bool * errorCode) {
+Value getValue(Node *node, int *errorCode) {
     if (node == NULL) {
-        *errorCode = true;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return '\0';
     }
     return node->value;
+}
+
+void freeNodes(Node *node, int *errorCode) {
+    if (node == NULL) {
+        return;
+    }
+    freeNodes(getChild(node, left, errorCode), errorCode);
+    freeNodes(getChild(node, right, errorCode), errorCode);
+    free(node);
+}
+
+void deleteTree(Node **root, int *errorCode) {
+    if (root == NULL || *root == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    freeNodes(*root, errorCode);
+    *root = NULL;
 }
