@@ -12,6 +12,4 @@ Node *getHead(Stack stack, int *errorCode);
 
 void pop(Stack *stack, int *errorCode);
 
-bool isEmptyStack(Stack stack);
-
 void deleteStack(Stack *stack, int *errorCode);

@@ -7,10 +7,15 @@ int getToken(FILE *file, char *type, int *errorCode) {
     int token = getc(file);
     if ('0' <= token && token <= '9') {
         ungetc(token, file);
-        fscanf(file, "%d", &token);
+        char buffer[16] = {'0'};
+        fscanf(file, "%s", buffer);
+        token = (int)strtol(buffer, NULL, 10);
+        if (errno != 0) {
+            *errorCode = INCORRECT_EXPRESSION_IN_FILE;
+        }
         *type = 'd';
     }
-    else if (token == ' ' || token == '\n' || token == '\t') {
+    else if (token == ' ' || token == '\n' || token == '\t' || token == '(' || token == ')') {
         *type = 'c';
     }
     else if (token == '+' || token == '-' || token == '*' || token == '/') {
@@ -18,12 +23,15 @@ int getToken(FILE *file, char *type, int *errorCode) {
     }
     else {
         *errorCode = INCORRECT_EXPRESSION_IN_FILE;
-        *type = 'e';
     }
     return token;
 }
 
 Node *buildTree(const char *filePath, int *errorCode) {
+    if (filePath == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
         *errorCode = FILE_OPENING_ERROR;
@@ -34,7 +42,7 @@ Node *buildTree(const char *filePath, int *errorCode) {
 
     while (!feof(file)) {
         char type = 0;
-        int token = getToken(file, &type, errorCode);
+        const int token = getToken(file, &type, errorCode);
         if (*errorCode != NO_ERRORS) {
             break;
         }
@@ -51,12 +59,12 @@ Node *buildTree(const char *filePath, int *errorCode) {
             *errorCode = INCORRECT_EXPRESSION_IN_FILE;
             break;
         }
-        Node *operation = getHead(stack, errorCode);
-        if (getChild(operation, left, errorCode) == NULL) {
-            addChild(operation, node, left, errorCode);
+        Node *operator = getHead(stack, errorCode);
+        if (getChild(operator, left, errorCode) == NULL) {
+            addChild(operator, node, left, errorCode);
         }
         else {
-            addChild(operation, node, right, errorCode);
+            addChild(operator, node, right, errorCode);
             pop(&stack, errorCode);
         }
         if (type == 'o') {
@@ -92,6 +100,8 @@ int calculateTree(Node *node, int *errorCode) {
             return calculateTree(rightChild, errorCode) * calculateTree(leftChild, errorCode);
         case '/':
             return calculateTree(rightChild, errorCode) / calculateTree(leftChild, errorCode);
+        default:
+            *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
     }
 }
 

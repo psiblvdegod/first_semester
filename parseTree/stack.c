@@ -8,6 +8,10 @@ typedef struct StackElement {
 } StackElement;
 
 void push(Stack *stack, StackElementValue value, int *errorCode) {
+    if (stack == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
     StackElement *newElement = calloc(1, sizeof(StackElement));
     if (newElement == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;

@@ -7,7 +7,10 @@ void stackTests(int *errorCode) {
     push(&stack, createNode('1', errorCode), errorCode);
     push(&stack, createNode('2', errorCode), errorCode);
     push(&stack, createNode('3', errorCode), errorCode);
-    if (*errorCode != NO_ERRORS) {
+    const bool test = getValue(getHead(stack, errorCode), errorCode) == '3';
+    pop(&stack, errorCode);
+    deleteStack(&stack, errorCode);
+    if (*errorCode == NO_ERRORS && !test) {
         return;
     }
 }
