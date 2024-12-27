@@ -24,6 +24,9 @@ Node *createNode(Value value, Key key, int *errorCode) {
 }
 
 Node *insertRecursive(Node *node, Node *newNode, int *errorCode) {
+    if (newNode == NULL) {
+        return node;
+    }
     if (node == NULL) {
         return newNode;
     }
@@ -41,8 +44,7 @@ Node *insertRecursive(Node *node, Node *newNode, int *errorCode) {
 }
 
 Node *insert(Node *root, Value value, Key key, int *errorCode) {
-    Node *newNode = createNode(value, key, errorCode);
-    return insertRecursive(root, newNode, errorCode);
+    return insertRecursive(root, createNode(value, key, errorCode), errorCode);
 }
 
 Node *disposeRecursive(Node *node, Key key, int *errorCode) {
@@ -96,7 +98,7 @@ void freeNodes(Node *node, int *errorCode) {
 }
 
 void deleteTree(Node **root, int *errorCode) {
-    if (root == NULL || *root == NULL) {
+    if (root == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }

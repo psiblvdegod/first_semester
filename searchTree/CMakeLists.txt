@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.29)
 project(searchTree C)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 23)
 
-add_executable(searchTree main.c tree.c tree.h tests.c tests.h)
+add_executable(searchTree main.c
+        tree.c
+        tests.c
+        queryProcessing.c)
