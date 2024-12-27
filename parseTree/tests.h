@@ -4,5 +4,3 @@
 void stackTests(int *errorCode);
 
 void treeTests(int *errorCode);
-
-void parseTreeTests(int *errorCode);

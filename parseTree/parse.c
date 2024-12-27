@@ -3,6 +3,26 @@
 #include <errno.h>
 #include <stdlib.h>
 
+int getToken(FILE *file, char *type, int *errorCode) {
+    int token = getc(file);
+    if ('0' <= token && token <= '9') {
+        ungetc(token, file);
+        fscanf(file, "%d", &token);
+        *type = 'd';
+    }
+    else if (token == ' ' || token == '\n' || token == '\t') {
+        *type = 'c';
+    }
+    else if (token == '+' || token == '-' || token == '*' || token == '/') {
+        *type = 'o';
+    }
+    else {
+        *errorCode = INCORRECT_EXPRESSION_IN_FILE;
+        *type = 'e';
+    }
+    return token;
+}
+
 Node *buildTree(const char *filePath, int *errorCode) {
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
@@ -13,47 +33,33 @@ Node *buildTree(const char *filePath, int *errorCode) {
     Stack stack = NULL;
 
     while (!feof(file)) {
-        int token = getc(file);
-        bool isDigit = false;
-        if (token == ' ' || token == '(' || token == ')') {
-            continue;
-        }
-        if ('0' <= token && token <= '9') {
-            ungetc(token, file);
-            fscanf(file, "%d", &token);
-            /*
-            if (errno != 0) {
-                *errorCode = ERROR_INCORRECT_EXPRESSION_IN_FILE;
-                break;
-            }
-             */
-            isDigit = true;
-        }
-        Node *node = createNode(token, errorCode);
+        char type = 0;
+        int token = getToken(file, &type, errorCode);
         if (*errorCode != NO_ERRORS) {
             break;
         }
+        if (type == 'c') {
+            continue;
+        }
+        Node *node = createNode(token, errorCode);
         if (root == NULL) {
             root = node;
             push(&stack, node, errorCode);
-            if (*errorCode != NO_ERRORS) {
-                break;
-            }
             continue;
         }
-
+        if (stack == NULL) {
+            *errorCode = INCORRECT_EXPRESSION_IN_FILE;
+            break;
+        }
         Node *operation = getHead(stack, errorCode);
-        Node *leftChild = getChild(operation, left, errorCode);
-        Node *rightChild = getChild(operation, right, errorCode);
-
-        if (leftChild == NULL) {
+        if (getChild(operation, left, errorCode) == NULL) {
             addChild(operation, node, left, errorCode);
         }
-        else if (rightChild == NULL) {
+        else {
             addChild(operation, node, right, errorCode);
             pop(&stack, errorCode);
         }
-        if (!isDigit) {
+        if (type == 'o') {
             push(&stack, node, errorCode);
         }
         if (*errorCode != NO_ERRORS) {
@@ -61,9 +67,12 @@ Node *buildTree(const char *filePath, int *errorCode) {
         }
     }
     fclose(file);
+    if (stack != NULL) {
+        *errorCode = INCORRECT_EXPRESSION_IN_FILE;
+        deleteStack(&stack, errorCode);
+    }
     if (*errorCode != NO_ERRORS) {
         deleteTree(&root, errorCode);
-        deleteStack(&stack, errorCode);
     }
     return root;
 }

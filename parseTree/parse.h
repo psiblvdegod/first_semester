@@ -10,3 +10,5 @@
 Node *buildTree(const char *filePath, int *errorCode);
 
 int calculateTree(Node *root, int *errorCode);
+
+void printTree(Node *node, int *errorCode);

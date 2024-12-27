@@ -9,7 +9,7 @@ typedef struct Node {
 } Node;
 
 Node * createNode(Value value, int *errorCode) {
-    Node * node = calloc(1, sizeof(Node));
+    Node *node = calloc(1, sizeof(Node));
     if (node == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
@@ -28,7 +28,7 @@ void addChild(Node *parent, Node *child, Position position, int *errorCode) {
     if (position == left) {
         parent->leftChild = child;
     }
-    else if (position == right){
+    else {
         parent->rightChild = child;
     }
 }
@@ -41,7 +41,7 @@ Node *getChild(Node *parent, Position position, int *errorCode) {
     if (position == left) {
         return parent->leftChild;
     }
-    else if (position == right) {
+    else {
         return parent->rightChild;
     }
 }

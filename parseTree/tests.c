@@ -10,7 +10,6 @@ void stackTests(int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return;
     }
-
 }
 
 void treeTests(int *errorCode) {
@@ -33,13 +32,4 @@ void treeTests(int *errorCode) {
     if (*errorCode == NO_ERRORS && !test) {
         *errorCode = TESTS_FAILED_ERROR;
     }
-}
-
-void parseTreeTests(int *errorCode) {
-    Node *root = buildTree("../text.txt", errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
-    }
-    const int calculateTreeTest = calculateTree(root, errorCode);
-    int a = 0;
 }
