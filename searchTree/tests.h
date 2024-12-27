@@ -1,3 +1,3 @@
-#include "tree.h"
+#pragma once
 
-bool treeTests();
+void treeTests(int *errorCode);

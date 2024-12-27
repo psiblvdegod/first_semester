@@ -3,32 +3,24 @@
 
 typedef struct Node Node;
 
-typedef char * Value;
+typedef char *Value;
 
-typedef struct Tree Tree;
+typedef int Key;
 
-Node * createNode(Value value, int key, bool * errorCode);
+// child's position for addChild() and getChild()
+typedef enum {
+    left,
+    right
+} Position;
 
-Value getValue(Node * node, bool * errorCode);
+// creates node
+Node *createNode(Value value, Key key, int *errorCode);
 
-int getKey(Node * node, bool * errorCode);
+Node *insert(Node *root, Value value, Key key, int *errorCode);
 
-//stores root. first create root using createNode(), then createTree(<root>)
-Tree * createTree(Node * root, bool * errorCode);
+Node *dispose(Node *root, Key key, int *errorCode);
 
-Node * getRoot(Tree * tree);
+Value search(Node *node, Key key);
 
-//if there isn't node with such key, returns NULL
-Node * getNodeByKey(Tree * tree, int key, bool * errorCode);
-
-Node * getParentByNode(Tree * tree, Node * node, bool * errorCode);
-
-void addNode(Tree * tree, Node * newNode, bool * errorCode);
-
-void disposeNode(Tree * tree, Node * deletingNode, bool * errorCode);
-
-//finds suitable parent for new node using it's key.
-//if tree is empty (==NULL) returns NULL
-Node * findSuitablePosition(Tree * tree, int key, bool * errorCode);
-
-
+// frees allocated memory, turns pointer NULL
+void deleteTree(Node **root, int *errorCode);

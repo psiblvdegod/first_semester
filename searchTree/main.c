@@ -1,8 +1,10 @@
+#include "tests.h"
 #include "tree.h"
+#include "errorCode.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "tests.h"
 
+/*
 void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
     if (userQuery == 1) {
         char * value = calloc(50, sizeof(char));
@@ -70,27 +72,9 @@ void queryProcessing(Tree ** tree, int userQuery, bool * errorCode) {
         }
     }
 }
+*/
 
 int main(void) {
-    if (!treeTests()) {
-        printf("Error. Tests failed.\n");
-        return -1;
-    }
-    int userQuery = 1;
-    bool errorCode = false;
-    Tree * tree = NULL;
-    while (userQuery) {
-        printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");
-        int inputValidation = scanf("%d", &userQuery);
-        while(getchar() != '\n');
-        if (inputValidation != 1  || userQuery < 0 || userQuery > 4) {
-            printf("Invalid value.\n");
-            continue;
-        }
-        queryProcessing(&tree, userQuery, &errorCode);
-        if (errorCode) {
-            printf("Something went wrong.\n");
-            errorCode = false;
-        }
-    }
+    int errorCode = NO_ERRORS;
+    treeTests(&errorCode);
 }
