@@ -1,5 +1,5 @@
-#include "stack.h"
 #include "errorCode.h"
+#include "stack.h"
 #include <stdlib.h>
 
 typedef struct StackElement {

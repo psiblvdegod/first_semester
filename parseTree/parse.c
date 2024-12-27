@@ -1,5 +1,5 @@
-#include "parse.h"
 #include "errorCode.h"
+#include "parse.h"
 #include <errno.h>
 #include <stdlib.h>
 
