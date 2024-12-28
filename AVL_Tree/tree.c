@@ -6,15 +6,18 @@ typedef struct Node {
     Value key;
     Value value;
     int balance;
-    struct Node * leftChild;
-    struct Node * rightChild;
+    struct Node *leftChild;
+    struct Node *rightChild;
 } Node;
 
-//defines rotation direction
-typedef enum { left, right } Direction;
+// defines rotation direction
+typedef enum {
+    left,
+    right
+} Direction;
 
-Node * createNode(Value value, Value key, bool * errorCode) {
-    Node * node = calloc(1, sizeof(Node));
+Node *createNode(Value value, Value key, int *errorCode) {
+    Node *node = calloc(1, sizeof(Node));
     if (node == NULL) {
         *errorCode = true;
         return NULL;
@@ -30,7 +33,6 @@ Node * createNode(Value value, Value key, bool * errorCode) {
 Value findValueByKey(Node * node, Value key) {
     if (node == NULL) {
         return NULL;
-        //*errorCode = true;
     }
     while (node != NULL) {
         if (strcmp(key, node->key) < 0) {
@@ -49,10 +51,10 @@ Value findValueByKey(Node * node, Value key) {
     return node->value;
 }
 
-Node * doSmallRotation(Node * node, Direction direction, bool * flag) {
+Node * doSmallRotation(Node * node, Direction direction) {
     //*flag = false;
     if (direction == left) {
-        Node * nodeRightChild = node->rightChild;
+        Node *nodeRightChild = node->rightChild;
         if (nodeRightChild != NULL) {
             node->rightChild = nodeRightChild->leftChild;
             nodeRightChild->leftChild = node;
@@ -60,7 +62,7 @@ Node * doSmallRotation(Node * node, Direction direction, bool * flag) {
         }
     }
     if (direction == right) {
-        Node * nodeLeftChild = node->leftChild;
+        Node *nodeLeftChild = node->leftChild;
         if (nodeLeftChild != NULL) {
             node->leftChild = nodeLeftChild->rightChild;
             nodeLeftChild->rightChild = node;
@@ -69,10 +71,10 @@ Node * doSmallRotation(Node * node, Direction direction, bool * flag) {
     }
 }
 
-Node * doBigRotation(Node * node, Direction direction, bool * flag) {
+Node * doBigRotation(Node * node, Direction direction) {
     //*flag = false;
     if (direction == left) {
-        Node * centralDescendant = node->rightChild->leftChild;
+        Node *centralDescendant = node->rightChild->leftChild;
         node->rightChild->leftChild = centralDescendant->rightChild;
         centralDescendant->rightChild = node->rightChild;
         node->rightChild = centralDescendant->leftChild;
@@ -80,7 +82,7 @@ Node * doBigRotation(Node * node, Direction direction, bool * flag) {
         return centralDescendant;
     }
     if (direction == right) {
-        Node * centralDescendant = node->leftChild->rightChild;
+        Node *centralDescendant = node->leftChild->rightChild;
         node->leftChild->rightChild = centralDescendant->leftChild;
         centralDescendant->leftChild = node->leftChild;
         node->leftChild = centralDescendant->rightChild;
@@ -89,10 +91,10 @@ Node * doBigRotation(Node * node, Direction direction, bool * flag) {
     }
 }
 
-Node * balance(Node * node, bool * flag) {
+Node *balance(Node * node, bool *isHeightChanged) {
     if (node->balance == -2) {
         if (node->rightChild->balance <= 0) {
-            node = doSmallRotation(node, left, flag);
+            node = doSmallRotation(node, left);
             if (node->balance == -1) {
                 node->balance = 0;
                 node->leftChild->balance = 0;
@@ -103,8 +105,7 @@ Node * balance(Node * node, bool * flag) {
             }
         }
         else {
-            node = doBigRotation(node, left, flag);
-
+            node = doBigRotation(node, left);
             if (node->balance == 1) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = -1;
@@ -120,7 +121,7 @@ Node * balance(Node * node, bool * flag) {
     }
     if (node->balance == 2) {
         if (node->leftChild->balance >= 0) {
-            node = doSmallRotation(node, right, flag);
+            node = doSmallRotation(node, right);
             if (node->balance == 1) {
                 node->balance = 0;
                 node->rightChild->balance = 0;
@@ -131,8 +132,7 @@ Node * balance(Node * node, bool * flag) {
             }
         }
         else {
-            node = doBigRotation(node, right, flag);
-
+            node = doBigRotation(node, right);
             if (node->balance == 1) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = -1;
@@ -147,96 +147,60 @@ Node * balance(Node * node, bool * flag) {
         }
     }
     if (node->balance == 0) {
-        *flag = false;
+        *isHeightChanged = false;
     }
     return node;
 }
 
-Node *dispose(Node *node, Value key, bool * isHeightChanged) {
+Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
+    if (newNode == NULL) {
+        *isHeightChanged = false;
+        return node;
+    }
     if (node == NULL) {
+        *isHeightChanged = true;
+        return newNode;
+    }
+    if (strcmp(newNode->key, node->key) == 0) {
+        node->value = newNode->value;
+        free(newNode);
+        *isHeightChanged = false;
+    }
+    else if (strcmp(newNode->key, node->key) < 0) {
+        node->leftChild = insert(node->leftChild, newNode, isHeightChanged);
+        if (*isHeightChanged) {
+            ++node->balance;
+        }
+    }
+    else if (strcmp(newNode->key, node->key) > 0) {
+        node->rightChild = insert(node->rightChild, newNode, isHeightChanged);
+        if (*isHeightChanged) {
+            --node->balance;
+        }
+    }
+    return balance(node, isHeightChanged);
+}
+
+Node *dispose(Node *node, Value key, bool *isHeightChanged) {
+    if (node == NULL) {
+        *isHeightChanged = false;
         return NULL;
     }
     if (strcmp(key, node->key) < 0) {
         node->leftChild = dispose(node->leftChild, key, isHeightChanged);
         if (*isHeightChanged) {
             --node->balance;
-            if (node->balance == 1 || node->balance == -1) {
-                *isHeightChanged = false;
-            }
         }
     }
-    else if (strcmp(key, node->key) > 0){
+    else if (strcmp(key, node->key) > 0) {
         node->rightChild = dispose(node->rightChild, key, isHeightChanged);
         if (*isHeightChanged) {
             ++node->balance;
-            if (node->balance == 1 || node->balance == -1) {
-                *isHeightChanged = false;
-            }
         }
     }
-    if (strcmp(key, node->key) == 0) {
-        if (node->leftChild == NULL && node->rightChild == NULL) {
-            //free(node);
-            return NULL;
-        }
-        else if (node->leftChild != NULL && node->rightChild != NULL) {
-            Node * children = insert(node->leftChild, node->rightChild, isHeightChanged);
-            //free(node);
-            return children;
-        }
-        else if (node->leftChild != NULL) {
-            Node * child = node->leftChild;
-            //free(node);
-            return child;
-        }
-        else if (node->rightChild != NULL) {
-            Node * child = node->rightChild;
-            //free(node);
-            return child;
-        }
+    else if (strcmp(key, node->key) == 0) {
         *isHeightChanged = true;
+        return NULL; // обязательно (иначе balance() поменяет isHeightChanged на false)
     }
     return balance(node, isHeightChanged);
 }
-
-Node * insert (Node * currentNode, Node * newNode, bool * flag) {
-    if (newNode == NULL) {
-        return NULL;
-    }
-    if (currentNode == NULL) {
-        return newNode;
-    }
-    if (strcmp(newNode->key, currentNode->key) == 0) {
-        newNode->leftChild = currentNode->leftChild;
-        newNode->rightChild = currentNode->rightChild;
-        free(currentNode);
-        *flag = false;
-        return newNode;
-    }
-    if (strcmp(newNode->key, currentNode->key) < 0) {
-        currentNode->leftChild = insert(currentNode->leftChild, newNode, flag);
-        if (*flag || currentNode->leftChild == newNode) {
-            ++currentNode->balance;
-            if (currentNode->balance == 0) {
-                *flag = false;
-            }
-            if (currentNode->leftChild == newNode) {
-                *flag = currentNode->rightChild == NULL;
-            }
-        }
-    }
-    if (strcmp(newNode->key, currentNode->key) > 0) {
-        currentNode->rightChild = insert(currentNode->rightChild, newNode, flag);
-        if (*flag || currentNode->rightChild == newNode) {
-            --currentNode->balance;
-            if (currentNode->rightChild == newNode) {
-                *flag = currentNode->leftChild == NULL;
-            }
-            if (currentNode->balance == 0) {
-                *flag = false;
-            }
-        }
-    }
-    return balance(currentNode, flag);
-}
-

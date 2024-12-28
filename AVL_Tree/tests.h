@@ -2,4 +2,4 @@
 
 #include "tree.h"
 
-bool treeTests();
+int treeTests();

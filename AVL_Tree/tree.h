@@ -5,7 +5,7 @@ typedef struct Node Node;
 
 typedef const char * Value;
 
-Node * createNode(Value value, Value key, bool * errorCode);
+Node * createNode(Value value, Value key, int *errorCode);
 
 //returns NULL if value is not found
 Value findValueByKey(Node * root, Value key);
@@ -14,8 +14,8 @@ Value findValueByKey(Node * root, Value key);
 //then use root = insert(root,...)
 //requires external boolean variable with false value.
 //isHeightChanged will be false after calling.
-Node * insert(Node * root, Node * newNode, bool * isHeightChanged);
+Node *insert(Node *node, Node *newNode, bool *isHeightChanged);
 
 //requires external boolean variable with false value.
 //isHeightChanged will be false after calling.
-Node * dispose(Node * root, Value key, bool * isHeightChanged);
+Node *dispose(Node * root, Value key, bool *isHeightChanged);

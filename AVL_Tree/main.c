@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "tests.h"
 
+/*
 void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
     if (userQuery == 1) {
         char * value = calloc(50, sizeof(char));
@@ -74,26 +75,7 @@ void queryProcessing(Node ** root, int userQuery, bool * errorCode) {
         }
     }
 }
-
+*/
 int main(void) {
-    if (!treeTests()) {
-        printf("Error. Tests failed.\n");
-    }
-    bool errorCode = false;
-    int userQuery = 1;
-    Node * root = NULL;
-    while (userQuery) {
-        printf("// 0 - quit // 1 - add // 2 - get // 3 - check // 4 - delete //\n");
-        int inputValidation = scanf("%d", &userQuery);
-        while(getchar() != '\n');
-        if (inputValidation != 1  || userQuery < 0 || userQuery > 4) {
-            printf("Invalid value.\n");
-            continue;
-        }
-        queryProcessing(&root, userQuery, &errorCode);
-        if (errorCode) {
-            printf("Something went wrong.\n");
-            errorCode = false;
-        }
-    }
+    return treeTests();
 }

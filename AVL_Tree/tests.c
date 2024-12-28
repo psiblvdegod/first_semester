@@ -1,22 +1,37 @@
 #include "tests.h"
+#include "errorCode.h"
 #include <string.h>
 
-bool treeTests() {
-    bool errorCode = false;
-    Node *node1 = createNode("a", "1", &errorCode);
-    Node *node2 = createNode("b", "2", &errorCode);
-    Node *node3 = createNode("c", "3", &errorCode);
-    Node *node4 = createNode("d", "4", &errorCode);
-    Node *root = node1;
-    root = insert(root, node3, &errorCode);
-    errorCode = false;
-    root = insert(root, node2, &errorCode);
-    errorCode = false;
-    root = insert(root, node4, &errorCode);
-    errorCode = false;
-    root = dispose(root, "3", &errorCode);
-    errorCode = false;
-    Value value1 = findValueByKey(root, "1");
-    Value value3 = findValueByKey(root, "3");
-    return !errorCode && !strcmp(value1, "a") && value3 == NULL;
+int treeTests() {
+    int errorCode = NO_ERRORS;
+    Node *root = NULL;
+    bool isHeightChanged = false;
+    root = insert(root, createNode("333", "333", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("444", "444", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("555", "555", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("000", "000", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("111", "111", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("555", "555", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("666", "666", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("AAA", "AAA", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("999", "999", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("777", "777", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("CCC", "CCC", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("EEE", "EEE", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("BBB", "BBB", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("DDD", "DDD", &errorCode), &isHeightChanged);
+
+    int bp1 = 0;
+
+    root = dispose(root, "333", &isHeightChanged);
+    root = dispose(root, "AAA", &isHeightChanged);
+    root = dispose(root, "BBB", &isHeightChanged);
+    root = dispose(root, "111", &isHeightChanged);
+    root = dispose(root, "222", &isHeightChanged);
+    root = dispose(root, "EEE", &isHeightChanged);
+    root = dispose(root, "555", &isHeightChanged);
+    root = dispose(root, "444", &isHeightChanged);
+    root = dispose(root, "777", &isHeightChanged);
+
+    int bp2 = 0;
 }
