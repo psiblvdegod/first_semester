@@ -1,16 +1,12 @@
 #include "list.h"
 #include "hashTable.h"
+#include "errorCode.h"
 #include "tests.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-#define NO_ERRORS 0
-#define MEMORY_ALLOCATION_ERROR 44
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define FILE_OPENING_ERROR 15
-#define TESTS_FAILED_ERROR (-1)
-
+/*
 void fillHashTable(HashTable hashTable, const int hashTableSize, const char *path, int *errorCode) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
@@ -33,11 +29,8 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char *pat
     }
     fclose(file);
 }
-
+*/
 int main(void) {
-    int errorCode = 0;
-    if (!hashTableTests() || !listTests()) {
-        return -1;
-    }
-
+    int errorCode = NO_ERRORS;
+    return test();
 }
