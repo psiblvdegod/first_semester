@@ -2,7 +2,8 @@
 #include "hashTable.h"
 #include <stdbool.h>
 
-//checks the correctness of the functions from the module hashTable.c
+// tests functions from hashTable.c module
 int hashTableTests();
 
+// tests getFrequenciesFromFile() and functions from hashTable.c module
 int hashTableFileTest();

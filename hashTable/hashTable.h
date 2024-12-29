@@ -17,17 +17,18 @@ HashTable *createHashTable(size_t hashTableSize, int *errorCode);
 // else adds it to table.
 void addWordToHashTable(HashTable **hashTable, Key key, int *errorCode);
 
-size_t calculateMaxListLength(HashTable *hashTable, int *errorCode);
+// returns the maximum of lists' lengths.
+size_t findMaxListLength(HashTable *hashTable, int *errorCode);
 
+// returns average length of not-empty lists
 double calculateAverageListLength(HashTable *hashTable, int *errorCode);
 
+// calculates fill factor of hash table
 double calculateFillFactor(HashTable *hashTable, int *errorCode);
 
-//if word not in the table returns 0.
-//else returns it's frequency in the text.
+// if word not in the table returns 0.
+// else returns it's frequency in the text.
 unsigned int findFrequency(HashTable *hashTable, Key key, int *errorCode);
 
-//prints all words and it's frequencies in unordered form.
-void printFrequencies(HashTable *hashTable, int *errorCode);
-
+// frees allocated memory and turns pointer NULL
 void deleteHashTable(HashTable **hashTable, int *errorCode);

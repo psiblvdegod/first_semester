@@ -1,62 +1,61 @@
 #include "errorCode.h"
 #include "hashTable.h"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct Node {
+typedef struct List {
     Value frequency;
     Key key;
-    struct Node *next;
-} Node;
+    struct List *next;
+} List;
 
-Node *createNode(Key key, int *errorCode) {
-    Node *newNode = calloc(1, sizeof(Node));
-    if (newNode == NULL) {
+List *createElement(Key key, int *errorCode) {
+    List *newElement = calloc(1, sizeof(List));
+    if (newElement == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
     Key copy = calloc(WORD_SIZE, sizeof(char));
     if (copy == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        free(newNode);
+        free(newElement);
         return NULL;
     }
-    newNode->key = strcpy(copy, key);
-    newNode->frequency = 1;
-    return newNode;
+    newElement->key = strcpy(copy, key);
+    newElement->frequency = 1;
+    return newElement;
 }
 
-Node *addNode(Node *node, Node *newNode, int *errorCode) {
-    if (newNode == NULL) {
+List *addElement(List *list, List *newElement, int *errorCode) {
+    if (newElement == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return node;
+        return list;
     }
-    if (node == NULL) {
-        return newNode;
+    if (list == NULL) {
+        return newElement;
     }
-    newNode->next = node;
-    return newNode;
+    newElement->next = list;
+    return newElement;
 }
 
-Node *findNode(Node *node, Key key, int *errorCode) {
-    while (node != NULL) {
-        if (node->key != NULL) {
-            if (strcmp(node->key, key) == 0) {
-                return node;
+List *findElement(List *list, Key key, int *errorCode) {
+    while (list != NULL) {
+        if (list->key != NULL) {
+            if (strcmp(list->key, key) == 0) {
+                return list;
             }
         }
         else {
             *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
             return NULL;
         }
-        node = node->next;
+        list = list->next;
     }
-    return node;
+    return list;
 }
 
 struct HashTable {
-    Node **table;
+    List **table;
     size_t size;
     size_t elementsAmount;
 };
@@ -83,7 +82,7 @@ HashTable *createHashTable(const size_t size, int *errorCode) {
         return NULL;
     }
     hashTable->size = size;
-    hashTable->table = calloc(size, sizeof(Node));
+    hashTable->table = calloc(size, sizeof(List));
     if (hashTable->table == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         free(hashTable);
@@ -106,16 +105,16 @@ void expandHashTable(HashTable **hashTable, int *errorCode) {
         return;
     }
     for (size_t i = 0; i < (*hashTable)->size; ++i) {
-        Node *cell = (*hashTable)->table[i];
+        List *cell = (*hashTable)->table[i];
         while (cell != NULL) {
             const size_t hash = hashFunction(newSize, cell->key);
-            Node *newNode = createNode(cell->key, errorCode);
+            List *newElement = createElement(cell->key, errorCode);
             if (*errorCode != NO_ERRORS) {
                 deleteHashTable(&newHashTable, errorCode);
                 return;
             }
-            newNode->frequency = cell->frequency;
-            newHashTable->table[hash] = addNode(newHashTable->table[hash], newNode, errorCode);
+            newElement->frequency = cell->frequency;
+            newHashTable->table[hash] = addElement(newHashTable->table[hash], newElement, errorCode);
             if (*errorCode != NO_ERRORS) {
                 deleteHashTable(&newHashTable, errorCode);
                 return;
@@ -133,32 +132,32 @@ void addWordToHashTable(HashTable **hashTable, Key key, int *errorCode) {
         return;
     }
     const size_t hash = hashFunction((*hashTable)->size, key);
-    Node *node = findNode((*hashTable)->table[hash], key, errorCode);
-    if (node == NULL) {
-        node = createNode(key, errorCode);
+    List *list = findElement((*hashTable)->table[hash], key, errorCode);
+    if (list == NULL) {
+        list = createElement(key, errorCode);
         if (*errorCode != NO_ERRORS) {
-            free(node);
+            free(list);
             return;
         }
-        (*hashTable)->table[hash] = addNode((*hashTable)->table[hash], node, errorCode);
+        (*hashTable)->table[hash] = addElement((*hashTable)->table[hash], list, errorCode);
         ++(*hashTable)->elementsAmount;
         if (calculateFillFactor(*hashTable, errorCode) > 2) {
             expandHashTable(hashTable, errorCode);
         }
     }
     else {
-        ++node->frequency;
+        ++list->frequency;
     }
 }
 
-size_t calculateMaxListLength(HashTable *hashTable, int *errorCode) {
+size_t findMaxListLength(HashTable *hashTable, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return -1;
     }
     size_t result = 0;
     for (size_t i = 0; i < hashTable->size; ++i) {
-        Node *cell = hashTable->table[i];
+        List *cell = hashTable->table[i];
         size_t listLength = 0;
         while (cell != NULL) {
             ++listLength;
@@ -190,7 +189,7 @@ unsigned int findFrequency(HashTable *hashTable, Key key, int *errorCode) {
         return -1;
     }
     const size_t hash = hashFunction(hashTable->size, key);
-    Node *cell = hashTable->table[hash];
+    List *cell = hashTable->table[hash];
     while (cell != NULL) {
         if (cell->key == NULL) {
             *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -212,24 +211,10 @@ double calculateFillFactor(HashTable *hashTable, int *errorCode) {
     return (double)(hashTable->elementsAmount) / (double)(hashTable->size);
 }
 
-void printFrequencies(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    for (size_t i = 0; i < hashTable->size; ++i) {
-        Node *cell = hashTable->table[i];
-        while (cell != NULL) {
-            printf("%s - %d\n", cell->key, cell->frequency);
-            cell = cell->next;
-        }
-    }
-}
-
-void deleteList(Node *node) {
-    while (node != NULL) {
-        Node *temp = node;
-        node = node->next;
+void deleteList(List *list) {
+    while (list != NULL) {
+        List *temp = list;
+        list = list->next;
         free(temp->key);
         free(temp);
     }
@@ -246,3 +231,4 @@ void deleteHashTable(HashTable **hashTable, int *errorCode) {
     free(*hashTable);
     *hashTable = NULL;
 }
+
