@@ -6,6 +6,7 @@
 #include "tests.h"
 
 int main(void) {
+    test();
     Node *root = NULL;
     int errorCode = NO_ERRORS;
     char userQuery = 1;

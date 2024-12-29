@@ -1,3 +1,4 @@
+#include "errorCode.h"
 #include "tree.h"
 #include <stdlib.h>
 #include <string.h>
@@ -181,7 +182,16 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
     return balance(node, isHeightChanged);
 }
 
-
+Node *findClosest(Node *current, Node *new) {
+    if (current->leftChild == NULL) {
+        current->key = new->key;
+        current->value = new->value;
+        free(new);
+        return NULL;
+    }
+    current->leftChild = findClosest(current->leftChild, new);
+    return current;
+}
 
 Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     if (node == NULL) {
@@ -202,7 +212,26 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     }
     else if (strcmp(key, node->key) == 0) {
         *isHeightChanged = true;
-        return NULL; // обязательно (иначе balance() поменяет isHeightChanged на false)
+        if (node->rightChild == NULL && node->leftChild == NULL) {
+            free(node);
+            return NULL;
+        }
+        else if (node->rightChild == NULL) {
+            Node *child = node->leftChild;
+            free(node);
+            return child;
+        }
+        else if (node->leftChild == NULL) {
+            Node *child = node->rightChild;
+            free(node);
+            return child;
+        }
+        else {
+            Node *closestNode = findClosest(node, node);
+            node->key = closestNode->key;
+            node->value = closestNode->value;
+            return node;
+        }
     }
     return balance(node, isHeightChanged);
 }

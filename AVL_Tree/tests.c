@@ -35,3 +35,16 @@ int treeTests() {
 
     int bp2 = 0;
 }
+
+void test() {
+    int errorCode = NO_ERRORS;
+    Node *root = NULL;
+    bool isHeightChanged = false;
+    root = insert(root, createNode("111", "111", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("222", "222", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("333", "333", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("444", "444", &errorCode), &isHeightChanged);
+    root = insert(root, createNode("555", "555", &errorCode), &isHeightChanged);
+    root = dispose(root, "444", &isHeightChanged);
+    int bp1 = 0;
+}
