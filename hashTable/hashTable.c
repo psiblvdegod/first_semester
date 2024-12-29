@@ -16,13 +16,13 @@ struct HashTable {
     int size;
 };
 
-unsigned int hashFunction(const int hashTableSize, Key key) {
+int hashFunction(const int hashTableSize, Key key) {
     if (hashTableSize < 1 || key == NULL) {
         return 0;
     }
-    unsigned int result = 1;
+    int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
-        result = (result + ((unsigned char) key[i]) * i) % hashTableSize;
+        result = (result + ((unsigned char) key[i]) * (i + 1)) % hashTableSize;
     }
     return result;
 }
@@ -37,6 +37,7 @@ HashTable *createHashTable(const int size, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
+    hashTable->size = size;
     hashTable->table = calloc(size, sizeof(Node));
     if (hashTable->table == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
@@ -52,6 +53,7 @@ Node *createNode(Key key, int *errorCode) {
         return NULL;
     }
     newNode->key = key;
+    newNode->frequency = 1;
     return newNode;
 }
 
@@ -59,7 +61,7 @@ Node *addNode(Node *node, Node *newNode, int *errorCode) {
     if (node == NULL) {
         return newNode;
     }
-    node->next = newNode;
+    newNode->next = node;
     return newNode;
 }
 
@@ -79,8 +81,11 @@ void updateHashTable(HashTable *hashTable, Key key, int *errorCode) {
     Node *node = search(hashTable->table[hash], key);
     if (node == NULL) {
         node = createNode(key, errorCode);
+        hashTable->table[hash] = addNode(hashTable->table[hash], node, errorCode);
     }
-    hashTable->table[hash] = addNode(hashTable->table[hash], node, errorCode);
+    else {
+        ++node->frequency;
+    }
 }
 /*
 int countElementsAmount(HashTable *hashTable, int *errorCode) {

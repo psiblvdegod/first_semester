@@ -1,11 +1,10 @@
 #pragma once
-#include "list.h"
+
+typedef char *Key;
+
+typedef int Value;
 
 typedef struct HashTable HashTable;
-
-//if input is not correct returns 0
-//it is not injective mapping to the range from 0 to hashTableSize - 1
-unsigned int hashFunction(int hashTableSize, Key key);
 
 //creates table initialized with NULLs
 HashTable *createHashTable(int hashTableSize, int *errorCode);

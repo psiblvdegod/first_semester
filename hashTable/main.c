@@ -1,4 +1,3 @@
-#include "list.h"
 #include "hashTable.h"
 #include "errorCode.h"
 #include "tests.h"
@@ -32,5 +31,5 @@ void fillHashTable(HashTable hashTable, const int hashTableSize, const char *pat
 */
 int main(void) {
     int errorCode = NO_ERRORS;
-    return test();
+    return hashTableTests();
 }
