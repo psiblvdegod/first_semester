@@ -1,31 +1,23 @@
 #pragma once
+#include <stdlib.h>
 
 #define WORD_SIZE 50
 
 typedef char *Key;
 
-typedef int Value;
+typedef unsigned int Value;
 
 typedef struct HashTable HashTable;
 
 // creates empty hash table with of required size
-HashTable *createHashTable(int hashTableSize, int *errorCode);
+HashTable *createHashTable(size_t hashTableSize, int *errorCode);
 
 // if there is element with such key in the table,
 // increases frequency by one.
 // else adds it to table.
-void updateHashTable(HashTable *hashTable, Key key, int *errorCode);
+void addWordToHashTable(HashTable **hashTable, Key key, int *errorCode);
 
-//counts fill factor. if it < 2 nothing happens.
-//else creates new table with bigger size and fills it with old values.
-//the old table will be freed, reassign the pointer.
-//changes hashTableSize to size of new hash table (that's why it's int * instead of const int)
-void expandHashTable(HashTable **hashTable, int *errorCode);
-
-//counts not amount of words in text, but amount of unique words
-int countElementsAmount(HashTable *hashTable, int *errorCode);
-
-int calculateMaxListLength(HashTable *hashTable, int *errorCode);
+size_t calculateMaxListLength(HashTable *hashTable, int *errorCode);
 
 double calculateAverageListLength(HashTable *hashTable, int *errorCode);
 
@@ -33,7 +25,7 @@ double calculateFillFactor(HashTable *hashTable, int *errorCode);
 
 //if word not in the table returns 0.
 //else returns it's frequency in the text.
-int findFrequency(HashTable *hashTable, Key key, int *errorCode);
+unsigned int findFrequency(HashTable *hashTable, Key key, int *errorCode);
 
 //prints all words and it's frequencies in unordered form.
 void printFrequencies(HashTable *hashTable, int *errorCode);

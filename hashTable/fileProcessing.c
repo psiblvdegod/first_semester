@@ -14,9 +14,9 @@ HashTable *getFrequenciesFromFile(const int hashTableSize, const char *filePath,
         return NULL;
     }
     while (!feof(file)) {
-        char buffer[50] = {'0'};
+        char buffer[WORD_SIZE] = {'0'};
         fscanf(file, "%s", buffer);
-        updateHashTable(hashTable, buffer, errorCode);
+        addWordToHashTable(hashTable, buffer, errorCode);
         if (*errorCode) {
             break;
         }

@@ -13,13 +13,13 @@ int hashTableTests() {
     int errorCode = NO_ERRORS;
     const int hashTableSize = 10;
     HashTable *hashTable = createHashTable(hashTableSize, &errorCode);
-    updateHashTable(hashTable, "ggg", &errorCode);
-    updateHashTable(hashTable, "ggg", &errorCode);
-    updateHashTable(hashTable, "ggg", &errorCode);
-    updateHashTable(hashTable, "ggg", &errorCode);
-    updateHashTable(hashTable, "ggg", &errorCode);
-    updateHashTable(hashTable, "0", &errorCode);
-    updateHashTable(hashTable, "01", &errorCode);
+    addWordToHashTable(hashTable, "ggg", &errorCode);
+    addWordToHashTable(hashTable, "ggg", &errorCode);
+    addWordToHashTable(hashTable, "ggg", &errorCode);
+    addWordToHashTable(hashTable, "ggg", &errorCode);
+    addWordToHashTable(hashTable, "ggg", &errorCode);
+    addWordToHashTable(hashTable, "0", &errorCode);
+    addWordToHashTable(hashTable, "01", &errorCode);
     const bool test1 = findFrequency(hashTable, "555", &errorCode) == 5;
     return test1;
 }
