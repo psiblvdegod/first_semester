@@ -18,20 +18,22 @@ void updateHashTable(HashTable *hashTable, Key key, int *errorCode);
 //else creates new table with bigger size and fills it with old values.
 //the old table will be freed, reassign the pointer.
 //changes hashTableSize to size of new hash table (that's why it's int * instead of const int)
-HashTable *expandHashTable(HashTable *hashTable, int *hashTableSize, int *errorCode);
+void expandHashTable(HashTable **hashTable, int *errorCode);
 
 //counts not amount of words in text, but amount of unique words
-int countElementsAmount(HashTable *hashTable, int hashTableSize, int *errorCode);
+int countElementsAmount(HashTable *hashTable, int *errorCode);
 
 int calculateMaxListLength(HashTable *hashTable, int hashTableSize, int *errorCode);
 
 double calculateAverageListLength(HashTable *hashTable, int hashTableSize, int *errorCode);
 
-double calculateFillFactor(HashTable *hashTable, int hashTableSize, int *errorCode);
+double calculateFillFactor(HashTable *hashTable, int *errorCode);
 
 //if word not in the table returns 0.
 //else returns it's frequency in the text.
 int findFrequencyByKey(HashTable *hashTable, int hashTableSize, Key key, int *errorCode);
 
 //prints all words and it's frequencies in unordered form.
-void printFrequencies(HashTable *hashTable, int hashTableSize, int *errorCode);
+void printFrequencies(HashTable *hashTable, int *errorCode);
+
+void deleteHashTable(HashTable **hashTable, int *errorCode);

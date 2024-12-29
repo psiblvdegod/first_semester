@@ -1,6 +1,5 @@
 #include "errorCode.h"
 #include "hashTable.h"
-#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,11 +15,11 @@ struct HashTable {
     int size;
 };
 
-int hashFunction(const int hashTableSize, Key key) {
+unsigned int hashFunction(const int hashTableSize, Key key) {
     if (hashTableSize < 1 || key == NULL) {
         return 0;
     }
-    int result = 1;
+    unsigned int result = 1;
     for (int i = 0; key[i] != '\0'; ++i) {
         result = (result + ((unsigned char) key[i]) * (i + 1)) % hashTableSize;
     }
@@ -63,6 +62,10 @@ Node *createNode(Key key, int *errorCode) {
 }
 
 Node *addNode(Node *node, Node *newNode, int *errorCode) {
+    if (newNode == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return node;
+    }
     if (node == NULL) {
         return newNode;
     }
@@ -92,23 +95,10 @@ void updateHashTable(HashTable *hashTable, Key key, int *errorCode) {
         ++node->frequency;
     }
 }
-/*
-int countElementsAmount(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
-    }
-    int result = 0;
-    for (int i = 0; i < hashTable->size; ++i) {
-        List tableElement = hashTable->table[i];
-        while (tableElement != NULL) {
-            ++result;
-            tableElement = getPrevious(tableElement);
-        }
-    }
-    return result;
-}
 
+
+
+/*
 int calculateMaxListLength(HashTable *hashTable, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -116,11 +106,11 @@ int calculateMaxListLength(HashTable *hashTable, int *errorCode) {
     }
     int result = 0;
     for (int i = 0; i < hashTable->size; ++i) {
-        List tableElement = hashTable->table[i];
+        Node *cell = hashTable->table[i];
         int tableElementLength = 0;
-        while (tableElement != NULL) {
+        while (cell != NULL) {
             ++tableElementLength;
-            tableElement = getPrevious(tableElement);
+            cell = cell->next;
         }
         result = result > tableElementLength ? result : tableElementLength;
     }
@@ -142,6 +132,41 @@ double calculateAverageListLength(HashTable *hashTable, int *errorCode) {
     return ((double) elementsAmount) / ((double) amountOfNotEmptyCells);
 }
 
+
+int findFrequencyByKey(HashTable *hashTable, Key key, int *errorCode) {
+    if (hashTable == NULL || hashTable->table == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return -1;
+    }
+    const unsigned int hash = hashFunction(hashTable->size, key);
+    Node *cell = hashTable->table[hash];
+    while (cell != NULL) {
+        if (strcmp(key, cell->key) == 0) {
+            return cell->frequency;
+        }
+        cell = cell->next;
+    }
+    return 0;
+}
+*/
+
+int countElementsAmount(HashTable *hashTable, int *errorCode) {
+    if (hashTable == NULL || hashTable->table == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return -1;
+    }
+    int result = 0;
+    for (int i = 0; i < hashTable->size; ++i) {
+        Node *cell = hashTable->table[i];
+        while (cell != NULL) {
+            ++result;
+            cell = cell->next;
+        }
+    }
+    return result;
+}
+
+
 double calculateFillFactor(HashTable *hashTable, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -151,66 +176,70 @@ double calculateFillFactor(HashTable *hashTable, int *errorCode) {
     return ((double) elementsAmount) / ((double) hashTable->size);
 }
 
-int findFrequencyByKey(HashTable *hashTable, Key key, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
-    }
-    const int hash = hashFunction(hashTable->size, key);
-    List list = hashTable->table[hash];
-    while (list != NULL) {
-        if (strcmp(key, getKey(list, errorCode)) == 0) {
-            return getFrequency(list, errorCode);
-        }
-        list = getPrevious(list);
-    }
-    return 0;
-}
 
-HashTable *expandHashTable(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL) {
+void expandHashTable(HashTable **hashTable, int *errorCode) {
+    if (hashTable == NULL || *hashTable == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return hashTable;
-    }
-    const double fillFactor = calculateFillFactor(hashTable, errorCode);
-    if (fillFactor < 2) {
-        return hashTable;
-    }
-    const int newSize = (int)(fillFactor * (hashTable->size) * 2);
-    HashTable *newHashTable = createHashTable(newSize, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return hashTable;
-    }
-    for (int i = 0; i < hashTable->size; ++i) {
-        while (hashTable->table[i] != NULL) {
-            Key key = hashTable->table[i];
-            const int hash = hashFunction(newSize, getKey(hashTable->table[i], errorCode));
-            newHashTable[hash] = updateList(newHashTable[hash], , getFrequency(hashTable[i], errorCode), errorCode);
-            hashTable[i] = getPrevious(hashTable[i]);
-        }
-    }
-    free(hashTable);
-    *hashTableSize = newSize;
-    return newHashTable;
-}
-
-void printFrequencies(HashTable hashTable, const int hashTableSize, bool * errorCode) {
-    if (hashTable == NULL) {
-        *errorCode = true;
         return;
     }
-    for (int i = 0; i < hashTableSize; ++i) {
-        List tableElement = hashTable[i];
-        while (tableElement != NULL) {
-            printf("%s - %d\n", getKey(tableElement, errorCode), getFrequency(tableElement, errorCode));
-            tableElement = getPrevious(tableElement);
+    const double fillFactor = calculateFillFactor(*hashTable, errorCode);
+    if (fillFactor < 2) {
+        return;
+    }
+    const int newSize = (int)(fillFactor * ((*hashTable)->size) * 2);
+    HashTable *newHashTable = createHashTable(newSize, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    for (int i = 0; i < (*hashTable)->size; ++i) {
+        Node *cell = (*hashTable)->table[i];
+        while (cell != NULL) {
+            const unsigned int hash = hashFunction(newSize, cell->key);
+            Node *newNode = createNode(cell->key, errorCode);
+            if (*errorCode != NO_ERRORS) {
+                //
+                return;
+            }
+            newNode->frequency = cell->frequency;
+            newHashTable->table[hash] = addNode(newHashTable->table[hash], newNode, errorCode);
+            cell = cell->next;
+        }
+    }
+    deleteHashTable(hashTable, errorCode);
+    *hashTable = newHashTable;
+}
+
+void printFrequencies(HashTable *hashTable, int *errorCode) {
+    if (hashTable == NULL || hashTable->table == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    for (int i = 0; i < hashTable->size; ++i) {
+        Node *cell = hashTable->table[i];
+        while (cell != NULL) {
+            printf("%s - %d\n", cell->key, cell->frequency);
+            cell = cell->next;
         }
     }
 }
 
-void deleteHashTable(HashTable *hashTable, int *errorCode) {
-    if (hashTable == 0 || hashTable->) {
-        *errorCode =
+void deleteList(Node *node) {
+    while (node != NULL) {
+        Node *temp = node;
+        node = node->next;
+        free(temp->key);
+        free(temp);
     }
 }
- */
+
+void deleteHashTable(HashTable **hashTable, int *errorCode) {
+    if (hashTable == NULL || *hashTable == NULL || (*hashTable)->table == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    for (int i = 0; i < (*hashTable)->size; ++i) {
+        deleteList((*hashTable)->table[i]);
+    }
+    free(*hashTable);
+    *hashTable = NULL;
+}

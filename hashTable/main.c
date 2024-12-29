@@ -5,12 +5,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-
-void fillHashTable(HashTable *hashTable, const char *path, int *errorCode) {
+HashTable *getFrequenciesFromFile(const char *path, int *errorCode) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
         *errorCode = FILE_OPENING_ERROR;
-        return;
+        return NULL;
+    }
+    HashTable *hashTable = createHashTable(100, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        fclose(file);
+        return NULL;
     }
     while (!feof(file)) {
         char *buffer = calloc(50, sizeof(char));
@@ -21,14 +25,22 @@ void fillHashTable(HashTable *hashTable, const char *path, int *errorCode) {
         fscanf(file, "%s", buffer);
         updateHashTable(hashTable, buffer, errorCode);
         if (*errorCode) {
-            return;
+            break;
         }
         free(buffer);
     }
+    if (*errorCode != NO_ERRORS) {
+    }
     fclose(file);
+    return hashTable;
 }
 
 int main(void) {
     int errorCode = NO_ERRORS;
-    return hashTableTests();
+    HashTable *hashTable = getFrequenciesFromFile("../text.txt", &errorCode);
+    //printFrequencies(hashTable, &errorCode);
+    expandHashTable(&hashTable, &errorCode);
+    printFrequencies(hashTable, &errorCode);
+    deleteHashTable(&hashTable, &errorCode);
+    return errorCode;
 }
