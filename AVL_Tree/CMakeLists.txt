@@ -7,4 +7,5 @@ add_executable(AVL_Tree main.c
         tree.c
         tree.h
         tests.c
-        tests.h)
+        tests.h
+        queryProcessing.c)

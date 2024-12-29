@@ -30,7 +30,7 @@ Node *createNode(Value value, Value key, int *errorCode) {
     return node;
 }
 
-Value findValueByKey(Node * node, Value key) {
+Value search(Node *node, Value key) {
     if (node == NULL) {
         return NULL;
     }
@@ -180,6 +180,8 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
     }
     return balance(node, isHeightChanged);
 }
+
+
 
 Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     if (node == NULL) {

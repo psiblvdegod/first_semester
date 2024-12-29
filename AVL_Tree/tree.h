@@ -8,7 +8,7 @@ typedef const char * Value;
 Node * createNode(Value value, Value key, int *errorCode);
 
 //returns NULL if value is not found
-Value findValueByKey(Node * root, Value key);
+Value search(Node * root, Value key);
 
 //adds node to tree. first root with createNode(...)
 //then use root = insert(root,...)
