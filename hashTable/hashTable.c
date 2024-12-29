@@ -52,7 +52,12 @@ Node *createNode(Key key, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
-    newNode->key = key;
+    char *copy = calloc(50, sizeof(char));
+    if (copy == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return NULL;
+    }
+    newNode->key = strcpy(copy, key);
     newNode->frequency = 1;
     return newNode;
 }
@@ -66,7 +71,7 @@ Node *addNode(Node *node, Node *newNode, int *errorCode) {
 }
 
 Node *search(Node *node, Key key) {
-    while (node != NULL && node->key != key) {
+    while (node != NULL && strcmp(node->key, key) != 0) {
         node = node->next;
     }
     return node;
