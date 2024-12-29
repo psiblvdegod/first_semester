@@ -51,9 +51,10 @@ Node *createNode(Key key, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
-    char *copy = calloc(50, sizeof(char));
+    Key copy = calloc(WORD_SIZE, sizeof(char));
     if (copy == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(newNode);
         return NULL;
     }
     newNode->key = strcpy(copy, key);
@@ -61,23 +62,23 @@ Node *createNode(Key key, int *errorCode) {
     return newNode;
 }
 
-Node *addNode(Node *node, Node *newNode, int *errorCode) {
+Node *addNode(Node *list, Node *newNode, int *errorCode) {
     if (newNode == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return node;
+        return list;
     }
-    if (node == NULL) {
+    if (list == NULL) {
         return newNode;
     }
-    newNode->next = node;
+    newNode->next = list;
     return newNode;
 }
 
-Node *search(Node *node, Key key) {
-    while (node != NULL && strcmp(node->key, key) != 0) {
-        node = node->next;
+Node *search(Node *list, Key key) {
+    while (list != NULL && strcmp(list->key, key) != 0) {
+        list = list->next;
     }
-    return node;
+    return list;
 }
 
 void updateHashTable(HashTable *hashTable, Key key, int *errorCode) {
@@ -89,6 +90,10 @@ void updateHashTable(HashTable *hashTable, Key key, int *errorCode) {
     Node *node = search(hashTable->table[hash], key);
     if (node == NULL) {
         node = createNode(key, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            free(node);
+            return;
+        }
         hashTable->table[hash] = addNode(hashTable->table[hash], node, errorCode);
     }
     else {
@@ -97,8 +102,6 @@ void updateHashTable(HashTable *hashTable, Key key, int *errorCode) {
 }
 
 
-
-/*
 int calculateMaxListLength(HashTable *hashTable, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -107,12 +110,12 @@ int calculateMaxListLength(HashTable *hashTable, int *errorCode) {
     int result = 0;
     for (int i = 0; i < hashTable->size; ++i) {
         Node *cell = hashTable->table[i];
-        int tableElementLength = 0;
+        int listLength = 0;
         while (cell != NULL) {
-            ++tableElementLength;
+            ++listLength;
             cell = cell->next;
         }
-        result = result > tableElementLength ? result : tableElementLength;
+        result = result < listLength ? listLength : result;
     }
     return result;
 }
@@ -133,7 +136,7 @@ double calculateAverageListLength(HashTable *hashTable, int *errorCode) {
 }
 
 
-int findFrequencyByKey(HashTable *hashTable, Key key, int *errorCode) {
+int findFrequency(HashTable *hashTable, Key key, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return -1;
@@ -148,7 +151,6 @@ int findFrequencyByKey(HashTable *hashTable, Key key, int *errorCode) {
     }
     return 0;
 }
-*/
 
 int countElementsAmount(HashTable *hashTable, int *errorCode) {
     if (hashTable == NULL || hashTable->table == NULL) {

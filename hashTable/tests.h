@@ -4,3 +4,5 @@
 
 //checks the correctness of the functions from the module hashTable.c
 int hashTableTests();
+
+int hashTableFileTest();

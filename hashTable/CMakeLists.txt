@@ -6,4 +6,5 @@ set(CMAKE_C_STANDARD 11)
 add_executable(hashTable
         main.c
         hashTable.c
-        tests.c)
+        tests.c
+        fileProcessing.c)
