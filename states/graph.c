@@ -106,8 +106,8 @@ void setEdge(Graph *graph, const Value number1, const Value number2, const Value
         return;
         // an attempt to establish an existing edge
     }
-    insertInList(linkedWithFirst, number2, edgeLength, errorCode);
-    insertInList(linkedWithSecond, number1, edgeLength, errorCode);
+    addToList(linkedWithFirst, number2, edgeLength, errorCode);
+    addToList(linkedWithSecond, number1, edgeLength, errorCode);
 }
 
 void setCapital(Graph *graph, const Value city, int *errorCode) {
@@ -160,6 +160,30 @@ Vertex **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
     return states;
 }
 
+Value findClosest(Graph *graph, List *linkedVertices, bool *wasFreeCityFound, int *errorCode) {
+    verifyGraphInvariants(graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
+    }
+    ListElement *current = getHead(linkedVertices, errorCode);
+    Value result = 0;
+    Value currentMinDistance = 0;
+    while (current != NULL) {
+        const Value number = getNumber(current, errorCode);
+        const Value distance = getDistance(current, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            return 0;
+        }
+        if (graph->vertices[number]->state == -1 && (distance < currentMinDistance || !(*wasFreeCityFound))) {
+            currentMinDistance = (long)distance;
+            result = number;
+            *wasFreeCityFound = true;
+        }
+        current = getNext(current, errorCode);
+    }
+    return result;
+}
+
 void distributeCities(Graph *graph, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
@@ -179,22 +203,22 @@ void distributeCities(Graph *graph, int *errorCode) {
         if (states[i] == NULL) {
             continue;
         }
-        List *linked = states[i]->linkedVertices;
-        long attachingCity = -1;
-        while (!isListEmpty(linked, errorCode)) {
-            long closest = popFromList(linked, errorCode);
-            if (graph->vertices[closest]->state == -1) {
-                attachingCity = closest;
-                break;
-            }
-        }
-        if (attachingCity == -1) {
+        bool wasFreeCityFound = false;
+        const Value closestCity = findClosest(graph, states[i]->linkedVertices, &wasFreeCityFound, errorCode);
+        if (!wasFreeCityFound) {
             ++distributed;
+            free(states[i]->linkedVertices);
+            free(states[i]);
             states[i] = NULL;
             continue;
         }
-        graph->vertices[attachingCity]->state = states[i]->state;
-        mergeLists(states[i]->linkedVertices, graph->vertices[attachingCity]->linkedVertices, errorCode);
+        graph->vertices[closestCity]->state = states[i]->state;
+        List *copy = copyList(graph->vertices[closestCity]->linkedVertices, errorCode);
+        ListElement *current = getHead(copy, errorCode);
+        while (current != NULL) {
+            addToList(states[i]->linkedVertices, getNumber(current, errorCode), getDistance(current, errorCode), errorCode);
+            current = getNext(current, errorCode);
+        }
     }
 }
 

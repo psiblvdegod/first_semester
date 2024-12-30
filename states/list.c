@@ -38,16 +38,7 @@ void deleteList(List **list, int *errorCode) {
     *list = NULL;
 }
 
-ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
-    if (current == NULL || newElement->distance <= current->distance) {
-        newElement->next = current;
-        return newElement;
-    }
-    current->next = insertRecursive(current->next, newElement);
-    return current;
-}
-
-void insertInList(List *list, Value number, Value distance, int *errorCode) {
+void addToList(List *list, Value number, Value distance, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -59,7 +50,8 @@ void insertInList(List *list, Value number, Value distance, int *errorCode) {
     }
     newElement->number = number;
     newElement->distance = distance;
-    list->head = insertRecursive(list->head, newElement);
+    newElement->next = list->head;
+    list->head = newElement;
 }
 
 List *copyList(List *list, int *errorCode) {
@@ -73,7 +65,7 @@ List *copyList(List *list, int *errorCode) {
     }
     ListElement *current = list->head;
     while (current != NULL) {
-        insertInList(copy, current->number, current->distance, errorCode);
+        addToList(copy, current->number, current->distance, errorCode);
         if (*errorCode != NO_ERRORS) {
             deleteList(&copy, errorCode);
             return NULL;
@@ -81,16 +73,6 @@ List *copyList(List *list, int *errorCode) {
         current = current->next;
     }
     return copy;
-}
-
-Value popFromList(List *list, int *errorCode) {
-    if (list == NULL || list->head == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return 0;
-    }
-    Value result = list->head->number;
-    list->head = list->head->next;
-    return result;
 }
 
 bool searchInList(List *list, Value value, int *errorCode) {
@@ -124,22 +106,6 @@ bool isListEmpty(List *list, int *errorCode) {
     return list->head == NULL;
 }
 
-void mergeLists(List *recipient, List *donor, int *errorCode) {
-    if (recipient == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    if (donor == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    ListElement *current = donor->head;
-    while (current != NULL) {
-        insertInList(recipient, current->number, current->distance, errorCode);
-        current = current->next;
-    }
-}
-
 void printList(List *list, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -150,4 +116,28 @@ void printList(List *list, int *errorCode) {
         printf("%zu ", current->number);
         current = current->next;
     }
+}
+
+ListElement *getHead(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    return list->head;
+}
+
+ListElement *getNext(ListElement* listElement, int *errorCode) {
+    if (listElement == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    return listElement->next;
+}
+
+Value getDistance(ListElement* listElement, int *errorCode) {
+    if (listElement == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    return listElement->distance;
 }
