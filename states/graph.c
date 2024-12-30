@@ -88,6 +88,7 @@ void deleteGraph(Graph **graph, int *errorCode) {
     }
     for (Value i = 0; i < (*graph)->verticesAmount; ++i) {
         deleteList(&((*graph)->vertices[i]->linkedVertices), errorCode);
+        free((*graph)->vertices[i]);
     }
     free((*graph)->vertices);
     free(*graph);
@@ -193,7 +194,7 @@ void distributeCities(Graph *graph, int *errorCode) {
     Vertex **states = getStates(graph, &statesAmount, errorCode);
     if (*errorCode != NO_ERRORS) {
         for (Value i = 0; i < statesAmount; ++i) {
-            free(states[i]->linkedVertices);
+            deleteList(&states[i]->linkedVertices, errorCode);
             free(states[i]);
         }
         free(states);
@@ -220,6 +221,7 @@ void distributeCities(Graph *graph, int *errorCode) {
             current = getNext(current, errorCode);
         }
     }
+    free(states);
 }
 
 Graph *buildGraph(const char *filePath, int *errorCode) {
@@ -239,7 +241,7 @@ Graph *buildGraph(const char *filePath, int *errorCode) {
         fclose(file);
         return NULL;
     }
-    for (size_t i = 0; i < edgesAmount; ++i) {
+    for (Value i = 0; i < edgesAmount; ++i) {
         const Value vertex1 = scanNumber(file, errorCode);
         const Value vertex2 = scanNumber(file, errorCode);
         const Value length = scanNumber(file, errorCode);
@@ -255,8 +257,15 @@ Graph *buildGraph(const char *filePath, int *errorCode) {
         const size_t capital = scanNumber(file, errorCode);
         setCapital(graph, capital, errorCode);
     }
-    distributeCities(graph, errorCode);
     fclose(file);
+    if (*errorCode != NO_ERRORS) {
+        deleteGraph(&graph, errorCode);
+        return NULL;
+    }
+    distributeCities(graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteGraph(&graph, errorCode);
+    }
     return graph;
 }
 

@@ -75,35 +75,19 @@ List *copyList(List *list, int *errorCode) {
     return copy;
 }
 
-bool searchInList(List *list, Value value, int *errorCode) {
+bool searchInList(List *list, Value number, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
     ListElement *current = list->head;
     while (current != NULL) {
-        if (current->number == value) {
+        if (current->number == number) {
             return true;
         }
         current = current->next;
     }
     return false;
-}
-
-Value getNumber(ListElement* listElement, int *errorCode) {
-    if (listElement == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return 0;
-    }
-    return listElement->number;
-}
-
-bool isListEmpty(List *list, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return true;
-    }
-    return list->head == NULL;
 }
 
 void printList(List *list, int *errorCode) {
@@ -132,6 +116,14 @@ ListElement *getNext(ListElement* listElement, int *errorCode) {
         return 0;
     }
     return listElement->next;
+}
+
+Value getNumber(ListElement* listElement, int *errorCode) {
+    if (listElement == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    return listElement->number;
 }
 
 Value getDistance(ListElement* listElement, int *errorCode) {

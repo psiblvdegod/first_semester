@@ -6,6 +6,6 @@
 
 int main(void) {
     int errorCode = NO_ERRORS;
-    Graph *graph =  buildGraph("../text.txt", &errorCode);
-    int a = 0;
+    Graph *graph =  buildGraph("../test.txt", &errorCode);
+    return errorCode;
 }
