@@ -78,6 +78,7 @@ List *copyList(List *list, int *errorCode) {
             deleteList(&copy, errorCode);
             return NULL;
         }
+        current = current->next;
     }
     return copy;
 }
@@ -123,27 +124,20 @@ bool isListEmpty(List *list, int *errorCode) {
     return list->head == NULL;
 }
 
-List *uniteLists(List **first, List **second, int *errorCode) {
-    if (first == NULL || *first == NULL ) {
+void mergeLists(List *recipient, List *donor, int *errorCode) {
+    if (recipient == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return;
     }
-    if (second == NULL || *second == NULL ) {
+    if (donor == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return;
     }
-    List *result = createList(errorCode);
-    result->head = (*first)->head;
-    while (!isListEmpty(*second, errorCode)) {
-        ListElement *current = popFromList(*second, errorCode);
-        insertInList(result, current->number, current->distance, errorCode);
-        free(current);
+    ListElement *current = donor->head;
+    while (current != NULL) {
+        insertInList(recipient, current->number, current->distance, errorCode);
+        current = current->next;
     }
-    free(*second);
-    *second = NULL;
-    free(*first);
-    *first = NULL;
-    return result;
 }
 
 void printList(List *list, int *errorCode) {

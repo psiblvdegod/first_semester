@@ -1,13 +1,12 @@
 #include "errorCode.h"
 #include "errno.h"
 #include "graph.h"
-#include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef struct Vertex {
     Value number;
-    Value state;
+    long state;
     bool isCapital;
     struct List *linkedVertices;
 } Vertex;
@@ -40,7 +39,7 @@ Graph *createGraph(const Value verticesAmount, int *errorCode) {
         return NULL;
     }
     graph->verticesAmount = verticesAmount;
-    graph->vertices = calloc(verticesAmount, sizeof(Vertex));
+    graph->vertices = calloc(verticesAmount, sizeof(Vertex *));
     if (graph->vertices == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         free(graph);
@@ -193,8 +192,8 @@ void distributeCities(Graph *graph, int *errorCode) {
             ++distributed;
             continue;
         }
-        graph->vertices[closest]->state = states[i]->number;
-        states[i]->linkedVertices = uniteLists(&(states[i]->linkedVertices), &(graph->vertices[closest]->linkedVertices), errorCode);
+        graph->vertices[closest]->state = states[i]->state;
+        mergeLists(states[i]->linkedVertices, graph->vertices[closest]->linkedVertices, errorCode);
     }
 }
 

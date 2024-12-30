@@ -1,5 +1,4 @@
 #pragma once
-#include "graph.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -25,6 +24,6 @@ Value getNumber(ListElement* listElement, int *errorCode);
 
 bool isListEmpty(List *list, int *errorCode);
 
-List *uniteLists(List **first, List **second, int *errorCode);
+void mergeLists(List *recipient, List *donor, int *errorCode);
 
 void printList(List *list, int *errorCode);
