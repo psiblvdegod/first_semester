@@ -11,12 +11,12 @@ struct Queue {
     QueueElement *tail;
 };
 
-Queue createQueue() {
-    Queue queue = calloc(1, sizeof(struct Queue));
+Queue *createQueue() {
+    Queue *queue = calloc(1, sizeof(struct Queue));
     return queue;
 }
 
-void enqueue(Queue queue, QueueValue value) {
+void enqueue(Queue *queue, QueueValue value) {
     QueueElement *newElement = calloc(1, sizeof(QueueElement));
     if (newElement == NULL) {
         return;
@@ -31,7 +31,7 @@ void enqueue(Queue queue, QueueValue value) {
     queue->tail = newElement;
 }
 
-QueueValue dequeue(Queue queue) {
+QueueValue dequeue(Queue *queue) {
     if (queue == NULL || queue->head == NULL) {
         return NULL;
     }
@@ -45,6 +45,6 @@ QueueValue dequeue(Queue queue) {
     return value;
 }
 
-bool isQueueEmpty(Queue queue) {
+bool isQueueEmpty(Queue *queue) {
     return queue->head == NULL;
 }

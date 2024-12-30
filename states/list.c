@@ -1,20 +1,21 @@
 #include "errorCode.h"
 #include "list.h"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
-typedef struct ListElement {
-    Value value;
+struct ListElement {
+    Value number;
+    Value distance;
     struct ListElement *next;
-} ListElement;
+};
 
 struct List {
     ListElement *head;
 };
 
-List createList(int *errorCode) {
-    List list = calloc(1, sizeof(struct List));
+List *createList(int *errorCode) {
+    List *list = calloc(1, sizeof(List));
     if (list == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
@@ -22,98 +23,7 @@ List createList(int *errorCode) {
     return list;
 }
 
-ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
-    if (current == NULL || strcmp(newElement->value, current->value) <= 0) {
-        newElement->next = current;
-        return newElement;
-    }
-    current->next = insertRecursive(current->next, newElement);
-    return current;
-}
-
-bool insertInList(List list, Value value, int *errorCode) {
-    if (list == NULL || value == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return false;
-    }
-    ListElement *newElement = calloc(1, sizeof(ListElement));
-    if (newElement == NULL) {
-        *errorCode = MEMORY_ALLOCATION_ERROR;
-        return false;
-    }
-    newElement->value = value;
-    if (list->head == NULL) {
-        list->head = newElement;
-        return true;
-    }
-    list->head = insertRecursive(list->head, newElement);
-    return true;
-}
-
-ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChanged) {
-    if (current == NULL || strcmp(value, current->value) < 0) {
-        return current;
-    }
-    if (strcmp(value, current->value) == 0) {
-        ListElement *next = current->next;
-        free(current);
-        *isSizeChanged = true;
-        return next;
-    }
-    current->next = deleteRecursive(current->next, value, isSizeChanged);
-    return current;
-}
-
-bool deleteFromList(List list, Value value, int *errorCode) {
-    if (list == NULL || value == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return false;
-    }
-    if (list->head == NULL) {
-        return false;
-    }
-    bool isSizeChanged = false;
-    list->head = deleteRecursive(list->head, value, &isSizeChanged);
-    return isSizeChanged;
-}
-
-void printList(List list, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    if (list->head == NULL) {
-        printf("List is empty.\n");
-        return;
-    }
-    ListElement *current = list->head;
-    printf("List:\n");
-    while (current != NULL) {
-        printf("%s ", current->value);
-        current = current->next;
-    }
-    printf("\n");
-}
-
-bool searchInList(List list, Value value, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return false;
-    }
-    ListElement *currentElement = list->head;
-    while (currentElement != NULL) {
-        if (strcmp(value, currentElement->value) == 0) {
-            return true;
-        }
-        else if (strcmp(value, currentElement->value) > 0) {
-            return false;
-        }
-        currentElement = currentElement->next;
-    }
-    return false;
-}
-
-void deleteList(List *list, int *errorCode) {
+void deleteList(List **list, int *errorCode) {
     if (list == NULL || *list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -126,4 +36,124 @@ void deleteList(List *list, int *errorCode) {
     }
     free(*list);
     *list = NULL;
+}
+
+ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
+    if (current == NULL || newElement->distance <= current->distance) {
+        newElement->next = current;
+        return newElement;
+    }
+    current->next = insertRecursive(current->next, newElement);
+    return current;
+}
+
+void insertInList(List *list, Value number, Value distance, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    ListElement *newElement = calloc(1, sizeof(ListElement));
+    if (newElement == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return;
+    }
+    newElement->number = number;
+    newElement->distance = distance;
+    list->head = insertRecursive(list->head, newElement);
+}
+
+List *copyList(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    List *copy = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
+    ListElement *current = list->head;
+    while (current != NULL) {
+        insertInList(copy, current->number, current->distance, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            deleteList(&copy, errorCode);
+            return NULL;
+        }
+    }
+    return copy;
+}
+
+ListElement *popFromList(List *list, int *errorCode) {
+    if (list == NULL || list->head == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    ListElement *result = list->head;
+    list->head = list->head->next;
+    return result;
+}
+
+bool searchInList(List *list, Value value, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return false;
+    }
+    ListElement *current = list->head;
+    while (current != NULL) {
+        if (current->number == value) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+Value getNumber(ListElement* listElement, int *errorCode) {
+    if (listElement == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    return listElement->number;
+}
+
+bool isListEmpty(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return true;
+    }
+    return list->head == NULL;
+}
+
+List *uniteLists(List **first, List **second, int *errorCode) {
+    if (first == NULL || *first == NULL ) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    if (second == NULL || *second == NULL ) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    List *result = createList(errorCode);
+    result->head = (*first)->head;
+    while (!isListEmpty(*second, errorCode)) {
+        ListElement *current = popFromList(*second, errorCode);
+        insertInList(result, current->number, current->distance, errorCode);
+        free(current);
+    }
+    free(*second);
+    *second = NULL;
+    free(*first);
+    *first = NULL;
+    return result;
+}
+
+void printList(List *list, int *errorCode) {
+    if (list == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    ListElement *current = list->head;
+    while (current != NULL) {
+        printf("%zu ", current->number);
+        current = current->next;
+    }
 }

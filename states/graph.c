@@ -1,67 +1,18 @@
 #include "errorCode.h"
 #include "errno.h"
 #include "graph.h"
-#include "queue.h"
+#include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef struct Vertex {
-    size_t number;
-    size_t state;
+    Value number;
+    Value state;
     bool isCapital;
     struct List *linkedVertices;
 } Vertex;
 
-typedef struct List {
-    Vertex *vertex;
-    size_t distance;
-    struct List *previous;
-} List;
-
-struct Graph {
-    Vertex **vertices;
-    size_t verticesAmount;
-};
-
-List *createElement(Vertex *vertex, size_t distance, int *errorCode) {
-    if (vertex == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
-    }
-    List *newElement = calloc(1, sizeof(List));
-    if (newElement == NULL) {
-        *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
-    }
-    newElement->vertex = vertex;
-    newElement->distance = distance;
-    return newElement;
-}
-
-List *addElement(List *list, List *newElement, int *errorCode) {
-    if (newElement == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
-    }
-    newElement->previous = list;
-    return newElement;
-}
-
-List *findElement(List *list, size_t number, int *errorCode) {
-    while (list != NULL) {
-        if (list->vertex == NULL) {
-            *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-            return NULL;
-        }
-        if (list->vertex->number == number) {
-            return list;
-        }
-        list = list->previous;
-    }
-    return NULL;
-}
-
-Vertex *createVertex(size_t number, int *errorCode) {
+Vertex *createVertex(const Value number, int *errorCode) {
     Vertex *vertex = calloc(1, sizeof(Vertex));
     if (vertex == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
@@ -69,10 +20,16 @@ Vertex *createVertex(size_t number, int *errorCode) {
     }
     vertex->number = number;
     vertex->state = -1;
+    vertex->linkedVertices = createList(errorCode);
     return vertex;
 }
 
-Graph *createGraph(const size_t verticesAmount, int *errorCode) {
+struct Graph {
+    Vertex **vertices;
+    size_t verticesAmount;
+};
+
+Graph *createGraph(const Value verticesAmount, int *errorCode) {
     if (verticesAmount < 1) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
@@ -89,10 +46,10 @@ Graph *createGraph(const size_t verticesAmount, int *errorCode) {
         free(graph);
         return NULL;
     }
-    for (size_t i = 0; i < verticesAmount; ++i) {
+    for (Value i = 0; i < verticesAmount; ++i) {
         graph->vertices[i] = createVertex(i, errorCode);
         if (*errorCode != NO_ERRORS) {
-            for (size_t k = i; ; --k) {
+            for (Value k = i; ; --k) {
                 free(graph->vertices[k]);
                 if (k == 0) {
                     break;
@@ -121,28 +78,40 @@ void verifyGraphInvariants(Graph *graph, int *errorCode) {
     }
 }
 
-void setEdge(Graph *graph, const size_t number1, const size_t number2, const size_t edgeLength, int *errorCode) {
+void deleteGraph(Graph **graph, int *errorCode) {
+    if (graph == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    verifyGraphInvariants(*graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    for (Value i = 0; i < (*graph)->verticesAmount; ++i) {
+        deleteList(&((*graph)->vertices[i]->linkedVertices), errorCode);
+    }
+    free((*graph)->vertices);
+    free(*graph);
+    *graph = NULL;
+}
+
+void setEdge(Graph *graph, const Value number1, const Value number2, const Value edgeLength, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
         return;
     }
     List *linkedWithFirst = graph->vertices[number1]->linkedVertices;
     List *linkedWithSecond = graph->vertices[number2]->linkedVertices;
-    if (findElement(linkedWithFirst, number2, errorCode) != NULL || findElement(linkedWithSecond, number1, errorCode) != NULL) {
+    if (searchInList(linkedWithFirst, number2, errorCode) || searchInList(linkedWithSecond, number1, errorCode)) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
         // an attempt to establish an existing edge
     }
-    List *vertex1 = createElement(graph->vertices[number1], edgeLength, errorCode);
-    List *vertex2 = createElement(graph->vertices[number2], edgeLength, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
-    }
-    addElement(linkedWithFirst, vertex2, errorCode);
-    addElement(linkedWithSecond, vertex1, errorCode);
+    insertInList(linkedWithFirst, number2, edgeLength, errorCode);
+    insertInList(linkedWithSecond, number1, edgeLength, errorCode);
 }
 
-void setCapital(Graph *graph, const size_t city, int *errorCode) {
+void setCapital(Graph *graph, const Value city, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
         return;
@@ -151,55 +120,82 @@ void setCapital(Graph *graph, const size_t city, int *errorCode) {
     graph->vertices[city]->state = city;
 }
 
-void distributeCities(Graph *graph, const size_t capitalsAmount, int *errorCode) {
-    verifyGraphInvariants(graph, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
-    }
-    if (capitalsAmount < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    size_t *capitals = calloc(capitalsAmount, sizeof(size_t));
-    if (capitals == NULL) {
-        *errorCode = MEMORY_ALLOCATION_ERROR;
-        return;
-    }
-    for (int i = 0, j = 0; i < graph->verticesAmount; ++i) {
-        if (graph->vertices[i]->isCapital) {
-            capitals[j] = i;
-            ++j;
-        }
-    }
-    for (int i = 0, j = 0;; i == capitalsAmount ? i = 0 : ++i) {
-        bool isAllDistributed = true;
-        for (; j < graph->verticesAmount; ++j) {
-            if (graph->vertices[j]->state == -1) {
-                graph->vertices[j]->state = capitals[i];
-                isAllDistributed = false;
-                break;
-            }
-        }
-        if (isAllDistributed) {
-            free(capitals);
-            return;
-        }
-    }
-}
-
-size_t scanNumber(FILE *file, int *errorCode) {
+Value scanNumber(FILE *file, int *errorCode) {
     char buffer[16] = {'0'};
     if (fscanf(file, "%s", buffer) != 1) {
         *errorCode = INCORRECT_EXPRESSION_IN_FILE;
         return 0;
     }
-    size_t result = strtoul(buffer, NULL, 10);
+    Value result = strtoul(buffer, NULL, 10);
     if (errno != 0) {
         *errorCode = INCORRECT_EXPRESSION_IN_FILE;
         errno = 0;
         return 0;
     }
     return result;
+}
+
+Vertex **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
+    verifyGraphInvariants(graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
+    for (Value i = 0; i < graph->verticesAmount; ++i) {
+        if (graph->vertices[i]->isCapital) {
+            ++(*statesAmount);
+        }
+    }
+    Vertex **states = calloc(*statesAmount, sizeof(Vertex *));
+    if (states == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return NULL;
+    }
+    for (Value i = 0, j = 0; i < graph->verticesAmount; ++i) {
+        if (graph->vertices[i]->isCapital) {
+            states[j] = createVertex(i, errorCode);
+            states[j]->state = i;
+            states[j]->linkedVertices = copyList(graph->vertices[i]->linkedVertices, errorCode);
+            ++j;
+        }
+    }
+    return states;
+}
+
+void distributeCities(Graph *graph, int *errorCode) {
+    verifyGraphInvariants(graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    Value statesAmount = 0;
+    Vertex **states = getStates(graph, &statesAmount, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        for (Value i = 0; i < statesAmount; ++i) {
+            free(states[i]->linkedVertices);
+            free(states[i]);
+        }
+        free(states);
+        return;
+    }
+    for (Value i = 0, distributed = 0; distributed != statesAmount; i == statesAmount ? i = 0 : ++i) {
+        if (states[i] == NULL) {
+            continue;
+        }
+        List *linked = states[i]->linkedVertices;
+        long closest = -1;
+        while (!isListEmpty(linked, errorCode)) {
+            closest = (long)getNumber(popFromList(linked, errorCode), errorCode);
+            if (graph->vertices[closest]->state == -1) {
+                break;
+            }
+        }
+        if (closest == -1) {
+            states[i] = NULL;
+            ++distributed;
+            continue;
+        }
+        graph->vertices[closest]->state = states[i]->number;
+        states[i]->linkedVertices = uniteLists(&(states[i]->linkedVertices), &(graph->vertices[closest]->linkedVertices), errorCode);
+    }
 }
 
 Graph *buildGraph(const char *filePath, int *errorCode) {
@@ -235,173 +231,17 @@ Graph *buildGraph(const char *filePath, int *errorCode) {
         const size_t capital = scanNumber(file, errorCode);
         setCapital(graph, capital, errorCode);
     }
-    distributeCities(graph, capitalsAmount, errorCode);
+    distributeCities(graph, errorCode);
     fclose(file);
     return graph;
 }
-/*
-int* findShortestWay(Graph *graph, const int startingVertex, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || graph->adjacencyMatrix == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-    int **adjacencyMatrix = graph->adjacencyMatrix;
 
-    int *isVertexVisited = calloc(graph->verticesAmount, sizeof(int));
-    int *shortestWays = calloc(graph->verticesAmount, sizeof(int));
-    Queue queue = createQueue();
-    if (queue == NULL || isVertexVisited == NULL | shortestWays == NULL) {
-        *errorCode = true;
-        return NULL;
-    }
-
-    enqueue(queue, graph->vertices[startingVertex]);
-    isVertexVisited[startingVertex] = 2;
-    while (!isQueueEmpty(queue)) {
-        Vertex *currentVertex = dequeue(queue);
-        if (isVertexVisited[currentVertex->number] != 2) {
-            isVertexVisited[currentVertex->number] = 1;
-        }
-        Node *linkedVertices = currentVertex->linkedVertices;
-        bool isAll = true;
-        while (linkedVertices != NULL) {
-            const int number = linkedVertices->vertex->number;
-            if (isVertexVisited[number] == 0) {
-                isAll = false;
-            }
-            if (isVertexVisited[number] != 2) {
-                enqueue(queue, linkedVertices->vertex);
-                if (shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number] < shortestWays[number] || shortestWays[number] == 0) {
-                    shortestWays[number] = shortestWays[currentVertex->number] + adjacencyMatrix[number][currentVertex->number];
-                }
-            }
-            linkedVertices = linkedVertices->previous;
-        }
-        if (isAll) {
-            isVertexVisited[currentVertex->number] = 2;
-        }
-    }
-    free(isVertexVisited);
-    return shortestWays;
-}
-
-void conquerNearestCity(Graph *graph, const int state, bool *errorCode) {
-    if (graph == NULL || graph->vertices == NULL || state > graph->verticesAmount) {
-        *errorCode = true;
-        return;
-    }
-    Vertex **cities = graph->vertices;
-    if (!cities[state]->isCapital) {
-        return;
-    }
-    int newCity = -1;
-    int newCityDistance = -1;
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        if (cities[i]->state != state) {
-            continue;
-        }
-
-        int *shortestWays = findShortestWay(graph, i, errorCode);
-        if (shortestWays == NULL || *errorCode) {
-            *errorCode = true;
-            return;
-        }
-
-        int nearestCity = -1;
-        int nearestCityDistance = -1;
-        for (int j = 0; j < graph->verticesAmount; ++j) {
-            if (cities[j]->state != -1 || shortestWays[j] == 0) {
-                continue;
-            }
-            if (nearestCity == -1 || shortestWays[j] < nearestCityDistance) {
-                nearestCity = cities[j]->number;
-                nearestCityDistance = shortestWays[j];
-            }
-        }
-
-        if (newCity == -1 || nearestCityDistance < newCityDistance) {
-            newCity = nearestCity;
-            newCityDistance = nearestCityDistance;
-        }
-
-        free(shortestWays);
-    }
-    cities[newCity]->state = state;
-}
-*/
-void printAdjacencyLists(Graph graph) {
-    for (int i = 0; i < graph->verticesAmount; ++i) {
+void printAdjacencyLists(Graph *graph, int *errorCode) {
+    for (Value i = 0; i < graph->verticesAmount; ++i) {
         Vertex *vertex = graph->vertices[i];
-        printf("%d: ", vertex->number);
-        Node *node = vertex->linkedVertices;
-        while (node != NULL) {
-            printf("%d ", node->vertex->number);
-            node = node->previous;
-        }
+        printf("%zu: ", vertex->number);
+        printList(vertex->linkedVertices, errorCode);
         printf("\n");
     }
 }
 
-void printStateAffiliation(Graph graph) {
-    Vertex **cities = graph->vertices;
-    int freeCitiesAmount = graph->verticesAmount;
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        if (!cities[i]->isCapital) {
-            continue;
-        }
-        printf("%d : ", cities[i]->number);
-        --freeCitiesAmount;
-        for (int j = 0; j < graph->verticesAmount; ++j) {
-            if (cities[j]->state == cities[i]->state) {
-                printf("%d ", cities[j]->number);
-                --freeCitiesAmount;
-            }
-        }
-        printf("\n");
-    }
-    if (freeCitiesAmount > 0) {
-        printf("free cities: ");
-        for (int i = 0; i < graph->verticesAmount; ++i) {
-            if (cities[i]->state == -1) {
-                printf("%d ", cities[i]->number);
-            }
-        }
-    }
-    printf("\n");
-}
-
-void distributeCities_(Graph *graph, int *errorCode) {
-    verifyGraphInvariants(graph, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
-    }
-    List **states = calloc(graph->verticesAmount, sizeof(List*));
-    if (states == NULL) {
-        *errorCode = MEMORY_ALLOCATION_ERROR;
-        return;
-    }
-    for (size_t i = 0; i < graph->verticesAmount; ++i) {
-        if (graph->vertices[i]->isCapital) {
-            List *linked = graph->vertices[i]->linkedVertices;
-            while (linked != NULL) {
-
-            }
-        }
-    }
-    for (int i = 0; i < graph->verticesAmount; ++i) {
-        if (states[i] == NULL) {
-            continue;
-        }
-        List *list = states[i];
-        List *closestCity = NULL;
-        size_t minDist = list->distance;
-        while (list != NULL) {
-            if (minDist > list->distance) {
-                closestCity = list;
-                minDist = list->distance;
-            }
-            list = list->previous;
-        }
-        states[i]->vertex->state = i;
-    }
-}

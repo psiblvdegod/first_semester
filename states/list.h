@@ -1,29 +1,30 @@
 #pragma once
+#include "graph.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
-typedef struct List *List;
+typedef struct List List;
 
-typedef char *Value;
+typedef struct ListElement ListElement;
 
-// creates empty list
-List createList(int *errorCode);
+typedef size_t Value;
 
-// adds element to list keeping it sorted.
-// returns true if element has been added successfully,
-// else returns false; definitely some error happened.
-bool insertInList(List list, Value value, int *errorCode);
+List *createList(int *errorCode);
 
-// deletes element from list keeping it sorted.
-// returns true if element has been deleted successfully,
-// else returns false; verify errorCode.
-bool deleteFromList(List list, Value value, int *errorCode);
+void deleteList(List **list, int *errorCode);
 
-// returns true if there is such value in the list,
-// else returns false.
-bool searchInList(List list, Value value, int *errorCode);
+void insertInList(List *list, Value number, Value distance, int *errorCode);
 
-// prints all elements from the list.
-void printList(List list, int *errorCode);
+ListElement *popFromList(List *list, int *errorCode);
 
-// frees memory allocated for the list and turns pointer NULL.
-void deleteList(List *list, int *errorCode);
+bool searchInList(List *list, Value value, int *errorCode);
+
+List *copyList(List *list, int *errorCode);
+
+Value getNumber(ListElement* listElement, int *errorCode);
+
+bool isListEmpty(List *list, int *errorCode);
+
+List *uniteLists(List **first, List **second, int *errorCode);
+
+void printList(List *list, int *errorCode);
