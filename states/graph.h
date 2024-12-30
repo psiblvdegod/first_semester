@@ -1,30 +1,28 @@
 #pragma once
-#include <stdbool.h>
+#include <stdlib.h>
 
-typedef int Value;
-
-typedef struct Graph* Graph;
+typedef struct Graph Graph;
 
 // opens file from filePath for read,
 // reads vertices amount and creates graph,
 // reads and sets edges,
 // reads and sets capitals,
 // distributes cities.
-Graph buildGraph(const char *filePath, bool *errorCode);
+Graph *buildGraph(const char *filePath, int *errorCode);
 
 // creates an empty graph with fixed size = verticesAmount,
 // it stores array of vertices, vertices amount and adjacency matrix.
 // initialises vertices with natural numbers [1 : verticesAmount].
-Graph createGraph(int verticesAmount, bool *errorCode);
+Graph *createGraph(size_t verticesAmount, int *errorCode);
 
 // links two vertices and puts edgeWeight to adjacency matrix.
-void setEdge(Graph graph, Value vertex1, Value vertex2, Value edgeWeight, bool *errorCode);
+void setEdge(Graph *graph, size_t number1, size_t number2, size_t edgeLength, int *errorCode);
 
 // turns city to capital.
-void setCapital(Graph graph, Value city, bool *errorCode);
+void setCapital(Graph graph, Value city, int *errorCode);
 
 // attaches the nearest free city to the state.
-void conquerNearestCity(Graph graph, Value state, bool *errorCode);
+void conquerNearestCity(Graph graph, Value state, int *errorCode);
 
 // prints all vertices, which are considered capitals.
 void printCapitals(Graph graph);

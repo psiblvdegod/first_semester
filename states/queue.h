@@ -4,14 +4,14 @@
 
 typedef struct Vertex* QueueValue;
 
-typedef struct Queue* Queue;
+typedef struct Queue Queue;
 
-Queue createQueue();
+Queue *createQueue();
 
 // adds element to queue.
-void enqueue(Queue queue, QueueValue value);
+void enqueue(Queue *queue, QueueValue value);
 
 // delete element from queue and returns it.
-QueueValue dequeue(Queue queue);
+QueueValue dequeue(Queue *queue);
 
-bool isQueueEmpty(Queue queue);
+bool isQueueEmpty(Queue *queue);
