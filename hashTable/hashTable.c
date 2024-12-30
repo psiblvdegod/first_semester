@@ -37,14 +37,12 @@ List *addElement(List *list, List *newElement, int *errorCode) {
 
 List *findElement(List *list, Key key, int *errorCode) {
     while (list != NULL) {
-        if (list->key != NULL) {
-            if (strcmp(list->key, key) == 0) {
-                return list;
-            }
-        }
-        else {
+        if (list->key == NULL) {
             *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
             return NULL;
+        }
+        if (strcmp(list->key, key) == 0) {
+            return list;
         }
         list = list->next;
     }
@@ -66,8 +64,31 @@ struct HashTable {
     size_t elementsAmount;
 };
 
+void verifyHashTableInvariants(HashTable *hashtable, int *errorCode) {
+    if (hashtable == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (hashtable->table == NULL) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (hashtable->size < 1) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (hashtable->elementsAmount < 0) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+}
+
 size_t hashFunction(const size_t hashTableSize, Key key, int *errorCode) {
-    if (hashTableSize < 1 || key == NULL) {
+    if (hashTableSize < 1) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return 0;
+    }
+    if (key == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return 0;
     }
@@ -98,8 +119,12 @@ HashTable *createHashTable(const size_t size, int *errorCode) {
 }
 
 void expandHashTable(HashTable **hashTable, int *errorCode) {
-    if (hashTable == NULL || *hashTable == NULL || (*hashTable)->table == NULL || (*hashTable)->size < 1) {
+    if (hashTable == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    verifyHashTableInvariants(*hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
         return;
     }
     const double fillFactor = calculateFillFactor(*hashTable, errorCode);
@@ -134,8 +159,12 @@ void expandHashTable(HashTable **hashTable, int *errorCode) {
 }
 
 void addWordToHashTable(HashTable **hashTable, Key key, int *errorCode) {
-    if (hashTable == NULL || *hashTable == NULL || (*hashTable)->table == NULL || (*hashTable)->size < 1) {
+    if (hashTable == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    verifyHashTableInvariants(*hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
         return;
     }
     const size_t hash = hashFunction((*hashTable)->size, key, errorCode);
@@ -164,9 +193,9 @@ void addWordToHashTable(HashTable **hashTable, Key key, int *errorCode) {
 }
 
 size_t findMaxListLength(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
+    verifyHashTableInvariants(hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
     }
     size_t result = 0;
     for (size_t i = 0; i < hashTable->size; ++i) {
@@ -182,9 +211,9 @@ size_t findMaxListLength(HashTable *hashTable, int *errorCode) {
 }
 
 double calculateAverageListLength(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
+    verifyHashTableInvariants(hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
     }
     size_t amountOfNotEmptyCells = 0;
     for (size_t i = 0; i < hashTable->size; ++i) {
@@ -197,9 +226,9 @@ double calculateAverageListLength(HashTable *hashTable, int *errorCode) {
 
 
 unsigned int findFrequency(HashTable *hashTable, Key key, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1 || key == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
+    verifyHashTableInvariants(hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
     }
     const size_t hash = hashFunction(hashTable->size, key, errorCode);
     List *cell = hashTable->table[hash];
@@ -217,16 +246,20 @@ unsigned int findFrequency(HashTable *hashTable, Key key, int *errorCode) {
 }
 
 double calculateFillFactor(HashTable *hashTable, int *errorCode) {
-    if (hashTable == NULL || hashTable->table == NULL || hashTable->size < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
+    verifyHashTableInvariants(hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
     }
     return (double)(hashTable->elementsAmount) / (double)(hashTable->size);
 }
 
 void deleteHashTable(HashTable **hashTable, int *errorCode) {
-    if (hashTable == NULL || *hashTable == NULL || (*hashTable)->table == NULL || (*hashTable)->size < 1) {
+    if (hashTable == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    verifyHashTableInvariants(*hashTable, errorCode);
+    if (*errorCode != NO_ERRORS) {
         return;
     }
     for (size_t i = 0; i < (*hashTable)->size; ++i) {
@@ -235,4 +268,3 @@ void deleteHashTable(HashTable **hashTable, int *errorCode) {
     free(*hashTable);
     *hashTable = NULL;
 }
-
