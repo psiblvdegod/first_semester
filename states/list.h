@@ -14,7 +14,7 @@ void deleteList(List **list, int *errorCode);
 
 void insertInList(List *list, Value number, Value distance, int *errorCode);
 
-ListElement *popFromList(List *list, int *errorCode);
+Value popFromList(List *list, int *errorCode);
 
 bool searchInList(List *list, Value value, int *errorCode);
 

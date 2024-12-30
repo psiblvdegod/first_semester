@@ -175,25 +175,26 @@ void distributeCities(Graph *graph, int *errorCode) {
         free(states);
         return;
     }
-    for (Value i = 0, distributed = 0; distributed != statesAmount; i == statesAmount ? i = 0 : ++i) {
+    for (Value i = 0, distributed = 0; distributed < statesAmount; i == statesAmount ? i = 0 : ++i) {
         if (states[i] == NULL) {
             continue;
         }
         List *linked = states[i]->linkedVertices;
-        long closest = -1;
+        long attachingCity = -1;
         while (!isListEmpty(linked, errorCode)) {
-            closest = (long)getNumber(popFromList(linked, errorCode), errorCode);
+            long closest = popFromList(linked, errorCode);
             if (graph->vertices[closest]->state == -1) {
+                attachingCity = closest;
                 break;
             }
         }
-        if (closest == -1) {
-            states[i] = NULL;
+        if (attachingCity == -1) {
             ++distributed;
+            states[i] = NULL;
             continue;
         }
-        graph->vertices[closest]->state = states[i]->state;
-        mergeLists(states[i]->linkedVertices, graph->vertices[closest]->linkedVertices, errorCode);
+        graph->vertices[attachingCity]->state = states[i]->state;
+        mergeLists(states[i]->linkedVertices, graph->vertices[attachingCity]->linkedVertices, errorCode);
     }
 }
 

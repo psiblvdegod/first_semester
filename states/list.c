@@ -83,12 +83,12 @@ List *copyList(List *list, int *errorCode) {
     return copy;
 }
 
-ListElement *popFromList(List *list, int *errorCode) {
+Value popFromList(List *list, int *errorCode) {
     if (list == NULL || list->head == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return 0;
     }
-    ListElement *result = list->head;
+    Value result = list->head->number;
     list->head = list->head->next;
     return result;
 }
