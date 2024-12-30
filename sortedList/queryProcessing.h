@@ -5,4 +5,4 @@
 // process user query.
 // returns false if program should stop working,
 // else returns true.
-bool queryProcessing(List list, int *errorCode);
+bool queryProcessing(List *list, int *errorCode);

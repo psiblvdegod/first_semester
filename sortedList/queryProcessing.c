@@ -1,13 +1,9 @@
 #include "queryProcessing.h"
+#include "errorCode.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define MEMORY_ALLOCATION_ERROR 44
-#define TESTS_FAILED_ERROR (-1)
-#define NO_ERRORS 0
-
-bool queryProcessing(List list, int *errorCode) {
+bool queryProcessing(List *list, int *errorCode) {
     if (errorCode == NULL) {
         return false;
     }
@@ -23,23 +19,15 @@ bool queryProcessing(List list, int *errorCode) {
         case '0':
             break;
         case '1': {
-            Value newValue = calloc(50, sizeof(char));
-            if (newValue == NULL) {
-                *errorCode = MEMORY_ALLOCATION_ERROR;
-                return false;
-            }
+            char newValue[50] = { '0' };
             printf("Enter value you want to add. No more 50 symbols\n");
             inputValidation = scanf("%s", newValue);
             while(getchar() != '\n');
             if (inputValidation != 1) {
                 printf("Invalid value.\n");
-                free(newValue);
                 break;
             }
             const bool wasInsertSuccessful = insertInList(list, newValue, errorCode);
-            if (*errorCode != NO_ERRORS) {
-                free(newValue);
-            }
             printf("Element was%s added.\n", wasInsertSuccessful ? "" : " not");
             break;
         }

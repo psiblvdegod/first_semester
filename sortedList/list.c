@@ -1,12 +1,8 @@
+#include "errorCode.h"
 #include "list.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define MEMORY_ALLOCATION_ERROR 44
-#define TESTS_FAILED_ERROR (-1)
-#define NO_ERRORS 0
 
 typedef struct ListElement {
     Value value;
@@ -17,8 +13,8 @@ struct List {
     ListElement *head;
 };
 
-List createList(int *errorCode) {
-    List list = calloc(1, sizeof(struct List));
+List *createList(int *errorCode) {
+    List *list = calloc(1, sizeof(struct List));
     if (list == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
@@ -35,7 +31,7 @@ ListElement *insertRecursive(ListElement *current, ListElement *newElement) {
     return current;
 }
 
-bool insertInList(List list, Value value, int *errorCode) {
+bool insertInList(List *list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
@@ -45,7 +41,13 @@ bool insertInList(List list, Value value, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return false;
     }
-    newElement->value = value;
+    Value newValue = calloc(VALUE_SIZE, sizeof(char));
+    if (newValue == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(newElement);
+        return false;
+    }
+    newElement->value = strcpy(newValue, value);
     if (list->head == NULL) {
         list->head = newElement;
         return true;
@@ -68,7 +70,7 @@ ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChan
     return current;
 }
 
-bool deleteFromList(List list, Value value, int *errorCode) {
+bool deleteFromList(List *list, Value value, int *errorCode) {
     if (list == NULL || value == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
@@ -81,7 +83,7 @@ bool deleteFromList(List list, Value value, int *errorCode) {
     return isSizeChanged;
 }
 
-void printList(List list, int *errorCode) {
+void printList(List *list, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -99,7 +101,7 @@ void printList(List list, int *errorCode) {
     printf("\n");
 }
 
-bool searchInList(List list, Value value, int *errorCode) {
+bool searchInList(List *list, Value value, int *errorCode) {
     if (list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
@@ -117,7 +119,7 @@ bool searchInList(List list, Value value, int *errorCode) {
     return false;
 }
 
-void deleteList(List *list, int *errorCode) {
+void deleteList(List **list, int *errorCode) {
     if (list == NULL || *list == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
