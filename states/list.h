@@ -17,7 +17,7 @@ void deleteList(List **list, int *errorCode);
 // adds element to list
 void addToList(List *list, Value number, Value distance, int *errorCode);
 
-// if there is such elements in the list returns true
+// if there is elements with such number in the list returns true
 // else returns false
 bool searchInList(List *list, Value number, int *errorCode);
 
@@ -31,7 +31,7 @@ Value getNumber(ListElement* listElement, int *errorCode);
 // returns value from field "distance"
 Value getDistance(ListElement* listElement, int *errorCode);
 
-// returns first element of the list
+// returns last element in the list
 ListElement *getHead(List *list, int *errorCode);
 
 // if there is next element in the list returns it

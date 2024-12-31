@@ -3,12 +3,6 @@
 #include "errno.h"
 #include <stdio.h>
 
-void setEdge(Graph *graph, Value number1, Value number2, Value edgeLength, int *errorCode);
-
-void distributeCities(Graph *graph, int *errorCode);
-
-void setCapital(Graph *graph, Value city, int *errorCode);
-
 Value scanNumber(FILE *file, int *errorCode) {
     char buffer[16] = {'0'};
     if (fscanf(file, "%s", buffer) != 1) {
