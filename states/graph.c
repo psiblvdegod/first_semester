@@ -88,6 +88,10 @@ void setEdge(Graph *graph, const Value number1, const Value number2, const Value
     if (*errorCode != NO_ERRORS) {
         return;
     }
+    if (number1 >= graph->verticesAmount || number2 >= graph->verticesAmount) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
     List *linkedWithFirst = graph->vertices[number1]->linkedVertices;
     List *linkedWithSecond = graph->vertices[number2]->linkedVertices;
     if (searchInList(linkedWithFirst, number2, errorCode) || searchInList(linkedWithSecond, number1, errorCode)) {
@@ -181,11 +185,11 @@ void distributeCities(Graph *graph, int *errorCode) {
         return;
     }
     for (Value i = 0, distributed = 0; distributed < statesAmount; ++i) {
-        if (states[i] == NULL) {
-            continue;
-        }
         if (i == statesAmount) {
             i = 0;
+        }
+        if (states[i] == NULL) {
+            continue;
         }
         bool wasFreeCityFound = false;
         const Value closestCity = findClosest(graph, states[i]->borderCities, &wasFreeCityFound, errorCode);
@@ -220,6 +224,8 @@ Value *getStateAffiliation(Graph *graph, Value *citiesAmount, int *errorCode) {
     for (Value i = 0; i < graph->verticesAmount; ++i) {
         stateAffiliation[i] = graph->vertices[i]->state;
     }
-    *citiesAmount = graph->verticesAmount;
+    if (citiesAmount != NULL) {
+        *citiesAmount = graph->verticesAmount;
+    }
     return stateAffiliation;
 }

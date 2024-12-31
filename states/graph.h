@@ -19,7 +19,7 @@ void distributeCities(Graph *graph, int *errorCode);
 // frees allocated memory and turns pointer NULL
 void deleteGraph(Graph **graph, int *errorCode);
 
-// created for testing.
+// created for tests.
 // returns array containing the affiliation of cities to states.
 // index corresponds to the city number,
 // value corresponds to the state to which the city belongs.
