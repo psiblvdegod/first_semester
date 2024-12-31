@@ -1,5 +1,4 @@
 #include "errorCode.h"
-#include "errno.h"
 #include "graph.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,7 +104,6 @@ void setEdge(Graph *graph, const Value number1, const Value number2, const Value
     if (searchInList(linkedWithFirst, number2, errorCode) || searchInList(linkedWithSecond, number1, errorCode)) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
-        // an attempt to establish an existing edge
     }
     addToList(linkedWithFirst, number2, edgeLength, errorCode);
     addToList(linkedWithSecond, number1, edgeLength, errorCode);
@@ -120,22 +118,12 @@ void setCapital(Graph *graph, const Value city, int *errorCode) {
     graph->vertices[city]->state = city;
 }
 
-Value scanNumber(FILE *file, int *errorCode) {
-    char buffer[16] = {'0'};
-    if (fscanf(file, "%s", buffer) != 1) {
-        *errorCode = INCORRECT_EXPRESSION_IN_FILE;
-        return 0;
-    }
-    Value result = strtoul(buffer, NULL, 10);
-    if (errno != 0) {
-        *errorCode = INCORRECT_EXPRESSION_IN_FILE;
-        errno = 0;
-        return 0;
-    }
-    return result;
-}
+typedef struct State {
+    Value number;
+    List *borderCities;
+} State;
 
-Vertex **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
+State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
@@ -145,16 +133,16 @@ Vertex **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
             ++(*statesAmount);
         }
     }
-    Vertex **states = calloc(*statesAmount, sizeof(Vertex *));
+    State **states = calloc(*statesAmount, sizeof(State *));
     if (states == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
     for (Value i = 0, j = 0; i < graph->verticesAmount; ++i) {
         if (graph->vertices[i]->isCapital) {
-            states[j] = createVertex(i, errorCode);
-            states[j]->state = i;
-            states[j]->linkedVertices = copyList(graph->vertices[i]->linkedVertices, errorCode);
+            states[j] = calloc(1, sizeof(State));
+            states[j]->number = i;
+            states[j]->borderCities = copyList(graph->vertices[i]->linkedVertices, errorCode);
             ++j;
         }
     }
@@ -176,7 +164,7 @@ Value findClosest(Graph *graph, List *linkedVertices, bool *wasFreeCityFound, in
             return 0;
         }
         if (graph->vertices[number]->state == -1 && (distance < currentMinDistance || !(*wasFreeCityFound))) {
-            currentMinDistance = (long)distance;
+            currentMinDistance = distance;
             result = number;
             *wasFreeCityFound = true;
         }
@@ -191,10 +179,10 @@ void distributeCities(Graph *graph, int *errorCode) {
         return;
     }
     Value statesAmount = 0;
-    Vertex **states = getStates(graph, &statesAmount, errorCode);
+    State **states = getStates(graph, &statesAmount, errorCode);
     if (*errorCode != NO_ERRORS) {
         for (Value i = 0; i < statesAmount; ++i) {
-            deleteList(&states[i]->linkedVertices, errorCode);
+            deleteList(&states[i]->borderCities, errorCode);
             free(states[i]);
         }
         free(states);
@@ -205,76 +193,21 @@ void distributeCities(Graph *graph, int *errorCode) {
             continue;
         }
         bool wasFreeCityFound = false;
-        const Value closestCity = findClosest(graph, states[i]->linkedVertices, &wasFreeCityFound, errorCode);
+        const Value closestCity = findClosest(graph, states[i]->borderCities, &wasFreeCityFound, errorCode);
         if (!wasFreeCityFound) {
             ++distributed;
-            free(states[i]->linkedVertices);
+            free(states[i]->borderCities);
             free(states[i]);
             states[i] = NULL;
             continue;
         }
-        graph->vertices[closestCity]->state = states[i]->state;
+        graph->vertices[closestCity]->state = states[i]->number;
         List *copy = copyList(graph->vertices[closestCity]->linkedVertices, errorCode);
         ListElement *current = getHead(copy, errorCode);
         while (current != NULL) {
-            addToList(states[i]->linkedVertices, getNumber(current, errorCode), getDistance(current, errorCode), errorCode);
+            addToList(states[i]->borderCities, getNumber(current, errorCode), getDistance(current, errorCode), errorCode);
             current = getNext(current, errorCode);
         }
     }
     free(states);
 }
-
-Graph *buildGraph(const char *filePath, int *errorCode) {
-    FILE *file = fopen(filePath, "r");
-    if (file == NULL) {
-        *errorCode = FILE_OPENING_ERROR;
-        return NULL;
-    }
-    const Value verticesAmount = scanNumber(file, errorCode);
-    const Value edgesAmount = scanNumber(file, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        fclose(file);
-        return NULL;
-    }
-    Graph *graph = createGraph(verticesAmount, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        fclose(file);
-        return NULL;
-    }
-    for (Value i = 0; i < edgesAmount; ++i) {
-        const Value vertex1 = scanNumber(file, errorCode);
-        const Value vertex2 = scanNumber(file, errorCode);
-        const Value length = scanNumber(file, errorCode);
-        setEdge(graph, vertex1, vertex2, length, errorCode);
-        if (*errorCode != NO_ERRORS) {
-            fclose(file);
-            deleteGraph(&graph, errorCode);
-            return NULL;
-        }
-    }
-    const size_t capitalsAmount = scanNumber(file, errorCode);
-    for (size_t k = 0; k < capitalsAmount; ++k) {
-        const size_t capital = scanNumber(file, errorCode);
-        setCapital(graph, capital, errorCode);
-    }
-    fclose(file);
-    if (*errorCode != NO_ERRORS) {
-        deleteGraph(&graph, errorCode);
-        return NULL;
-    }
-    distributeCities(graph, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        deleteGraph(&graph, errorCode);
-    }
-    return graph;
-}
-
-void printAdjacencyLists(Graph *graph, int *errorCode) {
-    for (Value i = 0; i < graph->verticesAmount; ++i) {
-        Vertex *vertex = graph->vertices[i];
-        printf("%zu: ", vertex->number);
-        printList(vertex->linkedVertices, errorCode);
-        printf("\n");
-    }
-}
-

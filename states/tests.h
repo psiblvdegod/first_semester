@@ -4,4 +4,4 @@
 #include "graph.h"
 
 // tests functions from module graph.c
-bool graphTests();
+int graphTests();
