@@ -14,19 +14,23 @@ int graphTests() {
     setEdge(graph, 2, 3, 10, &errorCode);
     setEdge(graph, 4, 5, 10, &errorCode);
     if (errorCode != NO_ERRORS) {
+        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
     setCapital(graph, 0, &errorCode);
     setCapital(graph, 4, &errorCode);
     if (errorCode != NO_ERRORS) {
+        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
     distributeCities(graph, &errorCode);
     if (errorCode != NO_ERRORS) {
+        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
     Value *stateAffiliation = getStateAffiliation(graph, NULL, &errorCode);
     if (errorCode != NO_ERRORS) {
+        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
     deleteGraph(&graph, &errorCode);

@@ -39,6 +39,11 @@ Graph *buildGraph(const char *filePath, int *errorCode) {
         const Value vertex1 = scanNumber(file, errorCode);
         const Value vertex2 = scanNumber(file, errorCode);
         const Value length = scanNumber(file, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            fclose(file);
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
         setEdge(graph, vertex1, vertex2, length, errorCode);
         if (*errorCode != NO_ERRORS) {
             fclose(file);
@@ -47,9 +52,19 @@ Graph *buildGraph(const char *filePath, int *errorCode) {
         }
     }
     const size_t capitalsAmount = scanNumber(file, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        fclose(file);
+        deleteGraph(&graph, errorCode);
+        return NULL;
+    }
     for (size_t k = 0; k < capitalsAmount; ++k) {
         const size_t capital = scanNumber(file, errorCode);
         setCapital(graph, capital, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            fclose(file);
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
     }
     fclose(file);
     if (*errorCode != NO_ERRORS) {

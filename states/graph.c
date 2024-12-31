@@ -134,16 +134,21 @@ State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
     for (Value i = 0, j = 0; i < graph->verticesAmount; ++i) {
         if (graph->vertices[i]->isCapital) {
             states[j] = calloc(1, sizeof(State));
+            if (states[j] == NULL) {
+                *errorCode = MEMORY_ALLOCATION_ERROR;
+                break;
+            }
             states[j]->number = i;
             states[j]->borderCities = copyList(graph->vertices[i]->linkedVertices, errorCode);
-            ++j;
             if (*errorCode != NO_ERRORS) {
                 break;
             }
+            ++j;
         }
     }
     if (*errorCode != NO_ERRORS) {
         for (Value i = 0; i < *statesAmount; ++i) {
+            free(states[i]->borderCities);
             free(states[i]);
         }
         free(states);
@@ -187,11 +192,6 @@ void distributeCities(Graph *graph, int *errorCode) {
     Value statesAmount = 0;
     State **states = getStates(graph, &statesAmount, errorCode);
     if (*errorCode != NO_ERRORS) {
-        for (Value i = 0; i < statesAmount; ++i) {
-            deleteList(&states[i]->borderCities, errorCode);
-            free(states[i]);
-        }
-        free(states);
         return;
     }
     for (Value i = 0, distributed = 0; distributed < statesAmount; ++i) {
