@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 
-#define WORD_SIZE 50
+#define WORD_MAX_SIZE 50
 #define HASH_TABLE_INITIAL_SIZE 10
 
 typedef char *Key;

@@ -15,7 +15,7 @@ List *createElement(Key key, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
-    Key keyCopy = calloc(WORD_SIZE, sizeof(char));
+    Key keyCopy = calloc(WORD_MAX_SIZE, sizeof(char));
     if (keyCopy == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         free(newElement);
@@ -265,8 +265,12 @@ void deleteHashTable(HashTable **hashTable, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    verifyHashTableInvariants(*hashTable, errorCode);
-    if (*errorCode != NO_ERRORS) {
+    if (*hashTable == NULL) {
+        return;
+    }
+    if ((*hashTable)->table == NULL) {
+        free(*hashTable);
+        *hashTable = NULL;
         return;
     }
     for (size_t i = 0; i < (*hashTable)->size; ++i) {
