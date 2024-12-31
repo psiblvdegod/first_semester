@@ -8,23 +8,33 @@ typedef struct ListElement ListElement;
 
 typedef size_t Value;
 
+// creates empty list
 List *createList(int *errorCode);
 
+// frees allocated memory, turns pointer NULL
 void deleteList(List **list, int *errorCode);
 
+// adds element to list
 void addToList(List *list, Value number, Value distance, int *errorCode);
 
-bool searchInList(List *list, Value value, int *errorCode);
+// if there is such elements in the list returns true
+// else returns false
+bool searchInList(List *list, Value number, int *errorCode);
 
+// allocates memory and copies list to it
+// returns pointer to list-copy
 List *copyList(List *list, int *errorCode);
 
-void printList(List *list, int *errorCode);
-
+// returns value from field "number"
 Value getNumber(ListElement* listElement, int *errorCode);
 
+// returns value from field "distance"
 Value getDistance(ListElement* listElement, int *errorCode);
 
+// returns first element of the list
 ListElement *getHead(List *list, int *errorCode);
 
+// if there is next element in the list returns it
+// else returns NULL
 ListElement *getNext(ListElement* listElement, int *errorCode);
 

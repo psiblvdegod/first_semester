@@ -10,18 +10,6 @@ typedef struct Vertex {
     struct List *linkedVertices;
 } Vertex;
 
-Vertex *createVertex(const Value number, int *errorCode) {
-    Vertex *vertex = calloc(1, sizeof(Vertex));
-    if (vertex == NULL) {
-        *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
-    }
-    vertex->number = number;
-    vertex->state = -1;
-    vertex->linkedVertices = createList(errorCode);
-    return vertex;
-}
-
 struct Graph {
     Vertex **vertices;
     size_t verticesAmount;
@@ -156,6 +144,9 @@ Value findClosest(Graph *graph, List *linkedVertices, bool *wasFreeCityFound, in
         return 0;
     }
     ListElement *current = getHead(linkedVertices, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return 0;
+    }
     Value result = 0;
     Value currentMinDistance = 0;
     while (current != NULL) {

@@ -1,6 +1,5 @@
 #include "errorCode.h"
 #include "list.h"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -88,18 +87,6 @@ bool searchInList(List *list, Value number, int *errorCode) {
         current = current->next;
     }
     return false;
-}
-
-void printList(List *list, int *errorCode) {
-    if (list == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    ListElement *current = list->head;
-    while (current != NULL) {
-        printf("%zu ", current->number);
-        current = current->next;
-    }
 }
 
 ListElement *getHead(List *list, int *errorCode) {
