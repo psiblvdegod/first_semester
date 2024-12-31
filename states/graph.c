@@ -137,7 +137,17 @@ State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
             states[j]->number = i;
             states[j]->borderCities = copyList(graph->vertices[i]->linkedVertices, errorCode);
             ++j;
+            if (*errorCode != NO_ERRORS) {
+                break;
+            }
         }
+    }
+    if (*errorCode != NO_ERRORS) {
+        for (Value i = 0; i < *statesAmount; ++i) {
+            free(states[i]);
+        }
+        free(states);
+        return NULL;
     }
     return states;
 }

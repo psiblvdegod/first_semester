@@ -4,7 +4,8 @@
 
 typedef struct Graph Graph;
 
-// creates graph with required amount of vertices
+// creates graph with required amount of vertices.
+// vertices are numbered from zero, edges contain positive numbers.
 Graph *createGraph(Value verticesAmount, int *errorCode);
 
 // sets edge between two vertices
