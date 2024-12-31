@@ -4,5 +4,5 @@
 #include "tests.h"
 
 int main(void) {
-    graphTests();
+    return graphTests();
 }

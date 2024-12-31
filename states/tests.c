@@ -8,11 +8,17 @@ int graphTests() {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    Matrix *matrix = buildAdjacencyMatrix(graph, &errorCode);
+    Value citiesAmount = 0;
+    Value *stateAffiliation = getStateAffiliation(graph, &citiesAmount, &errorCode);
     if (errorCode != NO_ERRORS) {
+        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
-    printMatrix(matrix, &errorCode);
-    deleteGraph(&graph, &errorCode);
-    deleteMatrix(&matrix, &errorCode);
+    Value expectedResult[] = {-1, 1, 1, 1, 4, 4, 4};
+    for (Value i = 0; i < citiesAmount; ++i) {
+        if (stateAffiliation[i] != expectedResult[i]) {
+            return TESTS_FAILED_ERROR;
+        }
+    }
+    return errorCode;
 }
