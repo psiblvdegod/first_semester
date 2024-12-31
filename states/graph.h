@@ -9,3 +9,5 @@ Graph *createGraph(Value verticesAmount, int *errorCode);
 void deleteGraph(Graph **graph, int *errorCode);
 
 void printAdjacencyLists(Graph *graph, int *errorCode);
+
+Value **buildAdjacencyMatrix(Graph *graph, int *errorCode);

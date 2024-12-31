@@ -45,18 +45,19 @@ Graph *createGraph(const Value verticesAmount, int *errorCode) {
         return NULL;
     }
     for (Value i = 0; i < verticesAmount; ++i) {
-        graph->vertices[i] = createVertex(i, errorCode);
-        if (*errorCode != NO_ERRORS) {
-            for (Value k = i; ; --k) {
-                free(graph->vertices[k]);
-                if (k == 0) {
-                    break;
-                }
-            }
-            free(graph->vertices);
-            free(graph);
+        graph->vertices[i] = calloc(1, sizeof(Vertex));
+        if (graph->vertices[i] == NULL) {
+            *errorCode = MEMORY_ALLOCATION_ERROR;
+            deleteGraph(&graph, errorCode);
             return NULL;
         }
+        graph->vertices[i]->linkedVertices = createList(errorCode);
+        if (*errorCode != NO_ERRORS) {
+            deleteGraph(&graph, errorCode);
+            return NULL;
+        }
+        graph->vertices[i]->number = i;
+        graph->vertices[i]->state = -1;
     }
     return graph;
 }
@@ -77,19 +78,19 @@ void verifyGraphInvariants(Graph *graph, int *errorCode) {
 }
 
 void deleteGraph(Graph **graph, int *errorCode) {
-    if (graph == NULL) {
+    if (graph == NULL || *graph == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    verifyGraphInvariants(*graph, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
+    if ((*graph)->vertices != NULL) {
+        for (Value i = 0; i < (*graph)->verticesAmount; ++i) {
+            if ((*graph)->vertices[i] != NULL) {
+                deleteList(&((*graph)->vertices[i]->linkedVertices), errorCode);
+                free((*graph)->vertices[i]);
+            }
+        }
+        free((*graph)->vertices);
     }
-    for (Value i = 0; i < (*graph)->verticesAmount; ++i) {
-        deleteList(&((*graph)->vertices[i]->linkedVertices), errorCode);
-        free((*graph)->vertices[i]);
-    }
-    free((*graph)->vertices);
     free(*graph);
     *graph = NULL;
 }
@@ -188,9 +189,12 @@ void distributeCities(Graph *graph, int *errorCode) {
         free(states);
         return;
     }
-    for (Value i = 0, distributed = 0; distributed < statesAmount; i == statesAmount ? i = 0 : ++i) {
+    for (Value i = 0, distributed = 0; distributed < statesAmount; ++i) {
         if (states[i] == NULL) {
             continue;
+        }
+        if (i == statesAmount) {
+            i = 0;
         }
         bool wasFreeCityFound = false;
         const Value closestCity = findClosest(graph, states[i]->borderCities, &wasFreeCityFound, errorCode);
@@ -210,4 +214,63 @@ void distributeCities(Graph *graph, int *errorCode) {
         }
     }
     free(states);
+}
+
+void deleteMatrix(Value ***matrix, Value size, int *errorCode) {
+    if (matrix == NULL || *matrix) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    for (Value i = 0; i < size; ++i) {
+        free((*matrix)[i]);
+    }
+    free(*matrix);
+    *matrix = NULL;
+}
+
+Value **createMatrix(const Value size, int *errorCode) {
+    if (size < 1) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return NULL;
+    }
+    Value **matrix = calloc(size, sizeof(Value *));
+    if (matrix == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        return NULL;
+    }
+    for (Value i = 0; i < size; ++i) {
+        matrix[i] = calloc(size, sizeof(Value));
+        if (matrix[i] == NULL) {
+            *errorCode = MEMORY_ALLOCATION_ERROR;
+            deleteMatrix(&matrix, size, errorCode);
+            return NULL;
+        }
+    }
+    return matrix;
+}
+
+Value **buildAdjacencyMatrix(Graph *graph, int *errorCode) {
+    verifyGraphInvariants(graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
+    Value **matrix = createMatrix(graph->verticesAmount, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
+    for (Value i = 0; i < graph->verticesAmount; ++i) {
+        ListElement *current = getHead(graph->vertices[i]->linkedVertices, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            deleteMatrix(&matrix, graph->verticesAmount, errorCode);
+            return NULL;
+        }
+        while (current != NULL) {
+            matrix[i][getNumber(current, errorCode)] = getDistance(current, errorCode);
+            if (*errorCode != NO_ERRORS) {
+                deleteMatrix(&matrix, graph->verticesAmount, errorCode);
+                return NULL;
+            }
+            current = getNext(current, errorCode);
+        }
+    }
 }
