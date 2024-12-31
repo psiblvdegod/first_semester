@@ -3,28 +3,25 @@
 #include "errorCode.h"
 #include <string.h>
 
-void treeTests(int *errorCode) {
-    Node *root = NULL;
-    root = insert(root, "0", 0, errorCode);
-    root = insert(root, "-10", -10, errorCode);
-    root = insert(root, "10", 10, errorCode);
-    root = insert(root, "20", 20, errorCode);
-    root = insert(root, "15", 15, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
+int treeTests() {
+    int errorCode = NO_ERRORS;
+    Node *root = nullptr;
+    root = insertInTree(root, "111", 1, &errorCode);
+    root = insertInTree(root, "222", 2, &errorCode);
+    root = insertInTree(root, "333", 3, &errorCode);
+    root = insertInTree(root, "444", 4, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteTree(&root, &errorCode);
+        return errorCode;
     }
-    root = dispose(root, 0, errorCode);
-    root = dispose(root, -10, errorCode);
-    root = dispose(root, 20, errorCode);
-    root = dispose(root, -20, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
+    bool wasDeletionSuccessful = false;
+    root = deleteFromTree(root, 1, &wasDeletionSuccessful, &errorCode);
+    const bool test1 = strcmp(searchInTree(root, 3), "333") == 0;
+    const bool test2 = searchInTree(root, 5) == NULL;
+    deleteTree(&root, &errorCode);
+    const bool test = test1 && test2 && wasDeletionSuccessful;
+    if (errorCode == NO_ERRORS && !test) {
+        return TESTS_FAILED_ERROR;
     }
-    const bool searchTest1 = strcmp(search(root, 15), "15") == 0;
-    const bool searchTest2 = search(root, -20) == NULL;
-    const bool test = searchTest1 && searchTest2;
-    deleteTree(&root, errorCode);
-    if (*errorCode == NO_ERRORS && !test) {
-        *errorCode = TESTS_FAILED_ERROR;
-    }
+    return errorCode;
 }

@@ -36,5 +36,21 @@ bool deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
-    dictionary->root = deleteFromTree(dictionary->root, key, errorCode);
+    bool wasDeletionSuccessful = false;
+    dictionary->root = deleteFromTree(dictionary->root, key, &wasDeletionSuccessful, errorCode);
+    return wasDeletionSuccessful;
+}
+
+void deleteDictionary(Dictionary **dictionary, int *errorCode) {
+    if (dictionary == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (*dictionary == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    deleteTree(&(*dictionary)->root, errorCode);
+    free(*dictionary);
+    *dictionary = nullptr;
 }

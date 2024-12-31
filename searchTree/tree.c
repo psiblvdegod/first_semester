@@ -43,26 +43,30 @@ Node *insertRecursive(Node *node, Node *newNode) {
 }
 
 Node *insertInTree(Node *root, Value value, Key key, int *errorCode) {
-    Node *newNode = createNode(value, key, errorCode);
+    if (value == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return nullptr;
+    }
+    Node *newNode = createNode(strdup(value), key, errorCode);
     if (*errorCode != NO_ERRORS) {
         return nullptr;
     }
     return insertRecursive(root, newNode);
 }
 
-Node *deleteRecursive(Node *node, Key key, bool *wasDeletionSuccessful, int *errorCode) {
+Node *deleteRecursive(Node *node, Key key, bool *wasDeletionSuccessful) {
     if (node == nullptr) {
         *wasDeletionSuccessful = false;
         return node;
     }
     if (key < node->key) {
-        node->leftChild = deleteRecursive(node->leftChild, key, wasDeletionSuccessful, errorCode);
+        node->leftChild = deleteRecursive(node->leftChild, key, wasDeletionSuccessful);
     }
     else if (key > node->key) {
-        node->rightChild = deleteRecursive(node->rightChild, key, wasDeletionSuccessful, errorCode);
+        node->rightChild = deleteRecursive(node->rightChild, key, wasDeletionSuccessful);
     }
     else {
-        Node *children = insertRecursive(node->leftChild, node->rightChild, errorCode);
+        Node *children = insertRecursive(node->leftChild, node->rightChild);
         free(node->value);
         free(node);
         *wasDeletionSuccessful = true;
@@ -76,7 +80,7 @@ Node *deleteFromTree(Node *node, Key key, bool *wasDeletionSuccessful, int *erro
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    return deleteRecursive(node, key, wasDeletionSuccessful, errorCode);
+    return deleteRecursive(node, key, wasDeletionSuccessful);
 }
 
 Value searchInTree(Node *node, Key key) {
@@ -100,6 +104,7 @@ void freeNodes(Node *node) {
     }
     freeNodes(node->leftChild);
     freeNodes(node->rightChild);
+    free(node->value);
     free(node);
 }
 

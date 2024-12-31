@@ -1,6 +1,6 @@
 #pragma once
 #include <stdbool.h>
-
+#define WORD_MAX_SIZE 50
 typedef struct Node Node;
 
 typedef char *Value;

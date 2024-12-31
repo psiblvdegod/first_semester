@@ -1,31 +1,26 @@
 #include "queryProcessing.h"
+#include "dictionary.h"
 #include "errorCode.h"
-#include "tree.h"
 #include "tests.h"
 #include <stdio.h>
 
 int main(void) {
-    int errorCode = NO_ERRORS;
-    treeTests(&errorCode);
+    int errorCode = treeTests();
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    Node *root = nullptr;
+    Dictionary *dictionary = createDictionary(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
     int userQuery = -1;
     while (userQuery != 0) {
-        printf("0 - exit // 1 - insert // 2 - search // 3 - check // 4 - dispose\n");
+        printf("0 - exit // 1 - insert // 2 - search // 3 - check // 4 - delete\n");
         userQuery = scanNumber(&errorCode);
-        processQuery(&root, userQuery, &errorCode);
-        if (errorCode != NO_ERRORS) {
-            if (errorCode == QUERY_READING_ERROR) {
-                printf("Invalid value.\n");
-                errorCode = NO_ERRORS;
-            }
-            else {
-                break;
-            }
-        }
+        while (getchar() != '\n');
+        processQuery(dictionary, userQuery, &errorCode);
+        while (getchar() != '\n');
     }
-    deleteTree(&root, &errorCode);
+    deleteDictionary(&dictionary, &errorCode);
     return errorCode;
 }
