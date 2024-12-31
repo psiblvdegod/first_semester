@@ -2,13 +2,13 @@
 #include "errorCode.h"
 #include <stdio.h>
 
-HashTable *getFrequenciesFromFile(const size_t hashTableSize, const char *filePath, int *errorCode) {
+HashTable *getFrequenciesFromFile(const char *filePath, int *errorCode) {
     FILE *file = fopen(filePath, "r");
     if (file == NULL) {
         *errorCode = FILE_OPENING_ERROR;
         return NULL;
     }
-    HashTable *hashTable = createHashTable(hashTableSize, errorCode);
+    HashTable *hashTable = createHashTable(errorCode);
     if (*errorCode != NO_ERRORS) {
         fclose(file);
         return NULL;

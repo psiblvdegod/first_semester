@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define WORD_SIZE 50
+#define HASH_TABLE_INITIAL_SIZE 10
 
 typedef char *Key;
 
@@ -9,9 +10,10 @@ typedef unsigned int Value;
 
 typedef struct HashTable HashTable;
 
-// creates empty hash table with of required size,
+// creates empty hash table.
+// HASH_TABLE_INITIAL_SIZE defines initial size of hash table.
 // hashtable will expand as elements are added.
-HashTable *createHashTable(size_t hashTableSize, int *errorCode);
+HashTable *createHashTable(int *errorCode);
 
 // if there is element with such key in the table,
 // increases frequency by one.

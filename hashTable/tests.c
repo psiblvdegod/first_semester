@@ -4,8 +4,7 @@
 
 int hashTableTests() {
     int errorCode = NO_ERRORS;
-    const size_t hashTableSize = 1;
-    HashTable *hashTable = createHashTable(hashTableSize, &errorCode);
+    HashTable *hashTable = createHashTable(&errorCode);
     addWordToHashTable(&hashTable, "1", &errorCode);
     addWordToHashTable(&hashTable, "2", &errorCode);
     addWordToHashTable(&hashTable, "2", &errorCode);
@@ -22,8 +21,7 @@ int hashTableTests() {
 
 int hashTableFileTest() {
     int errorCode = NO_ERRORS;
-    const size_t hashTableSize = 10;
-    HashTable *hashTable = getFrequenciesFromFile(hashTableSize, "../text.txt", &errorCode);
+    HashTable *hashTable = getFrequenciesFromFile("../text.txt", &errorCode);
     const bool test1 = findFrequency(hashTable, "777", &errorCode) == 7;
     const bool test2 = findFrequency(hashTable, "", &errorCode) == 0;
     const bool test = test1 && test2;

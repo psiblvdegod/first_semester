@@ -66,19 +66,19 @@ struct HashTable {
 
 void verifyHashTableInvariants(HashTable *hashtable, int *errorCode) {
     if (hashtable == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        *errorCode = INVARIANT_VIOLATION;
         return;
     }
     if (hashtable->table == NULL) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        *errorCode = INVARIANT_VIOLATION;
         return;
     }
     if (hashtable->size < 1) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        *errorCode = INVARIANT_VIOLATION;
         return;
     }
     if (hashtable->elementsAmount < 0) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        *errorCode = INVARIANT_VIOLATION;
         return;
     }
 }
@@ -99,7 +99,7 @@ size_t hashFunction(const size_t hashTableSize, Key key, int *errorCode) {
     return result;
 }
 
-HashTable *createHashTable(const size_t size, int *errorCode) {
+HashTable *allocateMemoryForHashTable(const size_t size, int *errorCode) {
     if (size < 1) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
@@ -118,6 +118,10 @@ HashTable *createHashTable(const size_t size, int *errorCode) {
     return hashTable;
 }
 
+HashTable *createHashTable(int *errorCode) {
+    return allocateMemoryForHashTable(HASH_TABLE_INITIAL_SIZE, errorCode);
+}
+
 void expandHashTable(HashTable **hashTable, int *errorCode) {
     if (hashTable == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
@@ -128,11 +132,14 @@ void expandHashTable(HashTable **hashTable, int *errorCode) {
         return;
     }
     const double fillFactor = calculateFillFactor(*hashTable, errorCode);
-    if (fillFactor < 2 || *errorCode != NO_ERRORS) {
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    if (fillFactor < 2) {
         return;
     }
     const size_t newSize = (size_t)(fillFactor * (double)(*hashTable)->size * 2);
-    HashTable *newHashTable = createHashTable(newSize, errorCode);
+    HashTable *newHashTable = allocateMemoryForHashTable(newSize, errorCode);
     if (*errorCode != NO_ERRORS) {
         return;
     }
