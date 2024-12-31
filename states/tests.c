@@ -49,8 +49,8 @@ int buildGraphTests(const char *filePath) {
     }
     Value citiesAmount = 0;
     Value *stateAffiliation = getStateAffiliation(graph, &citiesAmount, &errorCode);
+    deleteGraph(&graph, &errorCode);
     if (errorCode != NO_ERRORS) {
-        deleteGraph(&graph, &errorCode);
         return errorCode;
     }
     Value expectedResult[] = {-1, 1, 1, 1, 4, 4, 4};
