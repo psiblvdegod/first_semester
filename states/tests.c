@@ -30,6 +30,9 @@ int graphTests() {
         return errorCode;
     }
     deleteGraph(&graph, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
     Value expectedResult[] = {0, 0, 0, 0, 4, 4};
     for (Value i = 0; i < verticesAmount; ++i) {
         if (expectedResult[i] != stateAffiliation[i]) {
