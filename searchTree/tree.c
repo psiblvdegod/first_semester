@@ -14,6 +14,7 @@ Node *createNode(Value value, Key key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(value);
         return nullptr;
     }
     node->key = key;

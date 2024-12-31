@@ -27,8 +27,12 @@ bool addToDictionary(Dictionary *dictionary, Value value, Key key, int *errorCod
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
+    if (value == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return false;
+    }
     dictionary->root = insertInTree(dictionary->root, value, key, errorCode);
-    return true;
+    return *errorCode == NO_ERRORS;
 }
 
 bool deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
