@@ -12,29 +12,28 @@ typedef struct Node {
 
 Node *createNode(Value value, Key key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
-    if (node == NULL) {
+    if (node == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     node->key = key;
     node->value = value;
-    node->leftChild = NULL;
-    node->rightChild = NULL;
     return node;
 }
 
-Node *insertRecursive(Node *node, Node *newNode, int *errorCode) {
-    if (newNode == NULL) {
+Node *insertRecursive(Node *node, Node *newNode) {
+    if (newNode == nullptr) {
         return node;
+        // does not report an error cause newNode may be NULL when called from deleteRecursive()
     }
-    if (node == NULL) {
+    if (node == nullptr) {
         return newNode;
     }
     if (newNode->key < node->key) {
-        node->leftChild = insertRecursive(node->leftChild, newNode, errorCode);
+        node->leftChild = insertRecursive(node->leftChild, newNode);
     }
     else if (newNode->key > node->key) {
-        node->rightChild = insertRecursive(node->rightChild, newNode, errorCode);
+        node->rightChild = insertRecursive(node->rightChild, newNode);
     }
     else {
         node->value = newNode->value;
@@ -43,38 +42,45 @@ Node *insertRecursive(Node *node, Node *newNode, int *errorCode) {
     return node;
 }
 
-Node *insert(Node *root, Value value, Key key, int *errorCode) {
-    return insertRecursive(root, createNode(value, key, errorCode), errorCode);
+Node *insertInTree(Node *root, Value value, Key key, int *errorCode) {
+    Node *newNode = createNode(value, key, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return nullptr;
+    }
+    return insertRecursive(root, newNode);
 }
 
-Node *disposeRecursive(Node *node, Key key, int *errorCode) {
-    if (node == NULL) {
+Node *deleteRecursive(Node *node, Key key, bool *wasDeletionSuccessful, int *errorCode) {
+    if (node == nullptr) {
+        *wasDeletionSuccessful = false;
         return node;
     }
     if (key < node->key) {
-        node->leftChild = disposeRecursive(node->leftChild, key, errorCode);
+        node->leftChild = deleteRecursive(node->leftChild, key, wasDeletionSuccessful, errorCode);
     }
     else if (key > node->key) {
-        node->rightChild = disposeRecursive(node->rightChild, key, errorCode);
+        node->rightChild = deleteRecursive(node->rightChild, key, wasDeletionSuccessful, errorCode);
     }
     else {
         Node *children = insertRecursive(node->leftChild, node->rightChild, errorCode);
+        free(node->value);
         free(node);
+        *wasDeletionSuccessful = true;
         return children;
     }
     return node;
 }
 
-Node *dispose(Node *node, Key key, int *errorCode) {
-    if (node == NULL) {
+Node *deleteFromTree(Node *node, Key key, bool *wasDeletionSuccessful, int *errorCode) {
+    if (node == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return nullptr;
     }
-    return disposeRecursive(node, key, errorCode);
+    return deleteRecursive(node, key, wasDeletionSuccessful, errorCode);
 }
 
-Value search(Node *node, Key key) {
-    while (node != NULL) {
+Value searchInTree(Node *node, Key key) {
+    while (node != nullptr) {
         if (key < node->key) {
             node = node->leftChild;
         }
@@ -85,23 +91,23 @@ Value search(Node *node, Key key) {
             return node->value;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
-void freeNodes(Node *node, int *errorCode) {
-    if (node == NULL) {
+void freeNodes(Node *node) {
+    if (node == nullptr) {
         return;
     }
-    freeNodes(node->leftChild, errorCode);
-    freeNodes(node->rightChild, errorCode);
+    freeNodes(node->leftChild);
+    freeNodes(node->rightChild);
     free(node);
 }
 
 void deleteTree(Node **root, int *errorCode) {
-    if (root == NULL) {
+    if (root == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    freeNodes(*root, errorCode);
-    *root = NULL;
+    freeNodes(*root);
+    *root = nullptr;
 }

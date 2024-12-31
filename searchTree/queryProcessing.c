@@ -32,7 +32,7 @@ char *scanString(int *errorCode) {
     return value;
 }
 
-void queryProcessing(Node **root, const int userQuery, int *errorCode) {
+void processQuery(Node **root, const int userQuery, int *errorCode) {
     if (userQuery == 1) {
         printf("Enter value and key.\n");
         char *value = scanString(errorCode);

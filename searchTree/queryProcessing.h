@@ -6,4 +6,4 @@
 int scanNumber(int *errorCode);
 
 // processes user query
-void queryProcessing(Node **root, int userQuery, int *errorCode);
+void processQuery(Node **root, int userQuery, int *errorCode);
