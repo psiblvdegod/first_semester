@@ -216,61 +216,90 @@ void distributeCities(Graph *graph, int *errorCode) {
     free(states);
 }
 
-void deleteMatrix(Value ***matrix, Value size, int *errorCode) {
-    if (matrix == NULL || *matrix) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return;
-    }
-    for (Value i = 0; i < size; ++i) {
-        free((*matrix)[i]);
-    }
-    free(*matrix);
-    *matrix = NULL;
-}
+typedef struct Matrix {
+    Value **value;
+    Value size;
+} Matrix;
 
-Value **createMatrix(const Value size, int *errorCode) {
+Matrix *createMatrix(const Value size, int *errorCode) {
     if (size < 1) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return NULL;
     }
-    Value **matrix = calloc(size, sizeof(Value *));
+    Matrix *matrix = calloc(1, sizeof(Matrix));
     if (matrix == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
+    matrix->size = size;
+    matrix->value = calloc(size, sizeof(Value *));
+    if (matrix->value == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(matrix);
+        return NULL;
+    }
     for (Value i = 0; i < size; ++i) {
-        matrix[i] = calloc(size, sizeof(Value));
-        if (matrix[i] == NULL) {
+        matrix->value[i] = calloc(size, sizeof(Value));
+        if (matrix->value[i] == NULL) {
             *errorCode = MEMORY_ALLOCATION_ERROR;
-            deleteMatrix(&matrix, size, errorCode);
+            deleteMatrix(&matrix, errorCode);
             return NULL;
         }
     }
     return matrix;
 }
 
-Value **buildAdjacencyMatrix(Graph *graph, int *errorCode) {
+void deleteMatrix(Matrix **matrix, int *errorCode) {
+    if (matrix == NULL || *matrix == NULL || (*matrix)->size < 1) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if ((*matrix)->value != NULL) {
+        for (Value i = 0; i < (*matrix)->size; ++i) {
+            free((*matrix)->value[i]);
+        }
+    }
+    free(*matrix);
+    *matrix = NULL;
+}
+
+Matrix *buildAdjacencyMatrix(Graph *graph, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    Value **matrix = createMatrix(graph->verticesAmount, errorCode);
+    Matrix *matrix = createMatrix(graph->verticesAmount, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
     for (Value i = 0; i < graph->verticesAmount; ++i) {
         ListElement *current = getHead(graph->vertices[i]->linkedVertices, errorCode);
         if (*errorCode != NO_ERRORS) {
-            deleteMatrix(&matrix, graph->verticesAmount, errorCode);
+            deleteMatrix(&matrix, errorCode);
             return NULL;
         }
         while (current != NULL) {
-            matrix[i][getNumber(current, errorCode)] = getDistance(current, errorCode);
+            matrix->value[i][getNumber(current, errorCode)] = getDistance(current, errorCode);
             if (*errorCode != NO_ERRORS) {
-                deleteMatrix(&matrix, graph->verticesAmount, errorCode);
+                deleteMatrix(&matrix, errorCode);
                 return NULL;
             }
             current = getNext(current, errorCode);
         }
     }
+    return matrix;
+}
+
+void printMatrix(Matrix *matrix, int *errorCode) {
+    if (matrix == NULL || matrix->value == 0 || matrix->size < 1) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    for (Value i = 0; i < matrix->size; ++i) {
+        for (Value j = 0; j < matrix->size; ++j) {
+            printf("%zu\t", matrix->value[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
 }
