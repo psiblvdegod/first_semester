@@ -17,8 +17,10 @@ int graphTests() {
     Value expectedResult[] = {-1, 1, 1, 1, 4, 4, 4};
     for (Value i = 0; i < citiesAmount; ++i) {
         if (stateAffiliation[i] != expectedResult[i]) {
+            free(stateAffiliation);
             return TESTS_FAILED_ERROR;
         }
     }
+    free(stateAffiliation);
     return errorCode;
 }
