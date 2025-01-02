@@ -122,7 +122,7 @@ void deleteTree(Node **root, int *errorCode) {
     *root = nullptr;
 }
 
-Node *doRecursiveTraversal(Node *node, bool *statusOfInvariant) {
+Node *verifyInvariantRecursive(Node *node, bool *statusOfInvariant) {
     if (node == nullptr) {
         return node;
     }
@@ -141,13 +141,13 @@ Node *doRecursiveTraversal(Node *node, bool *statusOfInvariant) {
             return node;
         }
     }
-    node->leftChild = doRecursiveTraversal(node->leftChild, statusOfInvariant);
-    node->rightChild = doRecursiveTraversal(node->rightChild, statusOfInvariant);
+    node->leftChild = verifyInvariantRecursive(node->leftChild, statusOfInvariant);
+    node->rightChild = verifyInvariantRecursive(node->rightChild, statusOfInvariant);
     return node;
 }
 
 bool verifyBinarySearchTreeInvariant(Node *root) {
     bool statusOfInvariant = true;
-    doRecursiveTraversal(root, &statusOfInvariant);
+    verifyInvariantRecursive(root, &statusOfInvariant);
     return statusOfInvariant;
 }

@@ -25,4 +25,6 @@ Value searchInTree(Node *root, Key key);
 // frees allocated memory, turns pointer NULL
 void deleteTree(Node **root, int *errorCode);
 
+// if tree satisfies binary search tree properties, returns true.
+// else returns false.
 bool verifyBinarySearchTreeInvariant(Node *root);
