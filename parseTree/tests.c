@@ -36,7 +36,9 @@ int treeTests() {
     addChild(root, node1, left, &errorCode);
     addChild(root, node2, right, &errorCode);
     if (errorCode != NO_ERRORS) {
-        deleteTree(&root, &errorCode);
+        free(root);
+        free(node1);
+        free(node2);
         return errorCode;
     }
     const bool getChildTest = getChild(root, left, &errorCode) == node1;
@@ -46,6 +48,62 @@ int treeTests() {
     if (errorCode == NO_ERRORS && !test) {
         return TESTS_FAILED_ERROR;
     }
+    return errorCode;
+}
+
+int queueTest() {
+    int errorCode = NO_ERRORS;
+    Queue *queue = createQueue(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    enqueue(queue, createNode(1, &errorCode), &errorCode);
+    enqueue(queue, createNode(2, &errorCode), &errorCode);
+    enqueue(queue, createNode(3, &errorCode), &errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    const bool test1 = getValue(dequeue(queue, &errorCode), &errorCode) == 1;
+    const bool test2 = getValue(dequeue(queue, &errorCode), &errorCode) == 2;
+    const bool test3 = getValue(dequeue(queue, &errorCode), &errorCode) == 3;
+    deleteQueue(&queue, &errorCode);
+    const bool test = test1 && test2 && test3;
+    if (errorCode == NO_ERRORS && !test) {
+        return TESTS_FAILED_ERROR;
+    }
+    return errorCode;
+}
+
+int treeTraversalTest() {
+    int errorCode = NO_ERRORS;
+    Node *root = createNode('*', &errorCode);;
+    Node *node1 = createNode('+', &errorCode);
+    Node *node2 = createNode('-', &errorCode);
+    if (errorCode != NO_ERRORS) {
+        free(root);
+        free(node1);
+        free(node2);
+        return errorCode;
+    }
+    addChild(root, node1, left, &errorCode);
+    addChild(root, node2, right, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        free(root);
+        free(node1);
+        free(node2);
+        return errorCode;
+    }
+    Queue *queue = fillQueueWithTreeExpression(root, &errorCode);
+    int expectedResult[] = {'*', '+', '-'};
+    for (size_t i = 0; !isEmptyQueue(queue, &errorCode); ++i) {
+        if (getValue(dequeue(queue, &errorCode), &errorCode) != expectedResult[i]) {
+            if (errorCode == NO_ERRORS) {
+                errorCode = TESTS_FAILED_ERROR;
+                break;
+            }
+        }
+    }
+    deleteQueue(&queue, &errorCode);
     return errorCode;
 }
 
@@ -79,6 +137,7 @@ int parseTests(const char *filePath) {
         return errorCode;
     }
     const bool calculateTest = calculateTree(root, &errorCode) == -777;
+    deleteTree(&root, &errorCode);
     if (errorCode == NO_ERRORS && !calculateTest) {
         return TESTS_FAILED_ERROR;
     }

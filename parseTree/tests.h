@@ -9,3 +9,9 @@ int treeTests();
 
 // tests buildTree() and calculateTree() using data from <filePath>
 int parseTests(const char *filePath);
+
+// tests functions from queue.c module
+int queueTest();
+
+// tests fillQueueWithTreeExpression()
+int treeTraversalTest();

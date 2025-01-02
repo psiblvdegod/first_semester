@@ -14,5 +14,10 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
+    errorCode = queueTest();
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    errorCode = treeTraversalTest();
     return errorCode;
 }
