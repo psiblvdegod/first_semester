@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdbool.h>
 
 // tests functions from stack.c module

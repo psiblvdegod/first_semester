@@ -10,14 +10,14 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    errorCode = parseTests("../text.txt");
-    if (errorCode != NO_ERRORS) {
-        return errorCode;
-    }
     errorCode = queueTest();
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
     errorCode = treeTraversalTest();
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    errorCode = parseTests("../text.txt");
     return errorCode;
 }
