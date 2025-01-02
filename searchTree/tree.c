@@ -122,33 +122,32 @@ void deleteTree(Node **root, int *errorCode) {
     *root = nullptr;
 }
 
-Node *recursiveTraversal(Node *node, bool *result) {
-    if (node == nullptr || !*result) {
+Node *doRecursiveTraversal(Node *node, bool *statusOfInvariant) {
+    if (node == nullptr) {
+        return node;
+    }
+    if (!*statusOfInvariant) {
         return node;
     }
     if (node->leftChild != nullptr) {
         if (node->leftChild->key > node->key) {
-            *result = false;
+            *statusOfInvariant = false;
             return node;
         }
     }
     if (node->rightChild != nullptr) {
         if (node->rightChild->key < node->key) {
-            *result = false;
+            *statusOfInvariant = false;
             return node;
         }
     }
-    node->leftChild = recursiveTraversal(node->leftChild, result);
-    node->rightChild = recursiveTraversal(node->rightChild, result);
+    node->leftChild = doRecursiveTraversal(node->leftChild, statusOfInvariant);
+    node->rightChild = doRecursiveTraversal(node->rightChild, statusOfInvariant);
     return node;
 }
 
-bool isTreeBinarySearchTree(Node *root) {
-    if (root == NULL) {
-        return true;
-    }
-    Node *current = root;
-    bool result = true;
-    recursiveTraversal(root, &result);
-    return result;
+bool verifyBinarySearchTreeInvariant(Node *root) {
+    bool statusOfInvariant = true;
+    doRecursiveTraversal(root, &statusOfInvariant);
+    return statusOfInvariant;
 }

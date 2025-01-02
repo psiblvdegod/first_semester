@@ -14,14 +14,14 @@ int treeTests() {
         deleteTree(&root, &errorCode);
         return errorCode;
     }
-    const bool test3 = isTreeBinarySearchTree(root);
+    const bool invariantTest1 = verifyBinarySearchTreeInvariant(root);
     bool wasDeletionSuccessful = false;
     root = deleteFromTree(root, 1, &wasDeletionSuccessful, &errorCode);
-    const bool test4 = isTreeBinarySearchTree(root);
-    const bool test1 = strcmp(searchInTree(root, 3), "333") == 0;
-    const bool test2 = searchInTree(root, 5) == NULL;
+    const bool invariantTest2 = verifyBinarySearchTreeInvariant(root);
+    const bool searchTest1 = strcmp(searchInTree(root, 3), "333") == 0;
+    const bool searchTest2 = searchInTree(root, 5) == NULL;
     deleteTree(&root, &errorCode);
-    const bool test = test1 && test2 && test3 && test4 && wasDeletionSuccessful;
+    const bool test = invariantTest1 && invariantTest2 && searchTest1 && searchTest2 && wasDeletionSuccessful;
     if (errorCode == NO_ERRORS && !test) {
         return TESTS_FAILED_ERROR;
     }

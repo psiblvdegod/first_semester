@@ -25,4 +25,4 @@ Value searchInTree(Node *root, Key key);
 // frees allocated memory, turns pointer NULL
 void deleteTree(Node **root, int *errorCode);
 
-bool isTreeBinarySearchTree(Node *root);
+bool verifyBinarySearchTreeInvariant(Node *root);
