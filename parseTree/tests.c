@@ -58,6 +58,8 @@ int parseTests(const char *filePath) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
+    int expectedResult[] = {'*', 7, '-', 333, 444};
+
     const bool calculateTest = calculateTree(root, &errorCode) == 777;
     if (errorCode == NO_ERRORS && !calculateTest) {
         return TESTS_FAILED_ERROR;

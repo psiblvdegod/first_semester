@@ -10,4 +10,5 @@ add_executable(parseTree
         parse.c
         stack.c
         tests.c
-        tree.c)
+        tree.c
+        queue.c)

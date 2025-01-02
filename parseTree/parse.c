@@ -104,7 +104,7 @@ int calculateTree(Node *node, int *errorCode) {
     }
     Node *leftChild = getChild(node, left, errorCode);
     Node *rightChild = getChild(node, right, errorCode);
-    switch(getValue(node, errorCode)) {
+    switch (getValue(node, errorCode)) {
         case '+':
             return calculateTree(rightChild, errorCode) + calculateTree(leftChild, errorCode);
         case '-':
