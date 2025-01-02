@@ -1,6 +1,7 @@
 #include "tree.h"
 #include "errorCode.h"
 #include <stdlib.h>
+#include <>
 
 typedef struct Node {
     Value value;
@@ -8,15 +9,13 @@ typedef struct Node {
     struct Node *rightChild;
 } Node;
 
-Node * createNode(Value value, int *errorCode) {
+Node *createNode(Value value, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return NULL;
     }
     node->value = value;
-    node->leftChild = NULL;
-    node->rightChild = NULL;
     return node;
 }
 
@@ -69,5 +68,5 @@ void deleteTree(Node **root, int *errorCode) {
         return;
     }
     freeNodes(*root, errorCode);
-    *root = NULL;
+    *root = nullptr;
 }

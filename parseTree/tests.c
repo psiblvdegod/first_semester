@@ -5,7 +5,7 @@
 
 int stackTests() {
     int errorCode = NO_ERRORS;
-    Stack stack = NULL;
+    Stack stack = nullptr;
     push(&stack, createNode('1', &errorCode), &errorCode);
     push(&stack, createNode('2', &errorCode), &errorCode);
     push(&stack, createNode('3', &errorCode), &errorCode);
@@ -45,4 +45,9 @@ int treeTests() {
         return TESTS_FAILED_ERROR;
     }
     return errorCode;
+}
+
+int parseTests() {
+    int errorCode = NO_ERRORS;
+
 }

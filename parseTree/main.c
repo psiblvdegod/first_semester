@@ -4,12 +4,11 @@
 #include "errorCode.h"
 
 int main(void) {
-   int errorCode = NO_ERRORS;
-    stackTests(&errorCode);
+    int errorCode = stackTests();
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    treeTests(&errorCode);
+    errorCode = treeTests();
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }

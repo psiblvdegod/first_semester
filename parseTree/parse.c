@@ -3,50 +3,65 @@
 #include <errno.h>
 #include <stdlib.h>
 
-int getToken(FILE *file, char *type, int *errorCode) {
+typedef enum {
+    insignificant,
+    incorrect,
+    operation,
+    number,
+} TokenType;
+
+int getToken(FILE *file, TokenType *type, int *errorCode) {
     int token = getc(file);
+    if (token == '-') {
+        int next = getc(file);
+        if ('0' <= next && next <= '9') {
+            ungetc(next, file);
+            ungetc(token, file);
+            fscanf(file, "%d", &token);
+            *type = number;
+        }
+        else {
+            *type = operation;
+        }
+    }
     if ('0' <= token && token <= '9') {
         ungetc(token, file);
-        char buffer[16] = {'0'};
-        fscanf(file, "%s", buffer);
-        token = (int)strtol(buffer, NULL, 10);
-        if (errno != 0) {
-            *errorCode = INCORRECT_EXPRESSION_IN_FILE;
-        }
-        *type = 'd';
+        fscanf(file, "%d", &token);
+        *type = number;
     }
     else if (token == ' ' || token == '\n' || token == '\t' || token == '(' || token == ')') {
-        *type = 'c';
+        *type = insignificant;
     }
-    else if (token == '+' || token == '-' || token == '*' || token == '/') {
-        *type = 'o';
+    else if (token == '+' || token == '*' || token == '/') {
+        *type = operation;
     }
     else {
+        *type = incorrect;
         *errorCode = INCORRECT_EXPRESSION_IN_FILE;
     }
     return token;
 }
 
 Node *buildTree(const char *filePath, int *errorCode) {
-    if (filePath == NULL) {
+    if (filePath == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return nullptr;
     }
     FILE *file = fopen(filePath, "r");
-    if (file == NULL) {
+    if (file == nullptr) {
         *errorCode = FILE_OPENING_ERROR;
-        return NULL;
+        return nullptr;
     }
-    Node *root = NULL;
-    Stack stack = NULL;
+    Node *root = nullptr;
+    Stack stack = nullptr;
 
     while (!feof(file)) {
-        char type = 0;
+        TokenType type = 0;
         const int token = getToken(file, &type, errorCode);
         if (*errorCode != NO_ERRORS) {
             break;
         }
-        if (type == 'c') {
+        if (type == insignificant) {
             continue;
         }
         Node *node = createNode(token, errorCode);
@@ -67,7 +82,7 @@ Node *buildTree(const char *filePath, int *errorCode) {
             addChild(operator, node, right, errorCode);
             pop(&stack, errorCode);
         }
-        if (type == 'o') {
+        if (type == operation) {
             push(&stack, node, errorCode);
         }
         if (*errorCode != NO_ERRORS) {
