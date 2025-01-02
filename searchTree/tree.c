@@ -1,5 +1,5 @@
-#include "tree.h"
 #include "errorCode.h"
+#include "tree.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -122,9 +122,33 @@ void deleteTree(Node **root, int *errorCode) {
     *root = nullptr;
 }
 
-bool isTreeBinarySearchTree(Node *root, int *errorCode) {
+Node *recursiveTraversal(Node *node, bool *result) {
+    if (node == nullptr || !*result) {
+        return node;
+    }
+    if (node->leftChild != nullptr) {
+        if (node->leftChild->key > node->key) {
+            *result = false;
+            return node;
+        }
+    }
+    if (node->rightChild != nullptr) {
+        if (node->rightChild->key < node->key) {
+            *result = false;
+            return node;
+        }
+    }
+    node->leftChild = recursiveTraversal(node->leftChild, result);
+    node->rightChild = recursiveTraversal(node->rightChild, result);
+    return node;
+}
+
+bool isTreeBinarySearchTree(Node *root) {
     if (root == NULL) {
         return true;
     }
-
+    Node *current = root;
+    bool result = true;
+    recursiveTraversal(root, &result);
+    return result;
 }

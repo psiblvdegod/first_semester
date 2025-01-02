@@ -1,9 +1,6 @@
 #pragma once
-#include "dictionary.h"
 
-// reads 16 symbols from standard input stream,
-// converts it to signed int or reports an error.
-int scanNumber(int *errorCode);
+#include "dictionary.h"
 
 // processes user query
 void processQuery(Dictionary *dictionary, int userQuery, int *errorCode);

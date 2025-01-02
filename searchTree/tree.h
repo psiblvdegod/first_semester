@@ -1,6 +1,9 @@
 #pragma once
+
 #include <stdbool.h>
+
 #define WORD_MAX_SIZE 50
+
 typedef struct Node Node;
 
 typedef char *Value;
@@ -21,3 +24,5 @@ Value searchInTree(Node *root, Key key);
 
 // frees allocated memory, turns pointer NULL
 void deleteTree(Node **root, int *errorCode);
+
+bool isTreeBinarySearchTree(Node *root);

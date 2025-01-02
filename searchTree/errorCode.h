@@ -1,6 +1,5 @@
 #pragma once
 
-// description of errors that may occur
 #define NO_ERRORS 0
 #define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
 #define MEMORY_ALLOCATION_ERROR 44

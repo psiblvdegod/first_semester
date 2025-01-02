@@ -1,4 +1,5 @@
 #pragma once
+
 #include "tree.h"
 
 typedef struct Dictionary Dictionary;
