@@ -1,5 +1,4 @@
 #include "errorCode.h"
-#include "queue.h"
 #include "tree.h"
 #include <stdlib.h>
 
@@ -69,31 +68,4 @@ void deleteTree(Node **root, int *errorCode) {
     }
     freeNodes(*root, errorCode);
     *root = nullptr;
-}
-
-void fillQueueRecursive(Node *node, Queue *queue, int *errorCode) {
-    if (node == NULL) {
-        return;
-    }
-    enqueue(queue, node, errorCode);
-    fillQueueRecursive(node->leftChild, queue, errorCode);
-    fillQueueRecursive(node->rightChild, queue, errorCode);
-
-}
-
-Queue *fillQueueWithTreeExpression(Node *root, int *errorCode) {
-    if (root == nullptr) {
-        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return nullptr;
-    }
-    Queue *queue = createQueue(errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return nullptr;
-    }
-    fillQueueRecursive(root, queue, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        deleteQueue(&queue, errorCode);
-        return nullptr;
-    }
-    return queue;
 }

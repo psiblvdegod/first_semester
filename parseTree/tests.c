@@ -1,3 +1,4 @@
+#include "treeTraversal.h"
 #include "errorCode.h"
 #include "tests.h"
 #include "parse.h"
@@ -59,7 +60,7 @@ int parseTests(const char *filePath) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    int expectedResult[] = {'*', 7, '-', 333, 444};
+    int expectedResult[] = {'*', 7, '-', -333, -444};
     Queue *queue = fillQueueWithTreeExpression(root, &errorCode);
     if (errorCode != NO_ERRORS) {
         deleteTree(&root, &errorCode);
@@ -77,7 +78,7 @@ int parseTests(const char *filePath) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    const bool calculateTest = calculateTree(root, &errorCode) == 777;
+    const bool calculateTest = calculateTree(root, &errorCode) == -777;
     if (errorCode == NO_ERRORS && !calculateTest) {
         return TESTS_FAILED_ERROR;
     }

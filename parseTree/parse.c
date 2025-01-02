@@ -117,17 +117,3 @@ int calculateTree(Node *node, int *errorCode) {
             *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
     }
 }
-
-void printTree(Node *node, int *errorCode) {
-    if (node == NULL) {
-        return;
-    }
-    if (getChild(node, left, errorCode) == NULL) {
-        printf("%d ", getValue(node, errorCode));
-    }
-    else {
-        printf("%c ", getValue(node, errorCode));
-    }
-    printTree(getChild(node, left, errorCode), errorCode);
-    printTree(getChild(node, right, errorCode), errorCode);
-}

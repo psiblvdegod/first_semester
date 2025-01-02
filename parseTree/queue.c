@@ -68,18 +68,14 @@ bool isEmptyQueue(Queue *queue, int *errorCode) {
     return queue->front == nullptr;
 }
 
-void releaseQueue(Queue *queue, int *errorCode) {
-    while (!isEmptyQueue(queue, errorCode)) {
-        dequeue(queue, errorCode);
-    }
-}
-
 void deleteQueue(Queue **queue, int *errorCode) {
     if (queue == nullptr || *queue == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    releaseQueue(*queue, errorCode);
+    while (!isEmptyQueue(*queue, errorCode)) {
+        dequeue(*queue, errorCode);
+    }
     free(*queue);
     *queue = nullptr;
 }

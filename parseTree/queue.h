@@ -20,6 +20,3 @@ bool isEmptyQueue(Queue *queue, int *errorCode);
 
 // frees allocated memory and turns pointer NULL
 void deleteQueue(Queue **queue, int *errorCode);
-
-// deletes all elements from queue
-void releaseQueue(Queue *queue, int *errorCode);

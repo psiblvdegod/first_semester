@@ -25,5 +25,3 @@ Value getValue(Node *node, int *errorCode);
 
 // frees allocated memory, turns pointer NULL
 void deleteTree(Node **root, int *errorCode);
-
-struct Queue *fillQueueWithTreeExpression(Node *root, int *errorCode);
