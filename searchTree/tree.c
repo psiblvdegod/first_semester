@@ -14,18 +14,22 @@ Node *createNode(Value value, Key key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        free(value);
         return nullptr;
     }
     node->key = key;
-    node->value = value;
+    node->value = strdup(value);
+    if (node->value == nullptr) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(node);
+        return nullptr;
+    }
     return node;
 }
 
 Node *insertRecursive(Node *node, Node *newNode) {
     if (newNode == nullptr) {
         return node;
-        // does not report an error cause newNode may be NULL when called from deleteRecursive()
+        // does not report an error because newNode may be NULL when called from deleteRecursive()
     }
     if (node == nullptr) {
         return newNode;
@@ -48,7 +52,7 @@ Node *insertInTree(Node *root, Value value, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    Node *newNode = createNode(strdup(value), key, errorCode);
+    Node *newNode = createNode(value, key, errorCode);
     if (*errorCode != NO_ERRORS) {
         return nullptr;
     }
@@ -76,24 +80,24 @@ Node *deleteRecursive(Node *node, Key key, bool *wasDeletionSuccessful) {
     return node;
 }
 
-Node *deleteFromTree(Node *node, Key key, bool *wasDeletionSuccessful, int *errorCode) {
-    if (node == nullptr) {
+Node *deleteFromTree(Node *root, Key key, bool *wasDeletionSuccessful, int *errorCode) {
+    if (root == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    return deleteRecursive(node, key, wasDeletionSuccessful);
+    return deleteRecursive(root, key, wasDeletionSuccessful);
 }
 
-Value searchInTree(Node *node, Key key) {
-    while (node != nullptr) {
-        if (key < node->key) {
-            node = node->leftChild;
+Value searchInTree(Node *root, Key key) {
+    while (root != nullptr) {
+        if (key < root->key) {
+            root = root->leftChild;
         }
-        else if (key > node->key) {
-            node = node->rightChild;
+        else if (key > root->key) {
+            root = root->rightChild;
         }
         else {
-            return node->value;
+            return root->value;
         }
     }
     return nullptr;
@@ -116,4 +120,11 @@ void deleteTree(Node **root, int *errorCode) {
     }
     freeNodes(*root);
     *root = nullptr;
+}
+
+bool isTreeBinarySearchTree(Node *root, int *errorCode) {
+    if (root == NULL) {
+        return true;
+    }
+
 }

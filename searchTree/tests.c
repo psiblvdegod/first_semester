@@ -6,10 +6,10 @@
 int treeTests() {
     int errorCode = NO_ERRORS;
     Node *root = nullptr;
-    root = insertInTree(root, "111", 1, &errorCode);
     root = insertInTree(root, "222", 2, &errorCode);
-    root = insertInTree(root, "333", 3, &errorCode);
+    root = insertInTree(root, "111", 1, &errorCode);
     root = insertInTree(root, "444", 4, &errorCode);
+    root = insertInTree(root, "333", 3, &errorCode);
     if (errorCode != NO_ERRORS) {
         deleteTree(&root, &errorCode);
         return errorCode;

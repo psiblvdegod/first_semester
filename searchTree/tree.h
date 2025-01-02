@@ -7,12 +7,6 @@ typedef char *Value;
 
 typedef int Key;
 
-// child's position for addChild() and getChild()
-typedef enum {
-    left,
-    right
-} Position;
-
 // creates node
 Node *createNode(Value value, Key key, int *errorCode);
 
@@ -20,10 +14,10 @@ Node *createNode(Value value, Key key, int *errorCode);
 Node *insertInTree(Node *root, Value value, Key key, int *errorCode);
 
 // deletes node by key preserving binary search tree properties.
-Node *deleteFromTree(Node *node, Key key, bool *wasDeletionSuccessful, int *errorCode);
+Node *deleteFromTree(Node *root, Key key, bool *wasDeletionSuccessful, int *errorCode);
 
 // searches value by key
-Value searchInTree(Node *node, Key key);
+Value searchInTree(Node *root, Key key);
 
 // frees allocated memory, turns pointer NULL
 void deleteTree(Node **root, int *errorCode);

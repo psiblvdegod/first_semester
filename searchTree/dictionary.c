@@ -8,7 +8,7 @@ struct Dictionary {
 
 Dictionary *createDictionary(int *errorCode) {
     Dictionary *dictionary = calloc(1, sizeof(Dictionary));
-    if (dictionary == NULL) {
+    if (dictionary == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
     }
     return dictionary;
