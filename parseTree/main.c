@@ -1,5 +1,3 @@
-#include "tree.h"
-#include "parse.h"
 #include "tests.h"
 #include "errorCode.h"
 

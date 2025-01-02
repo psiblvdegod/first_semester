@@ -1,11 +1,9 @@
+#include "errorCode.h"
 #include "queue.h"
 #include <stdlib.h>
 
-#define MEMORY_ALLOCATION_ERROR 44
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-
 typedef struct QueueElement {
-    Value value;
+    QueueValue value;
     struct QueueElement *previous;
 } QueueElement;
 
@@ -16,25 +14,25 @@ struct Queue {
 
 Queue *createQueue(int *errorCode) {
     Queue *queue = (Queue*)calloc(1, sizeof(struct Queue));
-    if (queue == NULL) {
+    if (queue == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     return queue;
 }
 
-void enqueue(Queue *queue, Value value, int *errorCode) {
-    if (queue == NULL) {
+void enqueue(Queue *queue, QueueValue value, int *errorCode) {
+    if (queue == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     QueueElement* newElement = (QueueElement*)calloc(1, sizeof(QueueElement));
-    if (newElement == NULL) {
+    if (newElement == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return;
     }
     newElement->value = value;
-    if (queue->front == NULL) {
+    if (queue->front == nullptr) {
         queue->front = newElement;
     }
     else {
@@ -43,16 +41,16 @@ void enqueue(Queue *queue, Value value, int *errorCode) {
     queue->back = newElement;
 }
 
-Value dequeue(Queue *queue, int *errorCode) {
+QueueValue dequeue(Queue *queue, int *errorCode) {
     if (isEmptyQueue(queue, errorCode)) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return -1;
+        return nullptr;
     }
-    Value value = queue->front->value;
+    QueueValue value = queue->front->value;
     if (queue->front == queue->back) {
         free(queue->front);
-        queue->front = NULL;
-        queue->back = NULL;
+        queue->front = nullptr;
+        queue->back = nullptr;
     }
     else {
         QueueElement *temp = queue->front;
@@ -63,11 +61,11 @@ Value dequeue(Queue *queue, int *errorCode) {
 }
 
 bool isEmptyQueue(Queue *queue, int *errorCode) {
-    if (queue == NULL) {
+    if (queue == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return true;
     }
-    return queue->front == NULL;
+    return queue->front == nullptr;
 }
 
 void releaseQueue(Queue *queue, int *errorCode) {
@@ -77,11 +75,11 @@ void releaseQueue(Queue *queue, int *errorCode) {
 }
 
 void deleteQueue(Queue **queue, int *errorCode) {
-    if (queue == NULL || *queue == NULL) {
+    if (queue == nullptr || *queue == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     releaseQueue(*queue, errorCode);
     free(*queue);
-    *queue = NULL;
+    *queue = nullptr;
 }

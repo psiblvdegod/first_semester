@@ -1,6 +1,7 @@
 #include "errorCode.h"
 #include "tests.h"
 #include "parse.h"
+#include "queue.h"
 #include <stdlib.h>
 
 int stackTests() {
@@ -59,7 +60,23 @@ int parseTests(const char *filePath) {
         return errorCode;
     }
     int expectedResult[] = {'*', 7, '-', 333, 444};
-
+    Queue *queue = fillQueueWithTreeExpression(root, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteTree(&root, &errorCode);
+        return errorCode;
+    }
+    for (size_t i = 0; !isEmptyQueue(queue, &errorCode); ++i) {
+        if (getValue(dequeue(queue, &errorCode), &errorCode) != expectedResult[i]) {
+            if (errorCode == NO_ERRORS) {
+                errorCode = TESTS_FAILED_ERROR;
+                break;
+            }
+        }
+    }
+    deleteQueue(&queue, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
     const bool calculateTest = calculateTree(root, &errorCode) == 777;
     if (errorCode == NO_ERRORS && !calculateTest) {
         return TESTS_FAILED_ERROR;

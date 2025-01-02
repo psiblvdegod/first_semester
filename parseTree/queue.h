@@ -3,16 +3,16 @@
 
 typedef struct Queue Queue;
 
-typedef int Value;
+typedef struct Node* QueueValue;
 
 // creates empty queue
 Queue *createQueue(int *errorCode);
 
 // adds elements to queue
-void enqueue(Queue *queue, Value value, int *errorCode);
+void enqueue(Queue *queue, QueueValue value, int *errorCode);
 
 // deletes earliest added element and returns it's value
-Value dequeue(Queue *queue, int *errorCode);
+QueueValue dequeue(Queue *queue, int *errorCode);
 
 // if queue is empty returns true,
 // else returns false.
