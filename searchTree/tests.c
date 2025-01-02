@@ -1,6 +1,6 @@
+#include "errorCode.h"
 #include "tests.h"
 #include "tree.h"
-#include "errorCode.h"
 #include <string.h>
 
 int treeTests() {

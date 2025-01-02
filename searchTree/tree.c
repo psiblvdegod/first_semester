@@ -42,6 +42,7 @@ Node *insertRecursive(Node *node, Node *newNode) {
     }
     else {
         node->value = newNode->value;
+        free(newNode->value);
         free(newNode);
     }
     return node;

@@ -58,5 +58,3 @@ void processQuery(Dictionary *dictionary, const int userQuery, int *errorCode) {
         printf("Invalid value.\n");
     }
 }
-
-

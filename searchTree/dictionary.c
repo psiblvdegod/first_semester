@@ -45,7 +45,7 @@ bool deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
     }
     bool wasDeletionSuccessful = false;
     dictionary->root = deleteFromTree(dictionary->root, key, &wasDeletionSuccessful, errorCode);
-    return wasDeletionSuccessful;
+    return wasDeletionSuccessful && *errorCode == NO_ERRORS;
 }
 
 void deleteDictionary(Dictionary **dictionary, int *errorCode) {
