@@ -6,3 +6,6 @@ int stackTests();
 
 // tests functions from tree.c module
 int treeTests();
+
+// tests buildTree() and calculateTree() using data from <filePath>
+int parseTests(const char *filePath);

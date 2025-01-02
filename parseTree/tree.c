@@ -1,7 +1,6 @@
 #include "tree.h"
 #include "errorCode.h"
 #include <stdlib.h>
-#include <>
 
 typedef struct Node {
     Value value;
@@ -11,16 +10,16 @@ typedef struct Node {
 
 Node *createNode(Value value, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
-    if (node == NULL) {
+    if (node == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     node->value = value;
     return node;
 }
 
 void addChild(Node *parent, Node *child, Position position, int *errorCode) {
-    if (parent == NULL || child == NULL) {
+    if (parent == nullptr || child == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
@@ -33,9 +32,9 @@ void addChild(Node *parent, Node *child, Position position, int *errorCode) {
 }
 
 Node *getChild(Node *parent, Position position, int *errorCode) {
-    if (parent == NULL) {
+    if (parent == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return nullptr;
     }
     if (position == left) {
         return parent->leftChild;
@@ -46,7 +45,7 @@ Node *getChild(Node *parent, Position position, int *errorCode) {
 }
 
 Value getValue(Node *node, int *errorCode) {
-    if (node == NULL) {
+    if (node == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return '\0';
     }
@@ -54,7 +53,7 @@ Value getValue(Node *node, int *errorCode) {
 }
 
 void freeNodes(Node *node, int *errorCode) {
-    if (node == NULL) {
+    if (node == nullptr) {
         return;
     }
     freeNodes(getChild(node, left, errorCode), errorCode);
@@ -63,7 +62,7 @@ void freeNodes(Node *node, int *errorCode) {
 }
 
 void deleteTree(Node **root, int *errorCode) {
-    if (root == NULL || *root == NULL) {
+    if (root == nullptr || *root == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }

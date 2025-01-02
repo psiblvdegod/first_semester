@@ -17,7 +17,7 @@ int stackTests() {
     if (errorCode == NO_ERRORS && !test) {
         return TESTS_FAILED_ERROR;
     }
-    return errorCode
+    return errorCode;
 }
 
 int treeTests() {
@@ -47,7 +47,20 @@ int treeTests() {
     return errorCode;
 }
 
-int parseTests() {
+int parseTests(const char *filePath) {
     int errorCode = NO_ERRORS;
-
+    FILE *file = fopen(filePath, "r");
+    if (filePath == nullptr) {
+        return FILE_OPENING_ERROR;
+    }
+    Node *root = buildTree(filePath, &errorCode);
+    fclose(file);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    const bool calculateTest = calculateTree(root, &errorCode) == 777;
+    if (errorCode == NO_ERRORS && !calculateTest) {
+        return TESTS_FAILED_ERROR;
+    }
+    return errorCode;
 }

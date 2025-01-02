@@ -1,7 +1,5 @@
 #include "errorCode.h"
 #include "parse.h"
-#include <errno.h>
-#include <stdlib.h>
 
 typedef enum {
     insignificant,
@@ -24,7 +22,7 @@ int getToken(FILE *file, TokenType *type, int *errorCode) {
             *type = operation;
         }
     }
-    if ('0' <= token && token <= '9') {
+    else if ('0' <= token && token <= '9') {
         ungetc(token, file);
         fscanf(file, "%d", &token);
         *type = number;

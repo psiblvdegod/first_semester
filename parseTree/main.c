@@ -12,9 +12,9 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    Node *root = buildTree("../text.txt", &errorCode);
-    printTree(root, &errorCode);
-    const int result = calculateTree(root, &errorCode);
-    printf("\nresult: %d\n", result);
+    errorCode = parseTests("../text.txt");
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
     return errorCode;
 }
