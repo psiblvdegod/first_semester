@@ -1,5 +1,7 @@
 #pragma once
+
 #include <stdbool.h>
+
 #define VALUE_SIZE 50
 
 typedef struct List List;

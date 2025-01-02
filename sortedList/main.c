@@ -1,19 +1,18 @@
+#include "queryProcessing.h"
+#include "errorCode.h"
 #include "list.h"
 #include "tests.h"
-#include "queryProcessing.h"
-
 
 int main(void) {
-    int errorCode = 0;
-    listTests(&errorCode);
-    if (errorCode != 0) {
+    int errorCode = listTests();
+    if (errorCode != NO_ERRORS) {
         return errorCode;
     }
     List *list = createList(&errorCode);
-    if (errorCode != 0) {
+    if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    while(queryProcessing(list, &errorCode));
+    while (processQuery(list, &errorCode));
 
     deleteList(&list, &errorCode);
     return errorCode;

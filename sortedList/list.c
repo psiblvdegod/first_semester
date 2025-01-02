@@ -41,13 +41,12 @@ bool insertInList(List *list, Value value, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return false;
     }
-    Value newValue = calloc(VALUE_SIZE, sizeof(char));
-    if (newValue == NULL) {
+    newElement->value = strdup(value);
+    if (newElement->value == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         free(newElement);
         return false;
     }
-    newElement->value = strcpy(newValue, value);
     if (list->head == NULL) {
         list->head = newElement;
         return true;
@@ -62,6 +61,7 @@ ListElement *deleteRecursive(ListElement *current, Value value, bool *isSizeChan
     }
     if (strcmp(value, current->value) == 0) {
         ListElement *next = current->next;
+        free(current->value);
         free(current);
         *isSizeChanged = true;
         return next;

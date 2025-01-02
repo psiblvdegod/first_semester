@@ -1,16 +1,15 @@
 #include "queryProcessing.h"
 #include "errorCode.h"
 #include <stdio.h>
-#include <stdlib.h>
 
-bool queryProcessing(List *list, int *errorCode) {
+bool processQuery(List *list, int *errorCode) {
     if (errorCode == NULL) {
         return false;
     }
     printf("0 - quit // 1 - add // 2 - delete // 3 - print all\n");
     char userQuery;
     int inputValidation = scanf("%c", &userQuery);
-    while(getchar() != '\n');
+    while (getchar() != '\n');
     if (inputValidation != 1) {
         printf("Invalid value.\n");
         return true;
@@ -19,10 +18,10 @@ bool queryProcessing(List *list, int *errorCode) {
         case '0':
             break;
         case '1': {
-            char newValue[50] = { '0' };
-            printf("Enter value you want to add. No more 50 symbols\n");
+            char newValue[VALUE_SIZE] = { '0' };
+            printf("Enter value you want to add. No more %d symbols\n", VALUE_SIZE);
             inputValidation = scanf("%s", newValue);
-            while(getchar() != '\n');
+            while (getchar() != '\n');
             if (inputValidation != 1) {
                 printf("Invalid value.\n");
                 break;
@@ -32,22 +31,16 @@ bool queryProcessing(List *list, int *errorCode) {
             break;
         }
         case '2': {
-            Value deletingValue = calloc(50, sizeof(char));
-            if (deletingValue == NULL) {
-                *errorCode = MEMORY_ALLOCATION_ERROR;
-                return false;
-            }
-            printf("Enter value you want to delete. No more 50 symbols\n");
+            char deletingValue[VALUE_SIZE] = {'0'};
+            printf("Enter value you want to delete. No more %d symbols\n", VALUE_SIZE);
             inputValidation = scanf("%s", deletingValue);
-            while(getchar() != '\n');
+            while (getchar() != '\n');
             if (inputValidation != 1) {
                 printf("Invalid value.\n");
-                free(deletingValue);
                 break;
             }
             const bool wasDeletionSuccessful = deleteFromList(list, deletingValue, errorCode);
             printf("Element was%s deleted.\n", wasDeletionSuccessful ? "" : " not");
-            free(deletingValue);
             break;
         }
         case '3': {
