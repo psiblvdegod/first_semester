@@ -40,6 +40,9 @@ bool deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
+    if (dictionary->root == nullptr) {
+        return false;
+    }
     bool wasDeletionSuccessful = false;
     dictionary->root = deleteFromTree(dictionary->root, key, &wasDeletionSuccessful, errorCode);
     return wasDeletionSuccessful;

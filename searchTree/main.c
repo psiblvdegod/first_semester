@@ -20,6 +20,9 @@ int main(void) {
         while (getchar() != '\n');
         processQuery(dictionary, userQuery, &errorCode);
         while (getchar() != '\n');
+        if (errorCode != NO_ERRORS) {
+            break;
+        }
     }
     deleteDictionary(&dictionary, &errorCode);
     return errorCode;
