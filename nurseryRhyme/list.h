@@ -1,6 +1,8 @@
 #pragma once
 
-typedef int Value;
+#include <stdlib.h>
+
+typedef size_t Value;
 
 typedef struct Node Node;
 

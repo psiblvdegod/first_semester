@@ -68,16 +68,17 @@ void deleteList(List **list, int *errorCode) {
         return;
     }
     Node *current = (*list)->head;
-    if (current == current->next) {
-        Node *temp = current;
-        free(temp);
-        current = NULL;
+    if (current == NULL) {
+        free(*list);
+        *list = NULL;
+        return;
     }
-    while (current != NULL) {
+    while (current != current->next) {
         Node *temp = current;
         free(temp);
         current = current->next;
     }
+    free(current);
     free(*list);
     *list = NULL;
 }
