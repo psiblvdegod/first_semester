@@ -1,5 +1,5 @@
-#include "list.h"
 #include "errorCode.h"
+#include "list.h"
 #include <stdlib.h>
 
 struct Node {

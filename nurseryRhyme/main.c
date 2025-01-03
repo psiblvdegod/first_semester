@@ -7,6 +7,6 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    survivorTest(&errorCode);
+    safePlaceTest(&errorCode);
     return errorCode;
 }
