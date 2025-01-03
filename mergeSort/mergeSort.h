@@ -1,4 +1,5 @@
 #pragma once
+
 #include "list.h"
 
 // merges two sorted lists to one and returns it

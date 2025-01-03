@@ -1,7 +1,6 @@
 #include "contactsSorting.h"
 #include "mergeSort.h"
 #include "stdio.h"
-#include <stdlib.h>
 
 #define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
 #define MEMORY_ALLOCATION_ERROR 44
@@ -21,12 +20,8 @@ List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         return NULL;
     }
     while (!feof(file)) {
-        char *name = calloc(30, sizeof(char));
-        char *number = calloc(30, sizeof(char));
-        if (name == NULL || number == NULL) {
-            *errorCode = MEMORY_ALLOCATION_ERROR;
-            break;
-        }
+        char name[30];
+        char number[30];
         fscanf(file, "%s%s", name, number);
         if (sortingCriteria == byName) {
             addToList(list, number, name, errorCode);
@@ -39,9 +34,9 @@ List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         }
     }
     fclose(file);
-    if (*errorCode == NO_ERRORS) {
-        return mergeSort(list, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteList(&list, errorCode);
+        return NULL;
     }
-    deleteList(&list, errorCode);
-    return NULL;
+    return mergeSort(list, errorCode);
 }

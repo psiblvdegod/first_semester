@@ -1,3 +1,5 @@
+#pragma once
+
 #include "mergeSort.h"
 #include "list.h"
 

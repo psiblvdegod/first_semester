@@ -33,8 +33,19 @@ void addToList(List *list, Value value, Value key, int *errorCode) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return;
     }
-    newElement->value = value;
-    newElement->key = key;
+    newElement->value = strdup(value);
+    if (newElement->value == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(newElement);
+        return;
+    }
+    newElement->key = strdup(key);
+    if (newElement->key == NULL) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(newElement->value);
+        free(newElement);
+        return;
+    }
     if (list->head == NULL) {
         list->head = newElement;
         list->tail = newElement;
@@ -62,12 +73,16 @@ List *splitList(List *list, int *errorCode) {
     for (int i = 1; i < listLength / 2; ++i) {
         middle = middle->next;
     }
-    Node *temp = middle;
+    Node *newTail = middle;
     middle = middle->next;
-    temp->next = NULL;
+    newTail->next = NULL;
     List *separatedPart = createList(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return NULL;
+    }
     separatedPart->head = middle;
     separatedPart->tail = list->tail;
+    list->tail = newTail;
     return separatedPart;
 }
 
