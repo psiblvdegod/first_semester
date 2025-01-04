@@ -1,3 +1,4 @@
+#include "errorCode.h"
 #include "tree.h"
 #include <stdlib.h>
 #include <string.h>
@@ -18,15 +19,23 @@ typedef enum {
 
 Node *createNode(Value value, Value key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
-    if (node == NULL) {
+    if (node == nullptr) {
         *errorCode = true;
-        return NULL;
+        return nullptr;
     }
-    node->value = value;
-    node->key = key;
-    node->balance = 0;
-    node->leftChild = NULL;
-    node->rightChild = NULL;
+    node->value = strdup(value);
+    if (node->value == nullptr) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(node);
+        return nullptr;
+    }
+    node->key = strdup(key);
+    if (node->key == nullptr) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
+        free(node->key);
+        free(node);
+        return nullptr;
+    }
     return node;
 }
 
@@ -51,8 +60,7 @@ Value search(Node *node, Value key) {
     return node->value;
 }
 
-Node * doSmallRotation(Node * node, Direction direction) {
-    //*flag = false;
+Node *doSmallRotation(Node *node, Direction direction) {
     if (direction == left) {
         Node *nodeRightChild = node->rightChild;
         if (nodeRightChild != NULL) {
@@ -71,8 +79,7 @@ Node * doSmallRotation(Node * node, Direction direction) {
     }
 }
 
-Node * doBigRotation(Node * node, Direction direction) {
-    //*flag = false;
+Node *doBigRotation(Node *node, Direction direction) {
     if (direction == left) {
         Node *centralDescendant = node->rightChild->leftChild;
         node->rightChild->leftChild = centralDescendant->rightChild;
@@ -91,7 +98,7 @@ Node * doBigRotation(Node * node, Direction direction) {
     }
 }
 
-Node *balance(Node * node, bool *isHeightChanged) {
+Node *balance(Node * node) {
     if (node->balance == -2) {
         if (node->rightChild->balance <= 0) {
             node = doSmallRotation(node, left);
@@ -146,9 +153,6 @@ Node *balance(Node * node, bool *isHeightChanged) {
             node->balance = 0;
         }
     }
-    if (node->balance == 0) {
-        *isHeightChanged = false;
-    }
     return node;
 }
 
@@ -178,7 +182,11 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
             --node->balance;
         }
     }
-    return balance(node, isHeightChanged);
+    node = balance(node);
+    if (node->balance == 0) {
+        *isHeightChanged = false;
+    }
+    return node;
 }
 
 Node *findClosest(Node *current, Node *new) {
@@ -192,10 +200,28 @@ Node *findClosest(Node *current, Node *new) {
     return current;
 }
 
-Node *dispose(Node *node, Value key, bool *isHeightChanged) {
-    if (node == NULL) {
+Node *swapWithClosest(Node* current, Node *goal, bool *isHeightChanged) {
+    if (current->leftChild == NULL) {
+        goal->value = current->value;
+        goal->key = current->key;
+        free(current);
+        return nullptr;
+    }
+    current->leftChild = swapWithClosest(current->leftChild, goal, isHeightChanged);
+    if (*isHeightChanged) {
+        --current->balance;
+    }
+    current = balance(current);
+    if (current->balance == 1 || current->balance == -1) {
         *isHeightChanged = false;
-        return NULL;
+    }
+    return current;
+}
+
+Node *dispose(Node *node, Value key, bool *isHeightChanged) {
+    if (node == nullptr) {
+        *isHeightChanged = false;
+        return nullptr;
     }
     if (strcmp(key, node->key) < 0) {
         node->leftChild = dispose(node->leftChild, key, isHeightChanged);
@@ -211,26 +237,28 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     }
     else if (strcmp(key, node->key) == 0) {
         *isHeightChanged = true;
-        if (node->rightChild == NULL && node->leftChild == NULL) {
+        if (node->rightChild == nullptr && node->leftChild == nullptr) {
             free(node);
-            return NULL;
+            return nullptr;
         }
-        else if (node->rightChild == NULL) {
+        else if (node->rightChild == nullptr) {
             Node *child = node->leftChild;
             free(node);
             return child;
         }
-        else if (node->leftChild == NULL) {
+        else if (node->leftChild == nullptr) {
             Node *child = node->rightChild;
             free(node);
             return child;
         }
         else {
-            Node *closestNode = findClosest(node, node);
-            node->key = closestNode->key;
-            node->value = closestNode->value;
-            return node;
+            bool isHeightChanged2 = false;
+            node->rightChild = swapWithClosest(node->rightChild, node, &isHeightChanged2);
         }
     }
-    return balance(node, isHeightChanged);
+    node = balance(node);
+    if (node->balance == -1 || node->balance == 1) {
+        *isHeightChanged = false;
+    }
+    return node;
 }

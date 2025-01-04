@@ -3,7 +3,7 @@
 
 typedef struct Node Node;
 
-typedef const char * Value;
+typedef char *Value;
 
 Node * createNode(Value value, Value key, int *errorCode);
 
