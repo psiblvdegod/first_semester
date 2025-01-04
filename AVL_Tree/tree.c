@@ -189,35 +189,6 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
     return node;
 }
 
-Node *findClosest(Node *current, Node *new) {
-    if (current->leftChild == NULL) {
-        current->key = new->key;
-        current->value = new->value;
-        free(new);
-        return NULL;
-    }
-    current->leftChild = findClosest(current->leftChild, new);
-    return current;
-}
-
-Node *swapWithClosest(Node* current, Node *goal, bool *isHeightChanged) {
-    if (current->leftChild == NULL) {
-        goal->value = current->value;
-        goal->key = current->key;
-        free(current);
-        return nullptr;
-    }
-    current->leftChild = swapWithClosest(current->leftChild, goal, isHeightChanged);
-    if (*isHeightChanged) {
-        --current->balance;
-    }
-    current = balance(current);
-    if (current->balance == 1 || current->balance == -1) {
-        *isHeightChanged = false;
-    }
-    return current;
-}
-
 Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     if (node == nullptr) {
         *isHeightChanged = false;
@@ -280,3 +251,4 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     }
     return node;
 }
+

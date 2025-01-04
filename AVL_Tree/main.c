@@ -5,7 +5,7 @@
 #include "tests.h"
 
 int main(void) {
-    test();
+    treeTests();
     Node *root = NULL;
     int errorCode = NO_ERRORS;
     char userQuery = 1;
