@@ -1,4 +1,3 @@
-#include "errorCode.h"
 #include "tree.h"
 #include <stdlib.h>
 #include <string.h>
