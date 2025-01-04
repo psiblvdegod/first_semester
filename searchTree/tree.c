@@ -41,8 +41,9 @@ Node *insertRecursive(Node *node, Node *newNode) {
         node->rightChild = insertRecursive(node->rightChild, newNode);
     }
     else {
+        Value temp = node->value;
         node->value = newNode->value;
-        free(newNode->value);
+        free(temp);
         free(newNode);
     }
     return node;
