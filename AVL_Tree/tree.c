@@ -1,4 +1,5 @@
 #include "typeDefinitions.h"
+#include "AVL_Tree.h"
 #include "errorCode.h"
 #include "tree.h"
 
@@ -38,4 +39,12 @@ void deleteFromTree(Node **root, Key key, int *errorCode) {
 
 Value searchInTree(Node *node, Key key) {
     return searchInAVLTree(node, key);
+}
+
+void deleteTree(Node **root, int *errorCode) {
+    if (root == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    deleteAVLTree(*root);
 }

@@ -248,3 +248,10 @@ Value searchInAVLTree(Node *node, Key key) {
     }
     return node->key;
 }
+
+void deleteAVLTree(Node *root) {
+    while (root != nullptr) {
+        bool isHeightChanged = false;
+        root = deleteFromAVLTree(root, root->key, &isHeightChanged);
+    }
+}

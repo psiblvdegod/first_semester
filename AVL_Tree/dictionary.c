@@ -29,7 +29,7 @@ void addToDictionary(Dictionary *dictionary, Value value, Key key, int *errorCod
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    insertIntoTree(dictionary->root, value, key, errorCode);
+    insertIntoTree(&dictionary->root, value, key, errorCode);
 }
 
 Value searchInDictionary(Dictionary *dictionary, Key key, int *errorCode) {
@@ -41,7 +41,7 @@ Value searchInDictionary(Dictionary *dictionary, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    return searchInTree(dictionary->root, key, errorCode);
+    return searchInTree(dictionary->root, key);
 }
 
 void deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
@@ -53,7 +53,7 @@ void deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    deleteFromTree(dictionary->root, key, errorCode);
+    deleteFromTree(&dictionary->root, key, errorCode);
 }
 
 void deleteDictionary(Dictionary **dictionary, int *errorCode) {
@@ -68,7 +68,8 @@ void deleteDictionary(Dictionary **dictionary, int *errorCode) {
         free(*dictionary);
         return;
     }
-    deleteTree((*dictionary)->root);
+    deleteTree(&(*dictionary)->root, errorCode);
     free(*dictionary);
     *dictionary = nullptr;
 }
+

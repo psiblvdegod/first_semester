@@ -1,20 +1,51 @@
+#include "typeDefinitions.h"
+#include "AVL_Tree.h"
+#include "errorCode.h"
 #include "tests.h"
 #include <stdio.h>
-#include "errorCode.h"
 #include <string.h>
 
-void test() {
+int AVLTreeTest() {
     int errorCode = NO_ERRORS;
-    Node *root = NULL;
+    Node *root = nullptr;
     bool isHeightChanged = false;
-    root = insert(root, createNode("111", "111", &errorCode), &isHeightChanged);
-    root = insert(root, createNode("222", "222", &errorCode), &isHeightChanged);
-    root = insert(root, createNode("333", "333", &errorCode), &isHeightChanged);
-    root = insert(root, createNode("444", "444", &errorCode), &isHeightChanged);
-    root = insert(root, createNode("555", "555", &errorCode), &isHeightChanged);
-    root = dispose(root, "222", &isHeightChanged);
-    root = dispose(root, "333", &isHeightChanged);
-    int bp1 = 0;
+    root = insertIntoAVLTree(root, createNode("111", "111", &errorCode), &isHeightChanged);
+    if (errorCode != NO_ERRORS) {
+        deleteAVLTree(root);
+        return errorCode;
+    }
+    root = insertIntoAVLTree(root, createNode("222", "222", &errorCode), &isHeightChanged);
+    if (errorCode != NO_ERRORS) {
+        deleteAVLTree(root);
+        return errorCode;
+    }
+    root = insertIntoAVLTree(root, createNode("333", "333", &errorCode), &isHeightChanged);
+    if (errorCode != NO_ERRORS) {
+        deleteAVLTree(root);
+        return errorCode;
+    }
+    root = insertIntoAVLTree(root, createNode("444", "444", &errorCode), &isHeightChanged);
+    if (errorCode != NO_ERRORS) {
+        deleteAVLTree(root);
+        return errorCode;
+    }
+    root = insertIntoAVLTree(root, createNode("555", "555", &errorCode), &isHeightChanged);
+    if (errorCode != NO_ERRORS) {
+        deleteAVLTree(root);
+        return errorCode;
+    }
+    const bool searchTest1 = strcmp(searchInAVLTree(root, "123"), "123") == 0;
+    const bool searchTest2 = searchInAVLTree(root, "") == nullptr;
+    root = deleteFromAVLTree(root, "555", &isHeightChanged);
+    root = deleteFromAVLTree(root, "333", &isHeightChanged);
+    const bool searchTest3 = strcmp(searchInAVLTree(root, "444"), "444") == 0;
+    const bool searchTest4 = searchInAVLTree(root, "333") == nullptr;
+    deleteAVLTree(root);
+    const bool test = searchTest1 && searchTest2 && searchTest3 && searchTest4;
+    if (errorCode == NO_ERRORS && !test) {
+        return TESTS_FAILED_ERROR;
+    }
+    return errorCode;
 }
 
 int treeTests(const char *filePath) {
@@ -28,5 +59,6 @@ int treeTests(const char *filePath) {
         char value[VALUE_MAX_SIZE] = {'0'};
         char key[VALUE_MAX_SIZE] = {'0'};
         fscanf(file, "%s%s", value, key);
+        in
     }
 }
