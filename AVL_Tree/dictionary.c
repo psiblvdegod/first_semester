@@ -1,3 +1,4 @@
+#include "typeDefinitions.h"
 #include "dictionary.h"
 #include "errorCode.h"
 #include <stdlib.h>
@@ -15,7 +16,7 @@ Dictionary *createDictionary(int *errorCode) {
     return dictionary;
 }
 
-void addToDictionary(Dictionary *dictionary, Value value, Value key, int *errorCode) {
+void addToDictionary(Dictionary *dictionary, Value value, Key key, int *errorCode) {
     if (dictionary == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -28,14 +29,10 @@ void addToDictionary(Dictionary *dictionary, Value value, Value key, int *errorC
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    Node *newNode = createNode(value, key, errorCode);
-    if (*errorCode != NO_ERRORS) {
-        return;
-    }
-    insertInTree(dictionary->root, newNode, errorCode);
+    insertIntoTree(dictionary->root, value, key, errorCode);
 }
 
-Value searchInDictionary(Dictionary *dictionary, Value key, int *errorCode) {
+Value searchInDictionary(Dictionary *dictionary, Key key, int *errorCode) {
     if (dictionary == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
@@ -47,7 +44,7 @@ Value searchInDictionary(Dictionary *dictionary, Value key, int *errorCode) {
     return searchInTree(dictionary->root, key, errorCode);
 }
 
-void deleteFromDictionary(Dictionary *dictionary, Value key, int *errorCode) {
+void deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
     if (dictionary == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;

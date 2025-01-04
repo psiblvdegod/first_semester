@@ -9,4 +9,5 @@ add_executable(AVL_Tree main.c
         tests.c
         tests.h
         dictionary.c
+        AVL_Tree.c
         queryProcessing.c)

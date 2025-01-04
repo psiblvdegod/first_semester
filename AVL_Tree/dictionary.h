@@ -1,9 +1,5 @@
 #pragma once
 
-#define VALUE_MAX_SIZE 50
-
-typedef char *Value;
-
 typedef struct Dictionary Dictionary;
 
 Dictionary *createDictionary(int *errorCode);
