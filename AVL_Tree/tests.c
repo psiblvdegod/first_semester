@@ -48,7 +48,7 @@ int AVLTreeTest() {
     return errorCode;
 }
 
-int treeTests(const char *filePath) {
+int binarySearchTreeTests(const char *filePath) {
     int errorCode = NO_ERRORS;
     FILE *file = fopen(filePath, "r");
     if (file == nullptr) {
@@ -59,6 +59,13 @@ int treeTests(const char *filePath) {
         char value[VALUE_MAX_SIZE] = {'0'};
         char key[VALUE_MAX_SIZE] = {'0'};
         fscanf(file, "%s%s", value, key);
-        in
+        insertIntoTree(&root, value, key, &errorCode);
+        if (errorCode != NO_ERRORS) {
+            deleteTree(&root, &errorCode);
+            fclose(file);
+            return errorCode;
+        }
     }
+    fclose(file);
+    verifyBinarySearchTreeInvariant()
 }
