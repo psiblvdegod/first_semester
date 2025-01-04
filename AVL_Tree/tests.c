@@ -28,6 +28,5 @@ int treeTests(const char *filePath) {
         char value[VALUE_MAX_SIZE] = {'0'};
         char key[VALUE_MAX_SIZE] = {'0'};
         fscanf(file, "%s%s", value, key);
-        root = insert(root, );
     }
 }

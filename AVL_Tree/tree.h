@@ -5,17 +5,9 @@ typedef struct Node Node;
 
 typedef char *Value;
 
-Node * createNode(Value value, Value key, int *errorCode);
-
 //returns NULL if value is not found
-Value search(Node * root, Value key);
+Value searchInTree(Node *root, Value key);
 
-//adds node to tree. first root with createNode(...)
-//then use root = insert(root,...)
-//requires external boolean variable with false value.
-//isHeightChanged will be false after calling.
-Node *insert(Node *node, Node *newNode, bool *isHeightChanged);
+void insertIntoTree(Node **root, Value value, Value key, int *errorCode);
 
-//requires external boolean variable with false value.
-//isHeightChanged will be false after calling.
-Node *dispose(Node * root, Value key, bool *isHeightChanged);
+void deleteFromTree(Node **root, Value key, int *errorCode);

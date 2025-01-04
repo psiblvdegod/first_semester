@@ -39,27 +39,6 @@ Node *createNode(Value value, Value key, int *errorCode) {
     return node;
 }
 
-Value search(Node *node, Value key) {
-    if (node == NULL) {
-        return NULL;
-    }
-    while (node != NULL) {
-        if (strcmp(key, node->key) < 0) {
-            node = node->leftChild;
-        }
-        else if (strcmp(key, node->key) > 0) {
-            node = node->rightChild;
-        }
-        else if (strcmp(key, node->key) == 0) {
-            break;
-        }
-    }
-    if (node == NULL) {
-        return NULL;
-    }
-    return node->value;
-}
-
 Node *doSmallRotation(Node *node, Direction direction) {
     if (direction == left) {
         Node *nodeRightChild = node->rightChild;
@@ -156,7 +135,7 @@ Node *balance(Node * node) {
     return node;
 }
 
-Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
+Node *insertRecursive(Node *node, Node *newNode, bool *isHeightChanged) {
     if (newNode == NULL) {
         *isHeightChanged = false;
         return node;
@@ -171,13 +150,13 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
         *isHeightChanged = false;
     }
     else if (strcmp(newNode->key, node->key) < 0) {
-        node->leftChild = insert(node->leftChild, newNode, isHeightChanged);
+        node->leftChild = insertRecursive(node->leftChild, newNode, isHeightChanged);
         if (*isHeightChanged) {
             ++node->balance;
         }
     }
     else if (strcmp(newNode->key, node->key) > 0) {
-        node->rightChild = insert(node->rightChild, newNode, isHeightChanged);
+        node->rightChild = insertRecursive(node->rightChild, newNode, isHeightChanged);
         if (*isHeightChanged) {
             --node->balance;
         }
@@ -189,19 +168,19 @@ Node *insert(Node *node, Node *newNode, bool *isHeightChanged) {
     return node;
 }
 
-Node *dispose(Node *node, Value key, bool *isHeightChanged) {
+Node *deleteRecursive(Node *node, Value key, bool *isHeightChanged) {
     if (node == nullptr) {
         *isHeightChanged = false;
         return nullptr;
     }
     if (strcmp(key, node->key) < 0) {
-        node->leftChild = dispose(node->leftChild, key, isHeightChanged);
+        node->leftChild = deleteRecursive(node->leftChild, key, isHeightChanged);
         if (*isHeightChanged) {
             --node->balance;
         }
     }
     else if (strcmp(key, node->key) > 0) {
-        node->rightChild = dispose(node->rightChild, key, isHeightChanged);
+        node->rightChild = deleteRecursive(node->rightChild, key, isHeightChanged);
         if (*isHeightChanged) {
             ++node->balance;
         }
@@ -239,7 +218,7 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
             node->key = closest->key;
             closest->value = temp1;
             closest->key = temp2;
-            node->rightChild = dispose(node->rightChild, key, isHeightChanged);
+            node->rightChild = deleteRecursive(node->rightChild, key, isHeightChanged);
             if (*isHeightChanged) {
                 ++node->balance;
             }
@@ -252,3 +231,54 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     return node;
 }
 
+void insertIntoTree(Node **root, Value value, Value key, int *errorCode) {
+    if (root == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (value == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (key == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    Node *newNode = createNode(value, key, errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    bool isHeightChanged = false;
+    *root = insertRecursive(*root, newNode, &isHeightChanged);
+}
+
+void deleteFromTree(Node **root, Value key, int *errorCode) {
+    if (root == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (key == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    bool isHeightChanged = false;
+    *root = deleteRecursive(*root, key, &isHeightChanged);
+}
+
+Value searchInTree(Node *node, Value key) {
+    while (node != NULL) {
+        if (strcmp(key, node->key) < 0) {
+            node = node->leftChild;
+        }
+        else if (strcmp(key, node->key) > 0) {
+            node = node->rightChild;
+        }
+        else if (strcmp(key, node->key) == 0) {
+            break;
+        }
+    }
+    if (node == nullptr) {
+        return nullptr;
+    }
+    return node->value;
+}
