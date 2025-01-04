@@ -52,7 +52,7 @@ Graph *createGraph(const Value verticesAmount, int *errorCode) {
 
 void verifyGraphInvariants(Graph *graph, int *errorCode) {
     if (graph == NULL) {
-        *errorCode = INVARIANT_VIOLATION;
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     if (graph->vertices == NULL) {
@@ -66,12 +66,11 @@ void verifyGraphInvariants(Graph *graph, int *errorCode) {
 }
 
 void deleteGraph(Graph **graph, int *errorCode) {
-    if (*graph == NULL) {
+    if (graph == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    verifyGraphInvariants(*graph, errorCode);
-    if (*errorCode != NO_ERRORS) {
+    if (*graph == NULL) {
         return;
     }
     if ((*graph)->vertices != NULL) {
@@ -84,7 +83,7 @@ void deleteGraph(Graph **graph, int *errorCode) {
         free((*graph)->vertices);
     }
     free(*graph);
-    *graph = NULL;
+    *graph = nullptr;
 }
 
 void setEdge(Graph *graph, const Value number1, const Value number2, const Value edgeLength, int *errorCode) {
@@ -214,7 +213,7 @@ void distributeCities(Graph *graph, int *errorCode) {
             states[i] = nullptr;
             continue;
         }
-        graph->vertices[closestCity]->state = states[i]->number;
+        graph->vertices[closestCity]->state = (long)states[i]->number;
         List *copy = copyList(graph->vertices[closestCity]->linkedVertices, errorCode);
         ListElement *current = getHead(copy, errorCode);
         while (current != nullptr) {
