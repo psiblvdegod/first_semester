@@ -1,5 +1,6 @@
 #include "stack.h"
 #include <stdlib.h>
+#include "errorCode.h"
 
 typedef struct StackElement {
     Value value;
@@ -10,18 +11,26 @@ struct Stack {
     StackElement *head;
 };
 
-Stack *createStack(bool *errorCode) {
+Stack *createStack(int *errorCode) {
     Stack *stack = calloc(1, sizeof(struct Stack));
-    if (stack == NULL) {
-        *errorCode = true;
+    if (stack == nullptr) {
+        *errorCode = MEMORY_ALLOCATION_ERROR;
     }
     return stack;
 }
 
-void push(Stack *stack, Value value, bool *errorCode) {
+void push(Stack *stack, Value value, int *errorCode) {
+    if (value == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if (stack == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
     StackElement *newElement = calloc(1, sizeof(StackElement));
     if (newElement == NULL) {
-        *errorCode = true;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return;
     }
     newElement->value = value;
@@ -29,10 +38,14 @@ void push(Stack *stack, Value value, bool *errorCode) {
     stack->head = newElement;
 }
 
-Value pop(Stack *stack, bool *errorCode) {
-    if (isEmptyStack(stack)) {
-        *errorCode = true;
-        return '1';
+Value pop(Stack *stack, int *errorCode) {
+    if (stack == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return nullptr;
+    }
+    if (stack->head == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return nullptr;
     }
     Value value = stack->head->value;
     StackElement *temp = stack->head;
@@ -41,6 +54,10 @@ Value pop(Stack *stack, bool *errorCode) {
     return value;
 }
 
-bool isEmptyStack(Stack *stack) {
-    return stack == NULL || stack->head == NULL;
+bool isEmptyStack(Stack *stack, int *errorCode) {
+    if (stack == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return true;
+    }
+    return stack->head == NULL;
 }

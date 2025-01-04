@@ -1,5 +1,6 @@
 #include "errorCode.h"
 #include "AVL_Tree.h"
+#include "stack.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -254,4 +255,42 @@ void deleteAVLTree(Node *root) {
         bool isHeightChanged = false;
         root = deleteFromAVLTree(root, root->key, &isHeightChanged);
     }
+}
+
+bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
+    if (root == nullptr) {
+        return true;
+    }
+    Stack *stack = createStack(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return false;
+    }
+    while(!isEmptyStack(stack)) {
+        Node *current = pop(stack, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            return false;
+        }
+        if (current->balance < -2 || current->balance > 2) {
+            deleteStack(&stack, errorCode);
+            return false;
+        }
+        if (current->leftChild == nullptr && current->rightChild == nullptr) {
+            continue;
+        }
+        if (current->leftChild != nullptr) {
+            if (strcmp(current->leftChild->key, current->key) > 0) {
+                deleteStack(&stack, errorCode);
+                return false;
+            }
+            push(stack, current->leftChild, errorCode);
+        }
+        if (current->rightChild != nullptr) {
+            if (strcmp(current->rightChild->key, current->key) < 0) {
+                deleteStack(&stack, errorCode);
+                return false;
+            }
+            push(stack, current->rightChild, errorCode);
+        }
+    }
+    return true;
 }
