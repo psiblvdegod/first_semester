@@ -238,22 +238,40 @@ Node *dispose(Node *node, Value key, bool *isHeightChanged) {
     else if (strcmp(key, node->key) == 0) {
         *isHeightChanged = true;
         if (node->rightChild == nullptr && node->leftChild == nullptr) {
+            free(node->key);
+            free(node->value);
             free(node);
             return nullptr;
         }
         else if (node->rightChild == nullptr) {
             Node *child = node->leftChild;
+            free(node->key);
+            free(node->value);
             free(node);
             return child;
         }
         else if (node->leftChild == nullptr) {
             Node *child = node->rightChild;
+            free(node->key);
+            free(node->value);
             free(node);
             return child;
         }
         else {
-            bool isHeightChanged2 = false;
-            node->rightChild = swapWithClosest(node->rightChild, node, &isHeightChanged2);
+            Node *closest = node->rightChild;
+            while (closest->leftChild != nullptr) {
+                closest = closest->leftChild;
+            }
+            Value temp1 = node->value;
+            Value temp2 = node->key;
+            node->value = closest->value;
+            node->key = closest->key;
+            closest->value = temp1;
+            closest->key = temp2;
+            node->rightChild = dispose(node->rightChild, key, isHeightChanged);
+            if (*isHeightChanged) {
+                ++node->balance;
+            }
         }
     }
     node = balance(node);

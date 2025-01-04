@@ -45,6 +45,7 @@ void test() {
     root = insert(root, createNode("333", "333", &errorCode), &isHeightChanged);
     root = insert(root, createNode("444", "444", &errorCode), &isHeightChanged);
     root = insert(root, createNode("555", "555", &errorCode), &isHeightChanged);
+    root = dispose(root, "222", &isHeightChanged);
     root = dispose(root, "333", &isHeightChanged);
     int bp1 = 0;
 }
