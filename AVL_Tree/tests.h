@@ -2,4 +2,6 @@
 
 #include "tree.h"
 
-int treeTests();
+int AVLTreeTest();
+
+int invariantTest(const char *filePath);

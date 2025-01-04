@@ -1,5 +1,6 @@
 #pragma once
 
+#include "typeDefinitions.h"
 #include <stdbool.h>
 
 Value searchInTree(Node *root, Value key);

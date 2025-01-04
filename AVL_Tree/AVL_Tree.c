@@ -250,10 +250,37 @@ Value searchInAVLTree(Node *node, Key key) {
     return node->key;
 }
 
-void deleteAVLTree(Node *root) {
-    while (root != nullptr) {
-        bool isHeightChanged = false;
-        root = deleteFromAVLTree(root, root->key, &isHeightChanged);
+void deleteAVLTree(Node *root, int *errorCode) {
+    if (root == nullptr) {
+        return;
+    }
+    Stack *stack = createStack(errorCode);
+    if (*errorCode != NO_ERRORS) {
+        return;
+    }
+    while (!isEmptyStack(stack, errorCode)) {
+        Node *current = pop(stack, errorCode);
+        if (*errorCode != NO_ERRORS) {
+            deleteStack(&stack, errorCode);
+            return;
+        }
+        if (current->leftChild == nullptr && current->rightChild == nullptr) {
+            continue;
+        }
+        if (current->leftChild != nullptr) {
+            push(stack, current->leftChild, errorCode);
+            if (*errorCode != NO_ERRORS) {
+                deleteStack(&stack, errorCode);
+                return;
+            }
+        }
+        if (current->rightChild != nullptr) {
+            push(stack, current->rightChild, errorCode);
+            if (*errorCode != NO_ERRORS) {
+                deleteStack(&stack, errorCode);
+                return;
+            }
+        }
     }
 }
 
@@ -265,9 +292,10 @@ bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return false;
     }
-    while(!isEmptyStack(stack)) {
+    while(!isEmptyStack(stack, errorCode)) {
         Node *current = pop(stack, errorCode);
         if (*errorCode != NO_ERRORS) {
+            deleteStack(&stack, errorCode);
             return false;
         }
         if (current->balance < -2 || current->balance > 2) {

@@ -3,7 +3,7 @@
 #include "errorCode.h"
 
 typedef struct StackElement {
-    Value value;
+    StackValue value;
     struct StackElement *previous;
 } StackElement;
 
@@ -19,7 +19,7 @@ Stack *createStack(int *errorCode) {
     return stack;
 }
 
-void push(Stack *stack, Value value, int *errorCode) {
+void push(Stack *stack, StackValue value, int *errorCode) {
     if (value == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
@@ -38,7 +38,7 @@ void push(Stack *stack, Value value, int *errorCode) {
     stack->head = newElement;
 }
 
-Value pop(Stack *stack, int *errorCode) {
+StackValue pop(Stack *stack, int *errorCode) {
     if (stack == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
@@ -47,7 +47,7 @@ Value pop(Stack *stack, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    Value value = stack->head->value;
+    StackValue value = stack->head->value;
     StackElement *temp = stack->head;
     stack->head = stack->head->previous;
     free(temp);
@@ -60,4 +60,20 @@ bool isEmptyStack(Stack *stack, int *errorCode) {
         return true;
     }
     return stack->head == NULL;
+}
+
+void deleteStack(Stack **stack, int *errorCode) {
+    if (stack == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    if ((*stack) == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    while (!isEmptyStack(*stack, errorCode)) {
+        pop(*stack, errorCode);
+    }
+    free(*stack);
+    *stack = nullptr;
 }

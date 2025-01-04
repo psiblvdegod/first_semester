@@ -10,4 +10,6 @@ Node *deleteFromAVLTree(Node *node, Key key, bool *isHeightChanged);
 
 Value searchInAVLTree(Node *node, Key key);
 
-void deleteAVLTree(Node *root);
+bool verifyAVLTreeInvariants(Node *root, int *errorCode);
+
+void deleteAVLTree(Node *root, int *errorCode);

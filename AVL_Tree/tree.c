@@ -1,4 +1,3 @@
-#include "typeDefinitions.h"
 #include "AVL_Tree.h"
 #include "errorCode.h"
 #include "tree.h"
@@ -46,5 +45,5 @@ void deleteTree(Node **root, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
-    deleteAVLTree(*root);
+    deleteAVLTree(*root, errorCode);
 }
