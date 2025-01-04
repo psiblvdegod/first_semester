@@ -73,16 +73,15 @@ List *splitList(List *list, int *errorCode) {
     for (int i = 1; i < listLength / 2; ++i) {
         middle = middle->next;
     }
-    Node *newTail = middle;
-    middle = middle->next;
-    newTail->next = NULL;
     List *separatedPart = createList(errorCode);
     if (*errorCode != NO_ERRORS) {
-        return NULL;
+        return list;
     }
-    separatedPart->head = middle;
+    Node *newHead = middle->next;
+    middle->next = NULL;
+    separatedPart->head = newHead;
     separatedPart->tail = list->tail;
-    list->tail = newTail;
+    list->tail = middle;
     return separatedPart;
 }
 

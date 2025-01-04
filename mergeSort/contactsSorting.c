@@ -1,12 +1,7 @@
 #include "contactsSorting.h"
+#include "errorCode.h"
 #include "mergeSort.h"
 #include "stdio.h"
-
-#define INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION 1
-#define MEMORY_ALLOCATION_ERROR 44
-#define TESTS_FAILED_ERROR -1
-#define NO_ERRORS 0
-#define FILE_OPENING_ERROR 15
 
 List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *errorCode) {
     FILE *file = fopen(filePath, "r");
@@ -20,8 +15,8 @@ List *sortContacts(const char *filePath, SortingCriteria sortingCriteria, int *e
         return NULL;
     }
     while (!feof(file)) {
-        char name[30];
-        char number[30];
+        char name[30] = {'0'};
+        char number[30] = {'0'};
         fscanf(file, "%s%s", name, number);
         if (sortingCriteria == byName) {
             addToList(list, number, name, errorCode);

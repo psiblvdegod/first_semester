@@ -11,6 +11,10 @@ void listTests(int *errorCode) {
         return;
     }
     addToList(list, "1", "A", errorCode);
+    if (*errorCode != NO_ERRORS) {
+        deleteList(&list, errorCode);
+        return;
+    }
     addToList(list, "2", "B", errorCode);
     addToList(list, "3", "C", errorCode);
     addToList(list, "4", "D", errorCode);
@@ -157,8 +161,8 @@ void mergeSortTest(int *errorCode) {
     deleteList(&list, errorCode);
 }
 
-void contactsSortingTest(int *errorCode) {
-    List *result = sortContacts("../text.txt", byName, errorCode);
+void contactsSortingTest(const char *filePath, int *errorCode) {
+    List *result = sortContacts(filePath, byName, errorCode);
     if (*errorCode != NO_ERRORS) {
         return;
     }

@@ -15,6 +15,6 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    contactsSortingTest(&errorCode);
+    contactsSortingTest("../text.txt", &errorCode);
     return errorCode;
 }
