@@ -17,33 +17,33 @@ List *createList(int *errorCode) {
     List *list = calloc(1, sizeof(List));
     if (list == NULL) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     return list;
 }
 
 void deleteList(List **list, int *errorCode) {
-    if (list == NULL || *list == NULL) {
+    if (list == nullptr || *list == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     ListElement *currentElement = (*list)->head;
-    while (currentElement != NULL) {
+    while (currentElement != nullptr) {
         ListElement *temp = currentElement;
         currentElement = currentElement->next;
         free(temp);
     }
     free(*list);
-    *list = NULL;
+    *list = nullptr;
 }
 
 void addToList(List *list, Value number, Value distance, int *errorCode) {
-    if (list == NULL) {
+    if (list == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return;
     }
     ListElement *newElement = calloc(1, sizeof(ListElement));
-    if (newElement == NULL) {
+    if (newElement == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return;
     }
@@ -54,20 +54,20 @@ void addToList(List *list, Value number, Value distance, int *errorCode) {
 }
 
 List *copyList(List *list, int *errorCode) {
-    if (list == NULL) {
+    if (list == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return nullptr;
     }
     List *copy = createList(errorCode);
     if (*errorCode != NO_ERRORS) {
-        return NULL;
+        return nullptr;
     }
     ListElement *current = list->head;
-    while (current != NULL) {
+    while (current != nullptr) {
         addToList(copy, current->number, current->distance, errorCode);
         if (*errorCode != NO_ERRORS) {
             deleteList(&copy, errorCode);
-            return NULL;
+            return nullptr;
         }
         current = current->next;
     }
@@ -75,12 +75,12 @@ List *copyList(List *list, int *errorCode) {
 }
 
 bool searchInList(List *list, Value number, int *errorCode) {
-    if (list == NULL) {
+    if (list == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return false;
     }
     ListElement *current = list->head;
-    while (current != NULL) {
+    while (current != nullptr) {
         if (current->number == number) {
             return true;
         }
@@ -90,23 +90,23 @@ bool searchInList(List *list, Value number, int *errorCode) {
 }
 
 ListElement *getHead(List *list, int *errorCode) {
-    if (list == NULL) {
+    if (list == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return 0;
+        return nullptr;
     }
     return list->head;
 }
 
 ListElement *getNext(ListElement* listElement, int *errorCode) {
-    if (listElement == NULL) {
+    if (listElement == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return 0;
+        return nullptr;
     }
     return listElement->next;
 }
 
 Value getNumber(ListElement* listElement, int *errorCode) {
-    if (listElement == NULL) {
+    if (listElement == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return 0;
     }

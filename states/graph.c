@@ -12,37 +12,37 @@ typedef struct Vertex {
 
 struct Graph {
     Vertex **vertices;
-    size_t verticesAmount;
+    Value verticesAmount;
 };
 
 Graph *createGraph(const Value verticesAmount, int *errorCode) {
     if (verticesAmount < 1) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
-        return NULL;
+        return nullptr;
     }
     Graph *graph = calloc(1, sizeof(Graph));
-    if (graph == NULL) {
+    if (graph == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     graph->verticesAmount = verticesAmount;
     graph->vertices = calloc(verticesAmount, sizeof(Vertex *));
-    if (graph->vertices == NULL) {
+    if (graph->vertices == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         free(graph);
-        return NULL;
+        return nullptr;
     }
     for (Value i = 0; i < verticesAmount; ++i) {
         graph->vertices[i] = calloc(1, sizeof(Vertex));
-        if (graph->vertices[i] == NULL) {
+        if (graph->vertices[i] == nullptr) {
             *errorCode = MEMORY_ALLOCATION_ERROR;
             deleteGraph(&graph, errorCode);
-            return NULL;
+            return nullptr;
         }
         graph->vertices[i]->linkedVertices = createList(errorCode);
         if (*errorCode != NO_ERRORS) {
             deleteGraph(&graph, errorCode);
-            return NULL;
+            return nullptr;
         }
         graph->vertices[i]->number = i;
         graph->vertices[i]->state = -1;
@@ -66,8 +66,12 @@ void verifyGraphInvariants(Graph *graph, int *errorCode) {
 }
 
 void deleteGraph(Graph **graph, int *errorCode) {
-    if (graph == NULL || *graph == NULL) {
+    if (*graph == NULL) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return;
+    }
+    verifyGraphInvariants(*graph, errorCode);
+    if (*errorCode != NO_ERRORS) {
         return;
     }
     if ((*graph)->vertices != NULL) {
@@ -108,7 +112,7 @@ void setCapital(Graph *graph, const Value city, int *errorCode) {
         return;
     }
     graph->vertices[city]->isCapital = true;
-    graph->vertices[city]->state = city;
+    graph->vertices[city]->state = (long)city;
 }
 
 typedef struct State {
@@ -119,7 +123,7 @@ typedef struct State {
 State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
-        return NULL;
+        return nullptr;
     }
     for (Value i = 0; i < graph->verticesAmount; ++i) {
         if (graph->vertices[i]->isCapital) {
@@ -127,14 +131,14 @@ State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
         }
     }
     State **states = calloc(*statesAmount, sizeof(State *));
-    if (states == NULL) {
+    if (states == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     for (Value i = 0, j = 0; i < graph->verticesAmount; ++i) {
         if (graph->vertices[i]->isCapital) {
             states[j] = calloc(1, sizeof(State));
-            if (states[j] == NULL) {
+            if (states[j] == nullptr) {
                 *errorCode = MEMORY_ALLOCATION_ERROR;
                 break;
             }
@@ -152,7 +156,7 @@ State **getStates(Graph *graph, Value *statesAmount, int *errorCode) {
             free(states[i]);
         }
         free(states);
-        return NULL;
+        return nullptr;
     }
     return states;
 }
@@ -198,7 +202,7 @@ void distributeCities(Graph *graph, int *errorCode) {
         if (i == statesAmount) {
             i = 0;
         }
-        if (states[i] == NULL) {
+        if (states[i] == nullptr) {
             continue;
         }
         bool wasFreeCityFound = false;
@@ -207,13 +211,13 @@ void distributeCities(Graph *graph, int *errorCode) {
             ++distributed;
             free(states[i]->borderCities);
             free(states[i]);
-            states[i] = NULL;
+            states[i] = nullptr;
             continue;
         }
         graph->vertices[closestCity]->state = states[i]->number;
         List *copy = copyList(graph->vertices[closestCity]->linkedVertices, errorCode);
         ListElement *current = getHead(copy, errorCode);
-        while (current != NULL) {
+        while (current != nullptr) {
             addToList(states[i]->borderCities, getNumber(current, errorCode), getDistance(current, errorCode), errorCode);
             current = getNext(current, errorCode);
         }
@@ -224,17 +228,17 @@ void distributeCities(Graph *graph, int *errorCode) {
 Value *getStateAffiliation(Graph *graph, Value *citiesAmount, int *errorCode) {
     verifyGraphInvariants(graph, errorCode);
     if (*errorCode != NO_ERRORS) {
-        return NULL;
+        return nullptr;
     }
     Value *stateAffiliation = calloc(graph->verticesAmount, sizeof(Value));
-    if (stateAffiliation == NULL) {
+    if (stateAffiliation == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        return NULL;
+        return nullptr;
     }
     for (Value i = 0; i < graph->verticesAmount; ++i) {
         stateAffiliation[i] = graph->vertices[i]->state;
     }
-    if (citiesAmount != NULL) {
+    if (citiesAmount != nullptr) {
         *citiesAmount = graph->verticesAmount;
     }
     return stateAffiliation;

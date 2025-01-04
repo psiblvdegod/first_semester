@@ -28,7 +28,7 @@ int graphTests() {
         deleteGraph(&graph, &errorCode);
         return errorCode;
     }
-    Value *stateAffiliation = getStateAffiliation(graph, NULL, &errorCode);
+    Value *stateAffiliation = getStateAffiliation(graph, nullptr, &errorCode);
     if (errorCode != NO_ERRORS) {
         deleteGraph(&graph, &errorCode);
         return errorCode;
