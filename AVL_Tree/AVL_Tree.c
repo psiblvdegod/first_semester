@@ -293,6 +293,7 @@ bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return false;
     }
+    push(stack, root, errorCode);
     while (!isEmptyStack(stack, errorCode)) {
         Node *current = pop(stack, errorCode);
         if (*errorCode != NO_ERRORS) {
