@@ -17,6 +17,10 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
+    errorCode = stackTests();
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
     Dictionary *dictionary = createDictionary(&errorCode);
     if (errorCode != NO_ERRORS) {
         return errorCode;

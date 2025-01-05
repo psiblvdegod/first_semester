@@ -2,9 +2,56 @@
 #include "dictionary.h"
 #include "AVL_Tree.h"
 #include "errorCode.h"
+#include "stack.h"
 #include "tests.h"
 #include <stdio.h>
 #include <string.h>
+
+int stackTests() {
+    int errorCode = NO_ERRORS;
+    Stack *stack = createStack(&errorCode);
+    if (errorCode != NO_ERRORS) {
+        return errorCode;
+    }
+    Node *node1 = createNode("111", "111", &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    push(stack, node1, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    Node *node2 = createNode("222", "222", &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    const bool isEmptyTest1 = !isEmptyStack(stack, &errorCode);
+    push(stack, node2, &errorCode);
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    const bool popTest1 = pop(stack, &errorCode) == node2;
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    const bool popTest2 = pop(stack, &errorCode) == node1;
+    if (errorCode != NO_ERRORS) {
+        deleteStack(&stack, &errorCode);
+        return errorCode;
+    }
+    const bool isEmptyTest2 = isEmptyStack(stack, &errorCode);
+    const bool test = popTest1 && popTest2 && isEmptyTest1 && isEmptyTest2;
+    deleteStack(&stack, &errorCode);
+    if (errorCode == NO_ERRORS && !test) {
+        return TESTS_FAILED_ERROR;
+    }
+    return errorCode;
+}
 
 int AVLTreeTest() {
     int errorCode = NO_ERRORS;
