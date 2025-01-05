@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 int main(void) {
-    int errorCode = invariantTest("../test.txt");
+    int errorCode = stackTests();
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
@@ -17,7 +17,7 @@ int main(void) {
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }
-    errorCode = stackTests();
+    errorCode = invariantTest("../test.txt");;
     if (errorCode != NO_ERRORS) {
         return errorCode;
     }

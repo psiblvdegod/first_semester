@@ -27,7 +27,7 @@ Node *createNode(Value value, Key key, int *errorCode) {
     node->key = strdup(key);
     if (node->key == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
-        free(node->key);
+        free(node->value);
         free(node);
         return nullptr;
     }
@@ -269,18 +269,15 @@ void deleteAVLTree(Node *root, int *errorCode) {
             deleteStack(&stack, errorCode);
             return;
         }
-        if (current->leftChild == nullptr && current->rightChild == nullptr) {
-            free(current->value);
-            free(current->key);
-            free(current);
-            continue;
-        }
         if (current->leftChild != nullptr) {
             push(stack, current->leftChild, errorCode);
         }
         if (current->rightChild != nullptr) {
             push(stack, current->rightChild, errorCode);
         }
+        free(current->value);
+        free(current->key);
+        free(current);
     }
     deleteStack(&stack, errorCode);
 }
