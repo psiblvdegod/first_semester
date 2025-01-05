@@ -21,7 +21,7 @@ typedef enum {
 Node *createNode(Value value, Key key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == nullptr) {
-        *errorCode = true;
+        *errorCode = MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
     node->value = strdup(value);
@@ -43,7 +43,7 @@ Node *createNode(Value value, Key key, int *errorCode) {
 Node *doSmallRotation(Node *node, Direction direction) {
     if (direction == left) {
         Node *nodeRightChild = node->rightChild;
-        if (nodeRightChild != NULL) {
+        if (nodeRightChild != nullptr) {
             node->rightChild = nodeRightChild->leftChild;
             nodeRightChild->leftChild = node;
             return nodeRightChild;
@@ -51,7 +51,7 @@ Node *doSmallRotation(Node *node, Direction direction) {
     }
     if (direction == right) {
         Node *nodeLeftChild = node->leftChild;
-        if (nodeLeftChild != NULL) {
+        if (nodeLeftChild != nullptr) {
             node->leftChild = nodeLeftChild->rightChild;
             nodeLeftChild->rightChild = node;
             return nodeLeftChild;
@@ -78,7 +78,7 @@ Node *doBigRotation(Node *node, Direction direction) {
     }
 }
 
-Node *balance(Node * node) {
+Node *balance(Node *node) {
     if (node->balance == -2) {
         if (node->rightChild->balance <= 0) {
             node = doSmallRotation(node, left);
@@ -96,10 +96,12 @@ Node *balance(Node * node) {
             if (node->balance == 1) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = -1;
-            } else if (node->balance == -1) {
+            }
+            else if (node->balance == -1) {
                 node->leftChild->balance = 1;
                 node->rightChild->balance = 0;
-            } else if (node->balance == 0) {
+            }
+            else if (node->balance == 0) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = 0;
             }
@@ -123,10 +125,12 @@ Node *balance(Node * node) {
             if (node->balance == 1) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = -1;
-            } else if (node->balance == -1) {
+            }
+            else if (node->balance == -1) {
                 node->leftChild->balance = 1;
                 node->rightChild->balance = 0;
-            } else if (node->balance == 0) {
+            }
+            else if (node->balance == 0) {
                 node->leftChild->balance = 0;
                 node->rightChild->balance = 0;
             }
@@ -137,11 +141,11 @@ Node *balance(Node * node) {
 }
 
 Node *insertIntoAVLTree(Node *node, Node *newNode, bool *isHeightChanged) {
-    if (newNode == NULL) {
+    if (newNode == nullptr) {
         *isHeightChanged = false;
         return node;
     }
-    if (node == NULL) {
+    if (node == nullptr) {
         *isHeightChanged = true;
         return newNode;
     }
@@ -213,12 +217,12 @@ Node *deleteFromAVLTree(Node *node, Key key, bool *isHeightChanged) {
             while (closest->leftChild != nullptr) {
                 closest = closest->leftChild;
             }
-            Value temp1 = node->value;
-            Value temp2 = node->key;
+            Value tempForValue = node->value;
+            Value tempForKey = node->key;
             node->value = closest->value;
             node->key = closest->key;
-            closest->value = temp1;
-            closest->key = temp2;
+            closest->value = tempForValue;
+            closest->key = tempForKey;
             node->rightChild = deleteFromAVLTree(node->rightChild, key, isHeightChanged);
             if (*isHeightChanged) {
                 ++node->balance;
@@ -265,23 +269,19 @@ void deleteAVLTree(Node *root, int *errorCode) {
             return;
         }
         if (current->leftChild == nullptr && current->rightChild == nullptr) {
+            free(current->value);
+            free(current->key);
+            free(current);
             continue;
         }
         if (current->leftChild != nullptr) {
             push(stack, current->leftChild, errorCode);
-            if (*errorCode != NO_ERRORS) {
-                deleteStack(&stack, errorCode);
-                return;
-            }
         }
         if (current->rightChild != nullptr) {
             push(stack, current->rightChild, errorCode);
-            if (*errorCode != NO_ERRORS) {
-                deleteStack(&stack, errorCode);
-                return;
-            }
         }
     }
+    deleteStack(&stack, errorCode);
 }
 
 bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
@@ -292,7 +292,7 @@ bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return false;
     }
-    while(!isEmptyStack(stack, errorCode)) {
+    while (!isEmptyStack(stack, errorCode)) {
         Node *current = pop(stack, errorCode);
         if (*errorCode != NO_ERRORS) {
             deleteStack(&stack, errorCode);
@@ -320,5 +320,6 @@ bool verifyAVLTreeInvariants(Node *root, int *errorCode) {
             push(stack, current->rightChild, errorCode);
         }
     }
+    deleteStack(&stack, errorCode);
     return true;
 }

@@ -50,4 +50,5 @@ void deleteTree(Node **root, int *errorCode) {
         return;
     }
     deleteAVLTree(*root, errorCode);
+    *root = nullptr;
 }
