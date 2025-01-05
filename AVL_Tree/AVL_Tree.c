@@ -247,7 +247,7 @@ Value searchInAVLTree(Node *node, Key key) {
     if (node == nullptr) {
         return nullptr;
     }
-    return node->key;
+    return node->value;
 }
 
 void deleteAVLTree(Node *root, int *errorCode) {

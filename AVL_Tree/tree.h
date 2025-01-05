@@ -3,7 +3,7 @@
 #include "typeDefinitions.h"
 #include <stdbool.h>
 
-Value searchInTree(Node *root, Value key);
+Value searchInTree(Node *node, Key key, int *errorCode);
 
 void insertIntoTree(Node **root, Value value, Key key, int *errorCode);
 

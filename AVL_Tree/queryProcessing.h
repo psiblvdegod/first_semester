@@ -1,9 +1,7 @@
 #pragma once
+
 #include "tree.h"
 
-// reads 16 symbols from standard input stream,
-// converts it to signed int or reports an error.
-int scanNumber(int *errorCode);
+#include "dictionary.h"
 
-// processes user query
-void queryProcessing(Node **root, char userQuery, int *errorCode);
+void processQuery(Dictionary*dictionary, int userQuery, int *errorCode);

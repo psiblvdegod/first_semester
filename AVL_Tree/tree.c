@@ -36,7 +36,11 @@ void deleteFromTree(Node **root, Key key, int *errorCode) {
     *root = deleteFromAVLTree(*root, key, &isHeightChanged);
 }
 
-Value searchInTree(Node *node, Key key) {
+Value searchInTree(Node *node, Key key, int *errorCode) {
+    if (key == nullptr) {
+        *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
+        return nullptr;
+    }
     return searchInAVLTree(node, key);
 }
 

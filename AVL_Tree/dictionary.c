@@ -41,7 +41,7 @@ Value searchInDictionary(Dictionary *dictionary, Key key, int *errorCode) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return nullptr;
     }
-    return searchInTree(dictionary->root, key);
+    return searchInTree(dictionary->root, key, errorCode);
 }
 
 void deleteFromDictionary(Dictionary *dictionary, Key key, int *errorCode) {
