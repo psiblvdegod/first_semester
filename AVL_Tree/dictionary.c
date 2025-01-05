@@ -64,12 +64,7 @@ void deleteDictionary(Dictionary **dictionary, int *errorCode) {
     if (*dictionary == nullptr) {
         return;
     }
-    if ((*dictionary)->root == nullptr) {
-        free(*dictionary);
-        return;
-    }
     deleteTree(&(*dictionary)->root, errorCode);
     free(*dictionary);
     *dictionary = nullptr;
 }
-

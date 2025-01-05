@@ -12,12 +12,6 @@ typedef struct Node {
     struct Node *rightChild;
 } Node;
 
-// defines rotation direction
-typedef enum {
-    left,
-    right
-} Direction;
-
 Node *createNode(Value value, Key key, int *errorCode) {
     Node *node = calloc(1, sizeof(Node));
     if (node == nullptr) {
@@ -39,6 +33,12 @@ Node *createNode(Value value, Key key, int *errorCode) {
     }
     return node;
 }
+
+typedef enum {
+    left,
+    right
+} Direction;
+
 
 Node *doSmallRotation(Node *node, Direction direction) {
     if (direction == left) {

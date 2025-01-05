@@ -1,7 +1,7 @@
 #pragma once
 
+#include "dictionary.h"
 #include "tree.h"
 
-#include "dictionary.h"
-
-void processQuery(Dictionary*dictionary, int userQuery, int *errorCode);
+// processes user query
+void processQuery(Dictionary *dictionary, int userQuery, int *errorCode);
