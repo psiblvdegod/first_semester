@@ -262,6 +262,7 @@ void deleteAVLTree(Node *root, int *errorCode) {
     if (*errorCode != NO_ERRORS) {
         return;
     }
+    push(stack, root, errorCode);
     while (!isEmptyStack(stack, errorCode)) {
         Node *current = pop(stack, errorCode);
         if (*errorCode != NO_ERRORS) {
