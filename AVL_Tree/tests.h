@@ -5,3 +5,5 @@
 int AVLTreeTest();
 
 int invariantTest(const char *filePath);
+
+int dictionaryTest();
