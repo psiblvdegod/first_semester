@@ -1,6 +1,5 @@
 #include "errorCode.h"
 #include "list.h"
-#include <string.h>
 #include <stdlib.h>
 
 struct ListElement {
@@ -15,7 +14,7 @@ struct List {
 
 List *createList(int *errorCode) {
     List *list = calloc(1, sizeof(List));
-    if (list == NULL) {
+    if (list == nullptr) {
         *errorCode = MEMORY_ALLOCATION_ERROR;
         return nullptr;
     }
@@ -114,7 +113,7 @@ Value getNumber(ListElement* listElement, int *errorCode) {
 }
 
 Value getDistance(ListElement* listElement, int *errorCode) {
-    if (listElement == NULL) {
+    if (listElement == nullptr) {
         *errorCode = INCORRECT_ARGUMENTS_PASSED_TO_FUNCTION;
         return 0;
     }
