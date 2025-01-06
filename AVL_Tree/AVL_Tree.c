@@ -39,7 +39,6 @@ typedef enum {
     right
 } Direction;
 
-
 Node *doSmallRotation(Node *node, Direction direction) {
     if (direction == left) {
         Node *nodeRightChild = node->rightChild;
