@@ -58,21 +58,21 @@ List *merge(List *firstList, List *secondList, int *errorCode) {
     return mergedList;
 }
 
-List *mergeSort(List *left, int *errorCode) {
-    if (getHead(left, errorCode) == NULL || getNext(getHead(left, errorCode), errorCode) == NULL) {
-        return left;
+List *mergeSort(List *list, int *errorCode) {
+    if (getHead(list, errorCode) == NULL || getNext(getHead(list, errorCode), errorCode) == NULL) {
+        return list;
     }
-    List *right = splitList(left, errorCode);
+    List *separatedPart = splitList(list, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    left = mergeSort(left, errorCode);
+    list = mergeSort(list, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    right = mergeSort(right, errorCode);
+    separatedPart = mergeSort(separatedPart, errorCode);
     if (*errorCode != NO_ERRORS) {
         return NULL;
     }
-    return merge(left, right, errorCode);
+    return merge(list, separatedPart, errorCode);
 }
