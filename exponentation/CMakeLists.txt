@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(exponentation C)
+
+set(CMAKE_C_STANDARD 11)
+
+add_executable(exponentation main.c power.c power.h test.h test.c)
